@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,13 +43,27 @@ fun RegisterScreen(
             .padding(16.dp)
     ) {
 
-        Image(
-            painter = painterResource(Res.drawable.register_bg),
-            contentDescription = null,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(180.dp)
-        )
+        ) {
+
+            Image(
+                painter = painterResource(Res.drawable.register_bg),
+                contentDescription = null,
+                modifier = Modifier.matchParentSize()
+            )
+
+            Text(
+                text = "REGISTRATE",
+                color = Color.White,
+                fontSize = 36.sp,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 16.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
