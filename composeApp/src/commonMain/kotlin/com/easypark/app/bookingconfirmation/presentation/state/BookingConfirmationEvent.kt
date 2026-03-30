@@ -1,4 +1,7 @@
 package com.easypark.app.bookingconfirmation.presentation.state
 
-interface BookingConfirmationEvent {
+sealed interface BookingConfirmationEvent {
+    object OnBackClick : BookingConfirmationEvent
+    data class OnPaymentMethodSelected(val method: PaymentMethod) : BookingConfirmationEvent
+    object OnConfirmClick : BookingConfirmationEvent
 }

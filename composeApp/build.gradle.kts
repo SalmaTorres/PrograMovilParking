@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.sentry)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -46,6 +47,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -87,4 +90,3 @@ dependencies {
     implementation(libs.sentry.android)
     debugImplementation(libs.compose.uiTooling)
 }
-

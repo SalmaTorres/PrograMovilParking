@@ -30,6 +30,10 @@ import com.easypark.app.shared.presentation.composable.ParkTextField
 import com.easypark.app.shared.ui.ParkBackground
 import com.easypark.app.shared.ui.ParkGray
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import com.easypark.app.navigation.AppNavHost
+
 @Composable
 @Preview
 fun App() {

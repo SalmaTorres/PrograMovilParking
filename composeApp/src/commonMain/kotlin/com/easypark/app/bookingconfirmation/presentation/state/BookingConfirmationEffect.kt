@@ -1,4 +1,6 @@
 package com.easypark.app.bookingconfirmation.presentation.state
 
-interface BookingConfirmationEffect {
+sealed interface BookingConfirmationEffect {
+    object NavigateBack : BookingConfirmationEffect
+    object NavigateToSuccess : BookingConfirmationEffect
 }

@@ -1,4 +1,8 @@
 package com.easypark.app.parkingdetails.presentation.state
 
-class ParkingDetailsUIState {
-}
+import com.easypark.app.parkingdetails.domain.model.ParkingDetail
+
+data class ParkingDetailsUIState(
+    val isLoading: Boolean = false,
+    val parkingDetail: ParkingDetail? = null
+)
