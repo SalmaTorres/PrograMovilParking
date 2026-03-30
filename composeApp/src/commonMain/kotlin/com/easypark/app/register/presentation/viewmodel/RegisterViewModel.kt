@@ -15,8 +15,8 @@ class RegisterViewModel(
     private val _state = MutableStateFlow(RegisterUIState())
     val state = _state.asStateFlow()
 
-    private val _effect = Channel<RegisterEffect>()
-    val effect = _effect.receiveAsFlow()
+    private val _effect = MutableSharedFlow<RegisterEffect>()
+    val effect = _effect.asSharedFlow()
 
     fun onEvent(event: RegisterEvent) {
         when (event) {
@@ -43,34 +43,39 @@ class RegisterViewModel(
 
             RegisterEvent.OnRegisterClick -> register()
 
-            RegisterEvent.OnLoginClick -> {
-                viewModelScope.launch {
-                    _effect.send(RegisterEffect.NavigateToLogin)
-                }
-            }
+            RegisterEvent.OnLoginClick -> emit(RegisterEffect.NavigateToLogin)
         }
     }
 
     private fun register() {
         val current = _state.value
-
-        val model = RegisterModel(
-            name = current.name,
-            email = current.email,
-            phone = current.phone,
-            password = current.password,
-            role = current.role
-        )
+        if (current.name.isEmpty() || current.email.isEmpty() || current.password.isEmpty() || current.phone.isEmpty()) {
+            _state.update { it.copy(
+                isEmailError = it.email.isEmpty(),
+                isPasswordError = it.password.isEmpty(),
+                isPhoneError = it.phone.isEmpty(),
+                isNameError = it.name.isEmpty()
+            )}
+            return
+        }
 
         viewModelScope.launch {
-
-            val result = useCase(model)
+            _state.update { it.copy(isLoading = true) }
+            val result = useCase.invoke(current.name, current.email, current.phone, current.password, current.role)
+            _state.update { it.copy(isLoading = false) }
 
             if (result) {
-                _effect.send(RegisterEffect.NavigateToNext)
+                emit(RegisterEffect.NavigateToNext)
             } else {
-                _effect.send(RegisterEffect.ShowError("Datos inválidos"))
+                emit(RegisterEffect.ShowError("Error al registrar usuario"))
             }
         }
     }
+
+    private fun emit(effect: RegisterEffect) {
+        viewModelScope.launch {
+            _effect.emit(effect)
+        }
+    }
+
 }

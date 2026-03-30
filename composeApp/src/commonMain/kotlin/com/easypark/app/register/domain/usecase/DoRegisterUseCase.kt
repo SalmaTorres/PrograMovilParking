@@ -7,7 +7,7 @@ class DoRegisterUseCase(
     private val repository: RegisterRepository
 ) {
 
-    suspend operator fun invoke(data: RegisterModel): Boolean {
-        return repository.register(data)
+    suspend operator fun invoke(name: String, email: String, phone: String, password: String, role: String): Boolean {
+        return repository.register(name, email, phone, password, role)
     }
 }

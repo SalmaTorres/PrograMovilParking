@@ -24,7 +24,7 @@ fun ParkButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().height(56.dp),
+        modifier = modifier.fillMaxWidth().height(45.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSecondary) ParkBlueLight else ParkBlue,
             contentColor = if (isSecondary) ParkBlue else Color.White

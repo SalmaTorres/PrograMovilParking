@@ -4,5 +4,6 @@ data class SignInUIState(
     val email: String = "",
     val password: String = "",
     val isLoading: Boolean = false,
-    val error: String? = null
+    val isEmailError: Boolean = false,
+    val isPasswordError: Boolean = false,
 )

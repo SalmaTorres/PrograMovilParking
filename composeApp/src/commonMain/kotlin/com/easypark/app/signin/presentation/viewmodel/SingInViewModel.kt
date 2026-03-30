@@ -14,41 +14,48 @@ class SignInViewModel(
     private val _state = MutableStateFlow(SignInUIState())
     val state = _state.asStateFlow()
 
-    private val _effect = Channel<SignInEffect>()
-    val effect = _effect.receiveAsFlow()
+    private val _effect = MutableSharedFlow<SignInEffect>()
+    val effect = _effect.asSharedFlow()
 
     fun onEvent(event: SignInEvent) {
         when (event) {
-
             is SignInEvent.OnEmailChange -> {
-                _state.update { it.copy(email = event.email) }
+                _state.update { it.copy(email = event.email, isEmailError = event.email.isEmpty()) }
             }
-
             is SignInEvent.OnPasswordChange -> {
-                _state.update { it.copy(password = event.password) }
+                _state.update { it.copy(password = event.password, isPasswordError = event.password.isEmpty()) }
             }
-
             SignInEvent.OnLoginClick -> login()
-
-            SignInEvent.OnRegisterClick -> {
-                viewModelScope.launch {
-                    _effect.send(SignInEffect.NavigateToRegister)
-                }
-            }
+            SignInEvent.OnRegisterClick -> emit(SignInEffect.NavigateToRegister)
         }
     }
 
     private fun login() {
-        val current = _state.value
+        val currentState = _state.value
+        if (currentState.email.isEmpty() || currentState.password.isEmpty()) {
+            _state.update { it.copy(
+                isEmailError = it.email.isEmpty(),
+                isPasswordError = it.password.isEmpty()
+            )}
+            return
+        }
 
         viewModelScope.launch {
-            val result = useCase(current.email, current.password)
+            _state.update { it.copy(isLoading = true) }
+            val result = useCase.invoke(currentState.email, currentState.password)
+            _state.update { it.copy(isLoading = false) }
 
             if (result) {
-                _effect.send(SignInEffect.NavigateToHome)
+                emit(SignInEffect.NavigateToHome)
             } else {
-                _effect.send(SignInEffect.ShowError("Datos inválidos"))
+                emit(SignInEffect.ShowError("Credenciales incorrectas"))
             }
+        }
+    }
+
+    private fun emit(effect: SignInEffect) {
+        viewModelScope.launch {
+            _effect.emit(effect)
         }
     }
 }

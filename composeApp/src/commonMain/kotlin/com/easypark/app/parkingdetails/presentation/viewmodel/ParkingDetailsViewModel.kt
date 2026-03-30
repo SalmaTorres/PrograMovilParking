@@ -1,10 +1,6 @@
 package com.easypark.app.parkingdetails.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-<<<<<<< HEAD
-
-class ParkingDetailsViewModel : ViewModel() {
-=======
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.parkingdetails.domain.usecase.GetParkingDetailUseCase
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsUIState
@@ -32,5 +28,4 @@ class ParkingDetailsViewModel(
             }
         }
     }
->>>>>>> origin/Carlita
 }

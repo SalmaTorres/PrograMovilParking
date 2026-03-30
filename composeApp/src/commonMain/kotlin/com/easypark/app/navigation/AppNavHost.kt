@@ -10,6 +10,8 @@ import com.easypark.app.notifications.presentation.screen.NotificationsScreen
 import com.easypark.app.notifications.presentation.viewmodel.NotificationsViewModel
 import com.easypark.app.parkingdetails.presentation.screen.ParkingDetailsScreen
 import com.easypark.app.parkingdetails.presentation.viewmodel.ParkingDetailsViewModel
+import com.easypark.app.register.presentation.screen.RegisterScreen
+import com.easypark.app.signin.presentation.screen.SignInScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -18,33 +20,39 @@ fun AppNavHost() {
 
     NavHost(
         navController = navController,
-        startDestination = NavRoute.ParkingDetails
+        startDestination = NavRoute.SignIn
     ) {
+        composable<NavRoute.SignIn> {
+            SignInScreen(navController)
+        }
+        composable<NavRoute.Register> {
+            RegisterScreen(navController)
+        }
 
-        composable<NavRoute.Notifications> {
-            val viewModel = koinViewModel<NotificationsViewModel>()
-            NotificationsScreen(
-                viewModel = viewModel,
-                onBack = { navController.popBackStack() }
-            )
-        }
-        composable<NavRoute.ParkingDetails> {
-            val viewModel = koinViewModel<ParkingDetailsViewModel>()
-            ParkingDetailsScreen(
-                viewModel = viewModel,
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToBooking = { parkingId ->
-                    navController.navigate(NavRoute.BookingConfirmation)
-                }
-            )
-        }
+//        composable<NavRoute.Notifications> {
+//            val viewModel = koinViewModel<NotificationsViewModel>()
+//            NotificationsScreen(
+//                viewModel = viewModel,
+//                onBack = { navController.popBackStack() }
+//            )
+//        }
+//        composable<NavRoute.ParkingDetails> {
+//            val viewModel = koinViewModel<ParkingDetailsViewModel>()
+//            ParkingDetailsScreen(
+//                viewModel = viewModel,
+//                onNavigateBack = { navController.popBackStack() },
+//                onNavigateToBooking = { parkingId ->
+//                    navController.navigate(NavRoute.BookingConfirmation)
+//                }
+//            )
+//        }
         
-        composable<NavRoute.BookingConfirmation> {
-            val viewModel = koinViewModel<BookingConfirmationViewModel>()
-            BookingConfirmationScreen(
-                viewModel = viewModel,
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
+//        composable<NavRoute.BookingConfirmation> {
+//            val viewModel = koinViewModel<BookingConfirmationViewModel>()
+//            BookingConfirmationScreen(
+//                viewModel = viewModel,
+//                onNavigateBack = { navController.popBackStack() }
+//            )
+//        }
     }
 }

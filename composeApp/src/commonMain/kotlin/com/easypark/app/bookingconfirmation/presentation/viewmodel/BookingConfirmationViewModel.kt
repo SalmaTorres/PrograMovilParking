@@ -1,10 +1,7 @@
 package com.easypark.app.bookingconfirmation.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-<<<<<<< HEAD
 
-class BookingConfirmationViewModel : ViewModel() {
-=======
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.bookingconfirmation.domain.usecase.GetBookingConfirmationUseCase
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEvent
@@ -44,5 +41,4 @@ class BookingConfirmationViewModel(
             BookingConfirmationEvent.OnConfirmClick -> {}
         }
     }
->>>>>>> origin/Carlita
 }

@@ -5,7 +5,11 @@ data class RegisterUIState(
     val email: String = "",
     val phone: String = "",
     val password: String = "",
-    val role: String = "CONDUCTOR",
+    val role: String = "driver",
     val isLoading: Boolean = false,
-    val error: String? = null
+    val isNameError: Boolean = false,
+    val isEmailError: Boolean = false,
+    val isPhoneError: Boolean = false,
+    val isPasswordError: Boolean = false,
+
 )
