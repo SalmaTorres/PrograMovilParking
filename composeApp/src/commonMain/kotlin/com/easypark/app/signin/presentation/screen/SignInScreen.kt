@@ -33,7 +33,7 @@ fun SignInScreen(
                 SignInEffect.NavigateToHome -> onNavigateHome()
                 SignInEffect.NavigateToRegister -> onNavigateRegister()
                 is SignInEffect.ShowError -> {
-                    println(effect.message) // simple por ahora
+                    println(effect.message)
                 }
             }
         }
@@ -56,7 +56,6 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 🔹 EMAIL
         Text("Correo")
         TextField(
             value = state.email,
@@ -69,7 +68,6 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔹 PASSWORD
         Text("Contraseña")
         TextField(
             value = state.password,
@@ -83,7 +81,6 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 🔹 LOGIN
         Button(
             onClick = {
                 viewModel.onEvent(SignInEvent.OnLoginClick)
@@ -102,7 +99,6 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔹 REGISTER
         OutlinedButton(
             onClick = {
                 viewModel.onEvent(SignInEvent.OnRegisterClick)

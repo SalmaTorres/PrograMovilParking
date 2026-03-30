@@ -40,7 +40,6 @@ fun App() {
 
         Scaffold(
             topBar = {
-                // Ejemplo de Cabecera Universal
                 ParkHeader(
                     title = "Catálogo de Componentes",
                     onBackClick = { /* Acción volver */ },
@@ -48,7 +47,6 @@ fun App() {
                 )
             },
             bottomBar = {
-                // Aquí pueden probar el Footer de Conductor o Dueño
                 Column {
                     Text("Footer Conductor:", modifier = Modifier.padding(8.dp))
                     DriverFooter(currentScreen = currentTab, onNavigate = { currentTab = it })
@@ -64,7 +62,6 @@ fun App() {
             if (isLoading) {
                 ParkLoading()
 
-                // Un pequeño timer para quitar el cargador a los 2 segundos (solo para pruebas)
                 LaunchedEffect(Unit) {
                     kotlinx.coroutines.delay(2000)
                     isLoading = false
@@ -86,7 +83,6 @@ fun App() {
 
                 Spacer(Modifier.height(24.dp))
 
-                // SECCIÓN DE BOTONES
                 Text("Botones (ParkButton)", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 ParkButton(text = "Botón Principal", onClick = {})
@@ -100,7 +96,6 @@ fun App() {
 
                 Spacer(Modifier.height(24.dp))
 
-                // SECCIÓN DE INPUTS
                 Text("Inputs (ParkTextField)", style = MaterialTheme.typography.titleMedium)
                 var textValue by remember { mutableStateOf("") }
                 ParkTextField(
@@ -108,7 +103,7 @@ fun App() {
                     onValueChange = { textValue = it },
                     label = "Nombre de Usuario",
                     placeholder = "Ej: Juan Pérez",
-                    // leadingImage = Res.drawable.ic_user (Si tienes la imagen)
+                    // leadingImage = Res.drawable.ic_user
                 )
                 ParkTextField(
                     value = "",
@@ -120,7 +115,6 @@ fun App() {
 
                 Spacer(Modifier.height(24.dp))
 
-                // 3. SECCIÓN DE COLORES
                 Text("Paleta de Colores", style = MaterialTheme.typography.titleMedium)
                 Row(Modifier.fillMaxWidth().padding(top = 8.dp)) {
                     ColorBox(Color(0xFF2D7DED), "ParkBlue")

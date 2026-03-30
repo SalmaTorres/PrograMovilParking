@@ -2,13 +2,15 @@ package com.easypark.app.signin.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.easypark.app.signin.domain.usecase.DoLoginUseCase
 import com.easypark.app.signin.presentation.state.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class SignInViewModel : ViewModel() {
-
+class SignInViewModel(
+    private val useCase: DoLoginUseCase
+) : ViewModel(){
     private val _state = MutableStateFlow(SignInUIState())
     val state = _state.asStateFlow()
 
@@ -39,10 +41,10 @@ class SignInViewModel : ViewModel() {
     private fun login() {
         val current = _state.value
 
-        val isValid = current.email.isNotBlank() && current.password.length >= 6
-
         viewModelScope.launch {
-            if (isValid) {
+            val result = useCase(current.email, current.password)
+
+            if (result) {
                 _effect.send(SignInEffect.NavigateToHome)
             } else {
                 _effect.send(SignInEffect.ShowError("Datos inválidos"))
