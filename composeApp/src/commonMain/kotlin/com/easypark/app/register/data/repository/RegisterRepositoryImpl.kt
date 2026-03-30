@@ -1,17 +1,19 @@
 package com.easypark.app.register.data.repository
 
-import com.easypark.app.register.domain.model.RegisterModel
 import com.easypark.app.register.domain.repository.RegisterRepository
 
 class RegisterRepositoryImpl : RegisterRepository {
 
-    override suspend fun register(data: RegisterModel): Boolean {
+    override suspend fun register(
+        name: String, email: String, phone: String, password: String, role: String
+    ): Boolean {
+        // Simulamos validaciones de "Base de Datos" (Mock)
+        if (name.length < 3) return false
+        if (!email.contains("@")) return false
+        if (phone.length < 7) return false
+        if (password.length < 6) return false
 
-        if (data.name.isBlank()) return false
-        if (data.email.isBlank()) return false
-        if (data.phone.isBlank()) return false
-        if (data.password.length < 6) return false
-
+        // Si todo está bien, simulamos que el registro fue exitoso
         return true
     }
 }

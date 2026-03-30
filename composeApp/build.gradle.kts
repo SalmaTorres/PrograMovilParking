@@ -30,6 +30,14 @@ kotlin {
     }
     
     sourceSets {
+        val androidMain by getting {
+            dependencies {
+                // Librería oficial de Google Maps para Compose
+                implementation("com.google.maps.android:maps-compose:4.4.1")
+                // Servicios de Google Play para Mapas
+                implementation("com.google.android.gms:play-services-maps:18.2.0")
+            }
+        }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
@@ -90,4 +98,5 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.sentry.android)
     debugImplementation(libs.compose.uiTooling)
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

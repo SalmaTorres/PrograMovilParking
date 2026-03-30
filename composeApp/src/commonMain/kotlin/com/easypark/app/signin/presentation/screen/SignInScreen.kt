@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
+import com.easypark.app.shared.domain.model.UserType
 import com.easypark.app.shared.presentation.composable.ParkButton
 import com.easypark.app.shared.presentation.composable.ParkTextField
 import com.easypark.app.signin.presentation.state.*
@@ -31,7 +32,11 @@ fun SignInScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is SignInEffect.NavigateToHome -> {
-                    TODO()
+                    if (effect.userType == UserType.OWNER) {
+                        navController.navigate("home_owner") // O la ruta que tengas
+                    } else {
+                        navController.navigate("home_driver")
+                    }
                 }
                 is SignInEffect.NavigateToRegister -> {
                     navController.navigate(NavRoute.Register)

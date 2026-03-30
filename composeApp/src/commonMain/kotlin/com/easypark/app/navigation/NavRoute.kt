@@ -9,6 +9,12 @@ sealed class NavRoute {
     @Serializable
     object  Register: NavRoute()
 
+    @Serializable
+    object RegisterVehicle: NavRoute()
+
+    @Serializable
+    object RegisterParking: NavRoute()
+
 //    @Serializable
 //    data object ParkingDetails: NavRoute()
 //

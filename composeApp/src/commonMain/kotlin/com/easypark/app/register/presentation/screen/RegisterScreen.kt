@@ -35,8 +35,15 @@ fun RegisterScreen(
                 RegisterEffect.NavigateToLogin -> {
                     navController.navigate(NavRoute.SignIn)
                 }
-                RegisterEffect.NavigateToNext -> TODO()
-                is RegisterEffect.ShowError -> println(effect.message)
+                RegisterEffect.NavigateToRegisterVehicle -> {
+                    navController.navigate(NavRoute.RegisterVehicle)
+                }
+                RegisterEffect.NavigateToRegisterParking -> {
+                    navController.navigate(NavRoute.RegisterParking)
+                }
+                is RegisterEffect.ShowError -> {
+                    println("Error: ${effect.message}")
+                }
             }
         }
     }

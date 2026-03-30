@@ -1,7 +1,10 @@
 package com.easypark.app.signin.domain.repository
 
-interface AuthenticationRepository {
+import com.easypark.app.shared.domain.model.User
+import com.easypark.app.shared.domain.model.UserType
 
-    suspend fun login(email: String, password: String): Boolean
+interface AuthenticationRepository {
+    suspend fun login(email: String, password: String): UserType?
+    suspend fun register(email: String, pass: String, type: UserType): User?
 
 }

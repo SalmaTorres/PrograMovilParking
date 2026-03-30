@@ -22,6 +22,9 @@
         </activity>
         <meta-data android:name="io.sentry.dsn" android:value="https://679be237f8cee2500812c0a19b4a9a36@o4510864575692800.ingest.us.sentry.io/4510865563975680" />
         <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
     </application>
 
 </manifest>

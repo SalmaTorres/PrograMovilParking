@@ -42,13 +42,17 @@ class SignInViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = useCase.invoke(currentState.email, currentState.password)
+
+            // Aquí recibimos el UserType (OWNER, DRIVER o null)
+            val userTypeResult = useCase.invoke(currentState.email, currentState.password)
+
             _state.update { it.copy(isLoading = false) }
 
-            if (result) {
-                emit(SignInEffect.NavigateToHome)
+            if (userTypeResult != null) {
+                // Pasamos el tipo de usuario al efecto
+                emit(SignInEffect.NavigateToHome(userTypeResult))
             } else {
-                emit(SignInEffect.ShowError("Credenciales incorrectas"))
+                emit(SignInEffect.ShowError("Email o contraseña incorrectos"))
             }
         }
     }

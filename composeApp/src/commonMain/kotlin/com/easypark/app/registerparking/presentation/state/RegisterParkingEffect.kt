@@ -1,4 +1,9 @@
 package com.easypark.app.registerparking.presentation.state
 
-interface RegisterParkingEffect {
+sealed interface RegisterParkingEffect {
+    object NavigateBack : RegisterParkingEffect
+    object NavigateToSuccess : RegisterParkingEffect
+    data class ShowToast(
+        val message: String
+    ) : RegisterParkingEffect
 }

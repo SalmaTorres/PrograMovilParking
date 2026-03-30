@@ -29,6 +29,8 @@ fun AppNavHost() {
             RegisterScreen(navController)
         }
 
+
+
 //        composable<NavRoute.Notifications> {
 //            val viewModel = koinViewModel<NotificationsViewModel>()
 //            NotificationsScreen(

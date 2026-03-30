@@ -47,8 +47,11 @@ class RegisterViewModel(
         }
     }
 
+    // RegisterViewModel.kt
     private fun register() {
         val current = _state.value
+
+        // Validaciones de UI
         if (current.name.isEmpty() || current.email.isEmpty() || current.password.isEmpty() || current.phone.isEmpty()) {
             _state.update { it.copy(
                 isEmailError = it.email.isEmpty(),
@@ -61,13 +64,21 @@ class RegisterViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = useCase.invoke(current.name, current.email, current.phone, current.password, current.role)
+
+            val result = useCase.invoke(
+                current.name, current.email, current.phone, current.password, current.role
+            )
+
             _state.update { it.copy(isLoading = false) }
 
             if (result) {
-                emit(RegisterEffect.NavigateToNext)
+                when (current.role) {
+                    "CONDUCTOR" -> emit(RegisterEffect.NavigateToRegisterVehicle)
+                    "DUENO" -> emit(RegisterEffect.NavigateToRegisterParking)
+                    else -> emit(RegisterEffect.ShowError("Rol no identificado"))
+                }
             } else {
-                emit(RegisterEffect.ShowError("Error al registrar usuario"))
+                emit(RegisterEffect.ShowError("Error al registrar: verifique los datos"))
             }
         }
     }
