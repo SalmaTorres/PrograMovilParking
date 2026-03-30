@@ -1,4 +1,5 @@
 package com.easypark.app.parkingdetails.presentation.state
 
-interface ParkingDetailsEffect {
+sealed interface ParkingDetailsEffect {
+    object NavigateBack : ParkingDetailsEffect
 }

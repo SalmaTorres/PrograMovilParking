@@ -16,7 +16,11 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AppNavHost() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = NavRoute.Notifications) {
+    NavHost(
+        navController = navController,
+        startDestination = NavRoute.ParkingDetails
+    ) {
+
         composable<NavRoute.Notifications> {
             val viewModel = koinViewModel<NotificationsViewModel>()
             NotificationsScreen(
@@ -24,12 +28,14 @@ fun AppNavHost() {
                 onBack = { navController.popBackStack() }
             )
         }
-
         composable<NavRoute.ParkingDetails> {
             val viewModel = koinViewModel<ParkingDetailsViewModel>()
             ParkingDetailsScreen(
                 viewModel = viewModel,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToBooking = { parkingId ->
+                    navController.navigate(NavRoute.BookingConfirmation)
+                }
             )
         }
         
@@ -39,18 +45,6 @@ fun AppNavHost() {
                 viewModel = viewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
-        }
-
-        composable<NavRoute.Profile> {
-        }
-
-        composable<NavRoute.ProfileEdit> {
-        }
-        
-        composable<NavRoute.Github> {
-        }
-
-        composable<NavRoute.Movies> {
         }
     }
 }

@@ -22,4 +22,20 @@
     <string name="nav_mis_reservas">Mis Reservas</string>
     <string name="nav_reservas">Reservas</string>
     <string name="nav_espacios">Espacios</string>
+    <string name="parking_details_title">Detalles del parqueo</string>
+    <string name="reviews">reseñas</string>
+    <string name="rate_button">Calificar</string>
+    <string name="view_map_button">Ver mapa</string>
+    <string name="available">Disponible</string>
+    <string name="not_available">No disponible</string>
+    <string name="reserve_button">Reservar</string>
+    <string name="booking_confirmation_title">Confirma tu Reserva</string>
+    <string name="location_label">Ubicación</string>
+    <string name="space_label">Espacio</string>
+    <string name="duration_label">Duración</string>
+    <string name="total_cost_label">Costo Total</string>
+    <string name="payment_method_title">Selecciona tu método de pago</string>
+    <string name="cash_payment">Efectivo</string>
+    <string name="qr_payment">Pagar con QR</string>
+    <string name="confirm_booking_button">Confirmar reserva</string>
 </resources>
