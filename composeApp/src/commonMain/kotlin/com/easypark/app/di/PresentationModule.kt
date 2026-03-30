@@ -4,6 +4,7 @@ import com.easypark.app.bookingconfirmation.presentation.viewmodel.BookingConfir
 import com.easypark.app.notifications.presentation.viewmodel.NotificationsViewModel
 import com.easypark.app.parkingdetails.presentation.viewmodel.ParkingDetailsViewModel
 import com.easypark.app.register.presentation.viewmodel.RegisterViewModel
+import com.easypark.app.registerparking.presentation.viewmodel.RegisterParkingViewModel
 import com.easypark.app.signin.domain.model.LoginModel
 import com.easypark.app.signin.domain.repository.AuthenticationRepository
 import com.easypark.app.signin.presentation.screen.SignInScreen
@@ -21,5 +22,5 @@ val presentationModule = module {
     viewModelOf(::ParkingDetailsViewModel)
     viewModelOf(::BookingConfirmationViewModel)
     viewModelOf(::SpaceManagementViewModel)
-
+    viewModelOf(::RegisterParkingViewModel)
 }

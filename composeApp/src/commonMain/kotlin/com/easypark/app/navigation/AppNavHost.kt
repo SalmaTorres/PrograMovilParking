@@ -11,6 +11,7 @@ import com.easypark.app.notifications.presentation.viewmodel.NotificationsViewMo
 import com.easypark.app.parkingdetails.presentation.screen.ParkingDetailsScreen
 import com.easypark.app.parkingdetails.presentation.viewmodel.ParkingDetailsViewModel
 import com.easypark.app.register.presentation.screen.RegisterScreen
+import com.easypark.app.registerparking.presentation.screen.RegisterParkingScreen
 import com.easypark.app.signin.presentation.screen.SignInScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -27,6 +28,10 @@ fun AppNavHost() {
         }
         composable<NavRoute.Register> {
             RegisterScreen(navController)
+        }
+
+        composable<NavRoute.RegisterParking> {
+            RegisterParkingScreen(navController)
         }
 
 

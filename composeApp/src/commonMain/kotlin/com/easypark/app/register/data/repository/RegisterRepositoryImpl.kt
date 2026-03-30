@@ -13,7 +13,6 @@ class RegisterRepositoryImpl : RegisterRepository {
         if (phone.length < 7) return false
         if (password.length < 6) return false
 
-        // Si todo está bien, simulamos que el registro fue exitoso
         return true
     }
 }

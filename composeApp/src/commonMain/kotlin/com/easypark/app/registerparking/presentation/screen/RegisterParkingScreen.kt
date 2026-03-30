@@ -1,6 +1,5 @@
 package com.easypark.app.registerparking.presentation.screen
 
-import RegisterParkingViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,27 +11,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.easypark.app.navigation.NavRoute
 import com.easypark.app.registerparking.presentation.composable.ParkingMapSection
+import com.easypark.app.registerparking.presentation.state.RegisterParkingEffect
 import com.easypark.app.registerparking.presentation.state.RegisterParkingEvent
+import com.easypark.app.registerparking.presentation.viewmodel.RegisterParkingViewModel
 import com.easypark.app.shared.presentation.composable.*
 import com.easypark.app.shared.ui.*
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RegisterParkingScreen(
-    viewModel: RegisterParkingViewModel,
-    onNavigateBack: () -> Unit,
-    onSuccess: () -> Unit
+    navController: NavHostController,
+    viewModel: RegisterParkingViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()
 
-    // Escuchar efectos (Navegación)
     LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
-                RegisterParkingEffect.NavigateBack -> onNavigateBack()
-                RegisterParkingEffect.NavigateToSuccess -> onSuccess()
-                is RegisterParkingEffect.ShowToast -> { /* Mostrar snackbar o toast */ }
+                RegisterParkingEffect.NavigateBack -> {
+                    navController.navigate(NavRoute.Register)
+                }
+                RegisterParkingEffect.NavigateToSuccess -> {
+                    // TODO:  
+                }
+                is RegisterParkingEffect.ShowError -> {
+                    println("Error: ${effect.message}")
+                }
             }
         }
     }

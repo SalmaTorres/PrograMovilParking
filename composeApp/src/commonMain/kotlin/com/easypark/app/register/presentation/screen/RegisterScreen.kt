@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.register.presentation.state.*
 import com.easypark.app.register.presentation.viewmodel.RegisterViewModel
+import com.easypark.app.shared.domain.model.UserType
 import com.easypark.app.shared.presentation.composable.ParkButton
 import com.easypark.app.shared.presentation.composable.ParkTextField
 import kotlinx.coroutines.flow.collectLatest
@@ -36,7 +37,7 @@ fun RegisterScreen(
                     navController.navigate(NavRoute.SignIn)
                 }
                 RegisterEffect.NavigateToRegisterVehicle -> {
-                    navController.navigate(NavRoute.RegisterVehicle)
+                    navController.navigate(NavRoute.RegisterParking)
                 }
                 RegisterEffect.NavigateToRegisterParking -> {
                     navController.navigate(NavRoute.RegisterParking)
@@ -134,23 +135,27 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
+                // Botón Conductor
+                val isConductor = state.role == UserType.DRIVER
                 Button(
-                    onClick = {
-                        viewModel.onEvent(RegisterEvent.OnRoleSelected("CONDUCTOR"))
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = { viewModel.onEvent(RegisterEvent.OnRoleSelected(UserType.DRIVER)) },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isConductor) MaterialTheme.colorScheme.primary else Color.LightGray
+                    )
                 ) {
-                    Text("Conductor")
+                    Text("Conductor", color = if (isConductor) Color.White else Color.Black)
                 }
 
-                OutlinedButton(
-                    onClick = {
-                        viewModel.onEvent(RegisterEvent.OnRoleSelected("DUENO"))
-                    },
-                    modifier = Modifier.weight(1f)
+                val isDueno = state.role == UserType.OWNER
+                Button(
+                    onClick = { viewModel.onEvent(RegisterEvent.OnRoleSelected(UserType.OWNER)) },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isDueno) MaterialTheme.colorScheme.primary else Color.LightGray
+                    )
                 ) {
-                    Text("Dueño")
+                    Text("Dueño", color = if (isDueno) Color.White else Color.Black)
                 }
             }
 
