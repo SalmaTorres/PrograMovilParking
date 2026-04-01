@@ -30,7 +30,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    viewModel: RegisterViewModel = koinViewModel(),
+    viewModel: RegisterViewModel = koinViewModel()
 ) {
 
     val state by viewModel.state.collectAsState()

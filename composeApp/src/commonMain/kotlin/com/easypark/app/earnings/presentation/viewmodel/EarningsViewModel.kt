@@ -1,4 +1,8 @@
 package com.easypark.app.earnings.presentation.viewmodel
 
-class EarningsViewModel {
+import androidx.lifecycle.ViewModel
+
+class EarningsViewModel (
+
+): ViewModel() {
 }

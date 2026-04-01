@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.easypark.app.earnings.presentation.screen.EarningsScreen
 import com.easypark.app.notifications.presentation.screen.NotificationsScreen
 import com.easypark.app.register.presentation.screen.RegisterScreen
 import com.easypark.app.registerparking.presentation.screen.RegisterParkingScreen
+import com.easypark.app.reservationhistory.presentation.screen.ReservationHistoryScreen
 import com.easypark.app.signin.presentation.screen.SignInScreen
 import com.easypark.app.spacemanagement.presentation.screen.SpaceManagementScreen
 
@@ -38,6 +40,13 @@ fun AppNavHost() {
             NotificationsScreen(navController)
         }
 
+        composable<NavRoute.Earnings> {
+            EarningsScreen(navController)
+        }
+
+        composable<NavRoute.ReservationHistory> {
+            ReservationHistoryScreen(navController)
+        }
 
 
 //        composable<NavRoute.ParkingDetails> {

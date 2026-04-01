@@ -20,4 +20,10 @@ sealed class NavRoute {
 
     @Serializable
     object Notifications: NavRoute()
+
+    @Serializable
+    object Earnings: NavRoute()
+
+    @Serializable
+    object ReservationHistory: NavRoute()
 }

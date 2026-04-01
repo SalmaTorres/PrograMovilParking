@@ -1,4 +1,8 @@
 package com.easypark.app.reservationhistory.presentation.viewmodel
 
-class ReservationHistoryViewModel {
+import androidx.lifecycle.ViewModel
+
+class ReservationHistoryViewModel  (
+
+): ViewModel() {
 }

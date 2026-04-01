@@ -1,7 +1,9 @@
 package com.easypark.app.di
 
+import com.easypark.app.earnings.presentation.viewmodel.EarningsViewModel
 import com.easypark.app.notifications.presentation.viewmodel.NotificationsViewModel
 import com.easypark.app.register.presentation.viewmodel.RegisterViewModel
+import com.easypark.app.reservationhistory.presentation.viewmodel.ReservationHistoryViewModel
 import com.easypark.app.signin.presentation.viewmodel.SignInViewModel
 import com.easypark.app.spacemanagement.presentation.viewmodel.SpaceManagementViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -12,4 +14,6 @@ val presentationModule = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::SpaceManagementViewModel)
     viewModelOf(::NotificationsViewModel)
+    viewModelOf(::EarningsViewModel)
+    viewModelOf(::ReservationHistoryViewModel)
 }

@@ -103,14 +103,14 @@ fun OwnerFooter(
             FooterItem(
                 label = "Reservas",
                 imageRes = Res.drawable.ic_calendar,
-                isSelected = currentRoute is NavRoute.SpaceManagement,
-                onClick = { onNavigate(NavRoute.SpaceManagement) }
+                isSelected = currentRoute is NavRoute.ReservationHistory,
+                onClick = { onNavigate(NavRoute.ReservationHistory) }
             )
             FooterItem(
                 label = "Inicio",
                 imageRes = Res.drawable.ic_home,
-                isSelected = currentRoute is NavRoute.SpaceManagement,
-                onClick = { onNavigate(NavRoute.SpaceManagement) }
+                isSelected = currentRoute is NavRoute.Earnings,
+                onClick = { onNavigate(NavRoute.Earnings) }
             )
             FooterItem(
                 label = "Espacios",
