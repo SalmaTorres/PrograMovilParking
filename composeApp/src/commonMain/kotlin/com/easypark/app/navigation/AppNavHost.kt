@@ -5,10 +5,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.easypark.app.earnings.presentation.screen.EarningsScreen
+import com.easypark.app.findparking.presentation.screen.FindParkingScreen
 import com.easypark.app.notifications.presentation.screen.NotificationsScreen
 import com.easypark.app.register.presentation.screen.RegisterScreen
 import com.easypark.app.registerparking.presentation.screen.RegisterParkingScreen
 import com.easypark.app.reservationhistory.presentation.screen.ReservationHistoryScreen
+import com.easypark.app.reservationsummary.presentation.screen.ReservationSummaryScreen
 import com.easypark.app.signin.presentation.screen.SignInScreen
 import com.easypark.app.spacemanagement.presentation.screen.SpaceManagementScreen
 
@@ -48,6 +50,13 @@ fun AppNavHost() {
             ReservationHistoryScreen(navController)
         }
 
+        composable<NavRoute.FindParking> {
+            FindParkingScreen(navController)
+        }
+
+        composable<NavRoute.ReservationSummary> {
+            ReservationSummaryScreen(navController)
+        }
 
 //        composable<NavRoute.ParkingDetails> {
 //            val viewModel = koinViewModel<ParkingDetailsViewModel>()

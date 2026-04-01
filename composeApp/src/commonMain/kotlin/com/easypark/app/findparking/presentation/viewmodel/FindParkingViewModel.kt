@@ -1,4 +1,8 @@
 package com.easypark.app.findparking.presentation.viewmodel
 
-class FindParkingViewModel {
+import androidx.lifecycle.ViewModel
+
+class FindParkingViewModel (
+
+): ViewModel() {
 }

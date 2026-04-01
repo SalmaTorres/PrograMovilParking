@@ -17,7 +17,7 @@ import com.easypark.app.signin.presentation.viewmodel.SignInViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.easypark_logo // 👈 debes crear esto
+import kotlinproject.composeapp.generated.resources.easypark_logo
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -36,9 +36,10 @@ fun SignInScreen(
                         navController.navigate(NavRoute.SpaceManagement) {
                             popUpTo(NavRoute.SignIn) { inclusive = true }
                         }
-                    } else {
-                        // Si es conductor, lo envías a su pantalla (cuando la tengas)
-                        // navController.navigate(NavRoute.HomeDriver)
+                    } else if (effect.userType == UserType.DRIVER) {
+                        navController.navigate(NavRoute.FindParking) {
+                            popUpTo(NavRoute.SignIn) { inclusive = true }
+                        }
                     }
                 }
                 is SignInEffect.NavigateToRegister -> {

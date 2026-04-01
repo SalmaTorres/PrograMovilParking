@@ -1,4 +1,8 @@
 package com.easypark.app.reservationsummary.presentation.viewmodel
 
-class ReservationSummaryViewModel {
+import androidx.lifecycle.ViewModel
+
+class ReservationSummaryViewModel(
+
+): ViewModel() {
 }

@@ -61,8 +61,8 @@ private fun FooterItem(
 // --- FOOTER CONDUCTOR ---
 @Composable
 fun DriverFooter(
-    currentScreen: String,
-    onNavigate: (String) -> Unit
+    currentRoute: NavRoute,
+    onNavigate: (NavRoute) -> Unit
 ) {
     Surface(color = Color.White) {
         Row(
@@ -74,14 +74,14 @@ fun DriverFooter(
             FooterItem(
                 label = "Inicio",
                 imageRes = Res.drawable.ic_home,
-                isSelected = currentScreen == "home_driver",
-                onClick = { onNavigate("home_driver") }
+                isSelected = currentRoute is NavRoute.FindParking,
+                onClick = { onNavigate(NavRoute.FindParking) }
             )
             FooterItem(
                 label = "Mis Reservas",
                 imageRes = Res.drawable.ic_calendar,
-                isSelected = currentScreen == "reservas_driver",
-                onClick = { onNavigate("reservas_driver") }
+                isSelected = currentRoute is NavRoute.ReservationSummary,
+                onClick = { onNavigate(NavRoute.ReservationSummary) }
             )
         }
     }
