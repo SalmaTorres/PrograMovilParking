@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.easypark.app.navigation.NavRoute
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEffect
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEvent
 import com.easypark.app.shared.presentation.composable.ParkButton
@@ -40,8 +41,7 @@ fun ParkingDetailsScreen(
             when (effect) {
                 ParkingDetailsEffect.NavigateBack -> navController.popBackStack()
                 is ParkingDetailsEffect.NavigateToBooking -> {
-                    // Aquí navegas a la confirmación usando el ID
-                    // navController.navigate(NavRoute.ReservationSummary(effect.id))
+                    navController.navigate(NavRoute.BookingConfirmation(effect.id))
                 }
                 is ParkingDetailsEffect.ShowError -> {
                     println("Error: ${effect.message}")

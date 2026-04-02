@@ -1,5 +1,6 @@
 package com.easypark.app.di
 
+import com.easypark.app.bookingconfirmation.presentation.viewmodel.BookingConfirmationViewModel
 import com.easypark.app.earnings.presentation.viewmodel.EarningsViewModel
 import com.easypark.app.findparking.presentation.viewmodel.FindParkingViewModel
 import com.easypark.app.notifications.presentation.viewmodel.NotificationsViewModel
@@ -25,9 +26,9 @@ val presentationModule = module {
     viewModelOf(::FindParkingViewModel)
     viewModelOf(::ReservationSummaryViewModel)
     viewModel { (id: String) ->
-        ParkingDetailsViewModel(
-            parkingId = id,
-            getParkingDetailUseCase = get()
-        )
+        ParkingDetailsViewModel(parkingId = id, getParkingDetailUseCase = get())
+    }
+    viewModel { (id: String) ->
+        BookingConfirmationViewModel(parkingId = id, getBookingConfirmationUseCase = get())
     }
 }

@@ -1,5 +1,6 @@
 package com.easypark.app.di
 
+import com.easypark.app.bookingconfirmation.domain.usecase.GetBookingConfirmationUseCase
 import com.easypark.app.findparking.domain.usecase.GetParkingsUseCase
 import com.easypark.app.notifications.domain.usecase.GetNotificationsUseCase
 import com.easypark.app.parkingdetails.domain.usecase.GetParkingDetailUseCase
@@ -17,4 +18,5 @@ val domainModule = module {
     factory { GetNotificationsUseCase(get()) }
     factory { GetParkingsUseCase(get()) }
     factory { GetParkingDetailUseCase(get()) }
+    factory { GetBookingConfirmationUseCase(get()) }
 }

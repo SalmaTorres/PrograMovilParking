@@ -1,5 +1,6 @@
 package com.easypark.app.shared.data.repository
 
+import com.easypark.app.bookingconfirmation.domain.model.BookingConfirmation
 import com.easypark.app.parkingdetails.domain.model.ParkingDetail
 import com.easypark.app.shared.domain.model.ParkingModel
 import com.easypark.app.shared.domain.repository.ParkingRepository
@@ -37,4 +38,15 @@ class ParkingRepositoryImpl : ParkingRepository {
         )
     }
     override suspend fun registerParking(parking: ParkingModel): Boolean = true
+
+    override suspend fun getBookingConfirmation(id: String): BookingConfirmation {
+        val parking = mockList.find { it.id == id }
+        return BookingConfirmation(
+            locationName = parking?.name ?: "Estacionamiento",
+            address = parking?.address ?: "Dirección",
+            spaceIdentifier = "A - ${id}12", // Simulamos un espacio dinámico
+            durationText = "2 Horas",
+            totalCostText = "Bs ${(parking?.pricePerHour ?: 0.0) * 2}"
+        )
+    }
 }

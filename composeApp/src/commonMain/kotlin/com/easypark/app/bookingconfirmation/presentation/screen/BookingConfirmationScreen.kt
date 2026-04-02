@@ -3,9 +3,10 @@ package com.easypark.app.bookingconfirmation.presentation.screen
 import androidx.compose.runtime.Composable
 import com.easypark.app.bookingconfirmation.presentation.viewmodel.BookingConfirmationViewModel
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,26 +16,44 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.easypark.app.bookingconfirmation.presentation.composable.BookingRow
+import com.easypark.app.bookingconfirmation.presentation.composable.PaymentOption
+import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEffect
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEvent
 import com.easypark.app.bookingconfirmation.presentation.state.PaymentMethod
 import com.easypark.app.shared.presentation.composable.ParkButton
 import com.easypark.app.shared.presentation.composable.ParkHeader
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun BookingConfirmationScreen(
-    viewModel: BookingConfirmationViewModel,
-    onNavigateBack: () -> Unit
+    navController: NavHostController,
+    viewModel: BookingConfirmationViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                BookingConfirmationEffect.NavigateBack -> navController.popBackStack()
+                BookingConfirmationEffect.NavigateToSuccess -> {
+                    // Navegar a éxito o historial (limpiando el stack si es necesario)
+                    println("Reserva Exitosa")
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             ParkHeader(
                 title = stringResource(Res.string.booking_confirmation_title),
-                onBackClick = onNavigateBack,
+                onBackClick = { viewModel.onEvent(BookingConfirmationEvent.OnBackClick) },
                 onNotificationClick = null
             )
         },
@@ -43,126 +62,89 @@ fun BookingConfirmationScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .navigationBarsPadding()
                         .padding(16.dp)
                 ) {
                     ParkButton(
                         text = stringResource(Res.string.confirm_booking_button),
-                        onClick = { viewModel.onEvent(BookingConfirmationEvent.OnConfirmClick) },
-                        isSecondary = false
+                        onClick = { viewModel.onEvent(BookingConfirmationEvent.OnConfirmClick) }
                     )
                 }
             }
         }
-    ) { paddingValues ->
-        Box(
+    ) {
+        paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (state.bookingConfirmation != null) {
-                val detail = state.bookingConfirmation!!
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    BookingRow(label = stringResource(Res.string.location_label), value = "${detail.locationName}, ${detail.address}")
-                    HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-
-                    BookingRow(label = stringResource(Res.string.space_label), value = detail.spaceIdentifier)
-                    HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-
-                    BookingRow(label = stringResource(Res.string.duration_label), value = detail.durationText)
-                    HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = stringResource(Res.string.total_cost_label), color = Color.Gray)
-                        Text(text = detail.totalCostText, color = Color.Blue, fontWeight = FontWeight.Bold)
-                    }
-                    HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        text = stringResource(Res.string.payment_method_title),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Segmented Control
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFFE0E0E0)) // Light gray background
-                            .padding(4.dp)
-                    ) {
-                        PaymentOption(
-                            text = stringResource(Res.string.cash_payment),
-                            isSelected = state.selectedPaymentMethod == PaymentMethod.CASH,
-                            onClick = { viewModel.onEvent(BookingConfirmationEvent.OnPaymentMethodSelected(PaymentMethod.CASH)) },
-                            modifier = Modifier.weight(1f)
-                        )
-                        PaymentOption(
-                            text = stringResource(Res.string.qr_payment),
-                            isSelected = state.selectedPaymentMethod == PaymentMethod.QR,
-                            onClick = { viewModel.onEvent(BookingConfirmationEvent.OnPaymentMethodSelected(PaymentMethod.QR)) },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
                 }
+            }  else if (state.bookingConfirmation != null) {
+                val detail = state.bookingConfirmation!!
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                BookingRow(
+                    label = stringResource(Res.string.location_label),
+                    value = "${detail.locationName}, ${detail.address}"
+                )
+                HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+
+                BookingRow(label = stringResource(Res.string.space_label), value = detail.spaceIdentifier)
+                HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+
+                BookingRow(label = stringResource(Res.string.duration_label), value = detail.durationText)
+                HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = stringResource(Res.string.total_cost_label), color = Color.Gray)
+                    Text(text = detail.totalCostText, color = Color.Blue, fontWeight = FontWeight.Bold)
+                }
+                HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = stringResource(Res.string.payment_method_title),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFFE0E0E0))
+                        .padding(4.dp)
+                ) {
+                    PaymentOption(
+                        text = stringResource(Res.string.cash_payment),
+                        isSelected = state.selectedPaymentMethod == PaymentMethod.CASH,
+                        onClick = { viewModel.onEvent(BookingConfirmationEvent.OnPaymentMethodSelected(PaymentMethod.CASH)) },
+                        modifier = Modifier.weight(1f)
+                    )
+                    PaymentOption(
+                        text = stringResource(Res.string.qr_payment),
+                        isSelected = state.selectedPaymentMethod == PaymentMethod.QR,
+                        onClick = { viewModel.onEvent(BookingConfirmationEvent.OnPaymentMethodSelected(PaymentMethod.QR)) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
-    }
-}
-
-@Composable
-fun BookingRow(label: String, value: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(text = label, color = Color.Gray, modifier = Modifier.weight(1f))
-        Text(
-            text = value,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.weight(2f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Start
-        )
-    }
-}
-
-@Composable
-fun PaymentOption(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (isSelected) Color.White else Color.Transparent)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            color = if (isSelected) Color.Blue else Color.Black,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-        )
     }
 }

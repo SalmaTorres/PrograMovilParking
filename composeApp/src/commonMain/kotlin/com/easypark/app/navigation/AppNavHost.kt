@@ -5,6 +5,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.easypark.app.bookingconfirmation.presentation.screen.BookingConfirmationScreen
+import com.easypark.app.bookingconfirmation.presentation.viewmodel.BookingConfirmationViewModel
 import com.easypark.app.earnings.presentation.screen.EarningsScreen
 import com.easypark.app.findparking.presentation.screen.FindParkingScreen
 import com.easypark.app.notifications.presentation.screen.NotificationsScreen
@@ -65,7 +67,6 @@ fun AppNavHost() {
 
         composable<NavRoute.ParkingDetails> { backStackEntry ->
             val args = backStackEntry.toRoute<NavRoute.ParkingDetails>()
-
             val viewModel: ParkingDetailsViewModel = koinViewModel {
                 parametersOf(args.id)
             }
@@ -76,14 +77,16 @@ fun AppNavHost() {
             )
         }
 
+        composable<NavRoute.BookingConfirmation> { backStackEntry ->
+            val args = backStackEntry.toRoute<NavRoute.BookingConfirmation>()
+            val viewModel: BookingConfirmationViewModel = koinViewModel {
+                parametersOf(args.id)
+            }
 
-
-//        composable<NavRoute.BookingConfirmation> {
-//            val viewModel = koinViewModel<BookingConfirmationViewModel>()
-//            BookingConfirmationScreen(
-//                viewModel = viewModel,
-//                onNavigateBack = { navController.popBackStack() }
-//            )
-//        }
+            BookingConfirmationScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
     }
 }
