@@ -38,4 +38,10 @@
     <string name="cash_payment">Efectivo</string>
     <string name="qr_payment">Pagar con QR</string>
     <string name="confirm_booking_button">Confirmar reserva</string>
+    <string name="register_vehicle_title">Registra tu vehiculo</string>
+    <string name="vehicle_details">Vehicle Details</string>
+    <string name="vehicle_description">Please provide your vehicle information to get started.</string>
+    <string name="plate_hint">e.g. ABC-1234</string>
+    <string name="model_hint">e.g. Toyota Camry 2024</string>
+    <string name="color_hint">Select vehicle color</string>
 </resources>

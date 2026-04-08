@@ -4,6 +4,10 @@ data class RegisterVehicleUIState(
     val plate: String = "",
     val model: String = "",
     val color: String = "",
-    val isLoading: Boolean = false,
-    val error: String? = null
+
+    val isPlateError: Boolean = false,
+    val isModelError: Boolean = false,
+    val isColorError: Boolean = false,
+
+    val isLoading: Boolean = false
 )

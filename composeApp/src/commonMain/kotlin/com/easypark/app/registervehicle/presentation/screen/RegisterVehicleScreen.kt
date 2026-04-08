@@ -1,23 +1,19 @@
 package com.easypark.app.registervehicle.presentation.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.easypark.app.registervehicle.presentation.state.*
 import com.easypark.app.registervehicle.presentation.viewmodel.RegisterVehicleViewModel
+import com.easypark.app.shared.presentation.composable.*
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
-import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.car_image
+import org.jetbrains.compose.resources.stringResource
+import kotlinproject.composeapp.generated.resources.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterVehicleScreen(
     viewModel: RegisterVehicleViewModel,
@@ -28,31 +24,30 @@ fun RegisterVehicleScreen(
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest { effect ->
-            when (effect) {
+        viewModel.effect.collectLatest {
+            when (it) {
                 RegisterVehicleEffect.NavigateBack -> onBack()
                 RegisterVehicleEffect.NavigateNext -> onNext()
-                is RegisterVehicleEffect.ShowError -> println(effect.message)
+                is RegisterVehicleEffect.ShowError -> println(it.message)
             }
         }
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Registra tu vehiculo") }
+            ParkHeader(
+                title = stringResource(Res.string.register_vehicle_title),
+                onBackClick = { viewModel.onEvent(RegisterVehicleEvent.OnBackClick) }
             )
         },
         bottomBar = {
-            Button(
-                onClick = {
-                    viewModel.onEvent(RegisterVehicleEvent.OnSubmitClick)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text("Finalizar")
+            Box(Modifier.padding(16.dp)) {
+                ParkButton(
+                    text = stringResource(Res.string.finish),
+                    onClick = {
+                        viewModel.onEvent(RegisterVehicleEvent.OnSubmitClick)
+                    }
+                )
             }
         }
     ) { padding ->
@@ -63,60 +58,44 @@ fun RegisterVehicleScreen(
                 .padding(16.dp)
         ) {
 
-
-            Box(
+            Image(
+                painter = painterResource(Res.drawable.car_image),
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFFE3F2FD)) // azul claro
-            ) {
-
-                Image(
-                    painter = painterResource(Res.drawable.car_image),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp) // separa la imagen del borde
-                )
-            }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Vehicle Details", style = MaterialTheme.typography.titleLarge)
-            Text("Please provide your vehicle information to get started.")
+            Text(stringResource(Res.string.vehicle_details))
+            Text(stringResource(Res.string.vehicle_description))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextField(
+            ParkTextField(
                 value = state.plate,
                 onValueChange = {
                     viewModel.onEvent(RegisterVehicleEvent.OnPlateChange(it))
                 },
-                placeholder = { Text("e.g. ABC-1234") },
-                modifier = Modifier.fillMaxWidth()
+                placeholder = stringResource(Res.string.plate_hint),
+                isError = state.isPlateError
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            TextField(
+            ParkTextField(
                 value = state.model,
                 onValueChange = {
                     viewModel.onEvent(RegisterVehicleEvent.OnModelChange(it))
                 },
-                placeholder = { Text("e.g. Toyota Camry 2024") },
-                modifier = Modifier.fillMaxWidth()
+                placeholder = stringResource(Res.string.model_hint),
+                isError = state.isModelError
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            TextField(
+            ParkTextField(
                 value = state.color,
                 onValueChange = {
                     viewModel.onEvent(RegisterVehicleEvent.OnColorChange(it))
                 },
-                placeholder = { Text("Select vehicle color") },
-                modifier = Modifier.fillMaxWidth()
+                placeholder = stringResource(Res.string.color_hint),
+                isError = state.isColorError
             )
         }
     }
