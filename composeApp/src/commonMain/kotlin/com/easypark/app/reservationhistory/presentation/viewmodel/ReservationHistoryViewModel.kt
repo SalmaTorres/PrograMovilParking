@@ -6,38 +6,41 @@ import com.easypark.app.reservationhistory.domain.model.ReservationStatus
 import com.easypark.app.reservationhistory.domain.usecase.GetReservationHistoryUseCase
 import com.easypark.app.reservationhistory.presentation.state.ReservationHistoryUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ReservationHistoryViewModel(
     private val getReservationHistoryUseCase: GetReservationHistoryUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ReservationHistoryUiState())
-    val state: StateFlow<ReservationHistoryUiState> = _state.asStateFlow()
+    val state = _state.asStateFlow()
 
     init {
         loadReservations()
     }
 
     private fun loadReservations() {
-        getReservationHistoryUseCase()
-            .onEach { list ->
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    reservations = list
-                )
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, errorMessage = null) }
+            try {
+                val list = getReservationHistoryUseCase.execute()
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        reservations = list
+                    )
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = e.message ?: "Error desconocido"
+                    )
+                }
             }
-            .catch { e ->
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    errorMessage = e.message ?: "Error desconocido"
-                )
-            }
-            .launchIn(viewModelScope)
+        }
     }
 
     fun onQueryChanged(query: String) {
