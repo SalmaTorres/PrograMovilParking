@@ -1,10 +1,14 @@
 package com.easypark.app.registervehicle.presentation.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.easypark.app.registervehicle.presentation.state.*
 import com.easypark.app.registervehicle.presentation.viewmodel.RegisterVehicleViewModel
@@ -60,13 +64,22 @@ fun RegisterVehicleScreen(
         ) {
 
 
-            Image(
-                painter = painterResource(Res.drawable.car_image),
-                contentDescription = null,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-            )
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color(0xFFE3F2FD)) // azul claro
+            ) {
+
+                Image(
+                    painter = painterResource(Res.drawable.car_image),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp) // separa la imagen del borde
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
