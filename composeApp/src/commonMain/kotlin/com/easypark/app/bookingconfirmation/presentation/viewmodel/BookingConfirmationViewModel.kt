@@ -41,6 +41,12 @@ class BookingConfirmationViewModel(
             is BookingConfirmationEvent.OnPaymentMethodSelected -> {
                 _state.update { it.copy(selectedPaymentMethod = event.method) }
             }
+            is BookingConfirmationEvent.OnDurationChange -> {
+                _state.update { 
+                    val updatedBooking = it.bookingConfirmation?.copy(durationHours = event.hours)
+                    it.copy(bookingConfirmation = updatedBooking) 
+                }
+            }
             BookingConfirmationEvent.OnBackClick -> emit(BookingConfirmationEffect.NavigateBack)
             BookingConfirmationEvent.OnConfirmClick -> {
                 emit(BookingConfirmationEffect.NavigateToSuccess)

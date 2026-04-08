@@ -36,6 +36,9 @@ class ParkingDetailsViewModel(
                 }
             }
             ParkingDetailsEvent.OnLoadDetail -> loadParkingDetail()
+            is ParkingDetailsEvent.OnRate -> {
+                _state.update { it.copy(userRating = event.rating) }
+            }
         }
     }
 

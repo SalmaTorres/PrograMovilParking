@@ -45,8 +45,8 @@ class ParkingRepositoryImpl : ParkingRepository {
             locationName = parking?.name ?: "Estacionamiento",
             address = parking?.address ?: "Dirección",
             spaceIdentifier = "A - ${id}12", // Simulamos un espacio dinámico
-            durationText = "2 Horas",
-            totalCostText = "Bs ${(parking?.pricePerHour ?: 0.0) * 2}"
+            durationHours = 2,
+            pricePerHour = parking?.pricePerHour ?: 0.0
         )
     }
 }

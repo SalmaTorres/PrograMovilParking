@@ -4,5 +4,6 @@ import com.easypark.app.parkingdetails.domain.model.ParkingDetail
 
 data class ParkingDetailsUIState(
     val isLoading: Boolean = false,
-    val parkingDetail: ParkingDetail? = null
+    val parkingDetail: ParkingDetail? = null,
+    val userRating: Int = 0
 )

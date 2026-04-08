@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.easypark.app.bookingconfirmation.presentation.composable.BookingRow
 import com.easypark.app.bookingconfirmation.presentation.composable.PaymentOption
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEffect
@@ -32,7 +31,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun BookingConfirmationScreen(
-    navController: NavHostController,
+    onNavigateBack: () -> Unit,
+    onNavigateToSuccess: () -> Unit,
     viewModel: BookingConfirmationViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -40,10 +40,9 @@ fun BookingConfirmationScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                BookingConfirmationEffect.NavigateBack -> navController.popBackStack()
+                BookingConfirmationEffect.NavigateBack -> onNavigateBack()
                 BookingConfirmationEffect.NavigateToSuccess -> {
-                    // Navegar a éxito o historial (limpiando el stack si es necesario)
-                    println("Reserva Exitosa")
+                    onNavigateToSuccess()
                 }
             }
         }
@@ -99,7 +98,40 @@ fun BookingConfirmationScreen(
                 BookingRow(label = stringResource(Res.string.space_label), value = detail.spaceIdentifier)
                 HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
-                BookingRow(label = stringResource(Res.string.duration_label), value = detail.durationText)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = stringResource(Res.string.duration_label), color = Color.Gray)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = {
+                                if (detail.durationHours > 1) {
+                                    viewModel.onEvent(BookingConfirmationEvent.OnDurationChange(detail.durationHours - 1))
+                                }
+                            },
+                        ) {
+                            Text("-", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
+                        }
+                        Text(
+                            text = detail.durationText,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                        IconButton(
+                            onClick = {
+                                if (detail.durationHours < 24) {
+                                    viewModel.onEvent(BookingConfirmationEvent.OnDurationChange(detail.durationHours + 1))
+                                }
+                            },
+                        ) {
+                            Text("+", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
+                        }
+                    }
+                }
                 HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
                 Row(
