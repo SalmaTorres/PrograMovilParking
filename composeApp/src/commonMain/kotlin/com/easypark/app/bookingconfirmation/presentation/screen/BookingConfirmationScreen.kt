@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -57,7 +58,7 @@ fun BookingConfirmationScreen(
     Scaffold(
         topBar = {
             ParkHeader(
-                title = stringResource(Res.string.booking_confirmation_title),
+                title = stringResource(Res.string.booking_conf_title),
                 onBackClick = { viewModel.onEvent(BookingConfirmationEvent.OnBackClick) },
                 onNotificationClick = null
             )
@@ -71,7 +72,7 @@ fun BookingConfirmationScreen(
                         .padding(16.dp)
                 ) {
                     ParkButton(
-                        text = stringResource(Res.string.confirm_booking_button),
+                        text = stringResource(Res.string.action_reserve),
                         onClick = { viewModel.onEvent(BookingConfirmationEvent.OnConfirmClick) }
                     )
                 }
@@ -93,15 +94,21 @@ fun BookingConfirmationScreen(
             }  else if (state.bookingConfirmation != null) {
                 val detail = state.bookingConfirmation!!
 
+                val durationLabelText = if (detail.durationHours == 1) {
+                    stringResource(Res.string.format_duration_singular, detail.durationHours)
+                } else {
+                    stringResource(Res.string.format_duration_plural, detail.durationHours)
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 BookingRow(
-                    label = stringResource(Res.string.location_label),
+                    label = stringResource(Res.string.label_location),
                     value = "${detail.locationName}, ${detail.address}"
                 )
                 HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
-                BookingRow(label = stringResource(Res.string.space_label), value = detail.spaceIdentifier)
+                BookingRow(label = stringResource(Res.string.label_spaces), value = detail.spaceIdentifier)
                 HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
                 Row(
@@ -111,7 +118,13 @@ fun BookingConfirmationScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(Res.string.duration_label), color = ParkGray, fontSize = 14.sp)
+                    Text(
+                        text = stringResource(Res.string.label_duration),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.widthIn(min = 80.dp)
+                    )
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconButton(
                             onClick = {
@@ -124,10 +137,11 @@ fun BookingConfirmationScreen(
                             Text("-", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = ParkBlue)
                         }
                         Text(
-                            text = detail.durationText,
-                            fontWeight = FontWeight.SemiBold,
+                            text = durationLabelText,
+                            fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
+
                         IconButton(
                             onClick = {
                                 if (detail.durationHours < 24) {
@@ -147,14 +161,19 @@ fun BookingConfirmationScreen(
                         .padding(vertical = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = stringResource(Res.string.total_cost_label), color = ParkGray)
-                    Text(text = detail.totalCostText, color = ParkBlue, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(text = stringResource(Res.string.label_total_cost), color = ParkGray)
+                    Text(
+                        text = detail.totalCostText.format(),
+                        color = ParkBlue,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
                 }
                 HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = stringResource(Res.string.payment_method_title),
+                    text = stringResource(Res.string.label_payment_method),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -170,13 +189,13 @@ fun BookingConfirmationScreen(
                         .padding(4.dp)
                 ) {
                     PaymentOption(
-                        text = stringResource(Res.string.cash_payment),
+                        text = stringResource(Res.string.payment_cash),
                         isSelected = state.selectedPaymentMethod == PaymentMethod.CASH,
                         onClick = { viewModel.onEvent(BookingConfirmationEvent.OnPaymentMethodSelected(PaymentMethod.CASH)) },
                         modifier = Modifier.weight(1f)
                     )
                     PaymentOption(
-                        text = stringResource(Res.string.qr_payment),
+                        text = stringResource(Res.string.payment_qr),
                         isSelected = state.selectedPaymentMethod == PaymentMethod.QR,
                         onClick = { viewModel.onEvent(BookingConfirmationEvent.OnPaymentMethodSelected(PaymentMethod.QR)) },
                         modifier = Modifier.weight(1f)

@@ -18,9 +18,12 @@ import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.shared.presentation.composable.OwnerFooter
 import com.easypark.app.shared.presentation.composable.ParkHeader
+import com.easypark.app.shared.ui.ParkError
 import com.easypark.app.spacemanagement.presentation.composable.ParkingSpotItem
 import com.easypark.app.spacemanagement.presentation.composable.SummaryCard
 import com.easypark.app.spacemanagement.presentation.viewmodel.SpaceManagementViewModel
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -33,7 +36,7 @@ fun SpaceManagementScreen(
     Scaffold(
         topBar = {
             ParkHeader(
-                title = "Gestión de Espacios",
+                title = stringResource(Res.string.spaces_title),
                 onNotificationClick = {
                     navController.navigate(NavRoute.Notifications)
                 }
@@ -64,7 +67,7 @@ fun SpaceManagementScreen(
                 }
             } else if (state.errorMessage != null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = state.errorMessage ?: "", color = Color.Red)
+                    Text(text = state.errorMessage ?: "", color = ParkError)
                 }
             } else {
                 state.summary?.let { summary ->
@@ -75,7 +78,7 @@ fun SpaceManagementScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Parking Spots",
+                    text = stringResource(Res.string.spaces_list_section_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1E293B)

@@ -2,10 +2,8 @@ package com.easypark.app.earnings.presentation.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,7 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.earnings.domain.model.EarningTransaction
+import com.easypark.app.shared.ui.ParkGray
 import com.easypark.app.shared.ui.ParkSuccess
+import com.easypark.app.shared.ui.ParkTextDark
 
 @Composable
 fun EarningItemRow(
@@ -37,13 +37,13 @@ fun EarningItemRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = transaction.date.uppercase(),
-                    color = Color.Gray,
+                    color = ParkGray,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = transaction.label,
-                    color = Color.Black,
+                    color = ParkTextDark,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

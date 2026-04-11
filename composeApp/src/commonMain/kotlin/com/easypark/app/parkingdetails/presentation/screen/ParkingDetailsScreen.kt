@@ -21,6 +21,7 @@ import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEffect
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEvent
 import com.easypark.app.shared.presentation.composable.ParkButton
 import com.easypark.app.shared.presentation.composable.ParkHeader
+import com.easypark.app.shared.ui.*
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
@@ -68,7 +69,7 @@ fun ParkingDetailsScreen(
                         .padding(16.dp)
                 ) {
                     ParkButton(
-                        text = stringResource(Res.string.reserve_button),
+                        text = stringResource(Res.string.action_reserve),
                         onClick = { viewModel.onEvent(ParkingDetailsEvent.OnReserveClick) },
                         isSecondary = false
                     )
@@ -115,7 +116,7 @@ fun ParkingDetailsScreen(
                                     for (i in 1..5) {
                                         Text(
                                             text = if (i <= state.userRating) "★" else "☆",
-                                            color = Color.Blue,
+                                            color = ParkBlue,
                                             fontSize = 28.sp,
                                             modifier = Modifier
                                                 .clickable {
@@ -127,24 +128,23 @@ fun ParkingDetailsScreen(
                                     }
                                 }
                             } else {
-                                // Muestra las estrellas seleccionadas si ya calificó, si no muestra hardcoded
                                 val displayStars = if (state.userRating > 0) {
                                     "★".repeat(state.userRating) + "☆".repeat(5 - state.userRating)
                                 } else {
                                     "★★★☆☆"
                                 }
-                                Text(text = displayStars, color = Color.Blue, fontSize = 20.sp)
+                                Text(text = displayStars, color = ParkBlue, fontSize = 20.sp)
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "${detail.rating.toInt()} (${detail.reviewCount} ${stringResource(Res.string.reviews)})",
-                                    color = Color.Gray
+                                    text = "${detail.rating.toInt()} (${detail.reviewCount} ${stringResource(Res.string.format_reviews)})",
+                                    color = ParkGray
                                 )
                             }
                             Spacer(modifier = Modifier.weight(1f))
                             TextButton(onClick = { isRatingMode = !isRatingMode }) {
                                 Text(
-                                    text = if (isRatingMode) "Guardar" else stringResource(Res.string.rate_button),
-                                    color = Color.Blue
+                                    text = if (isRatingMode) stringResource(Res.string.action_save) else stringResource(Res.string.action_rate),
+                                    color = ParkBlue
                                 )
                             }
                         }
@@ -157,10 +157,10 @@ fun ParkingDetailsScreen(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = detail.address, color = Color.Gray)
+                            Text(text = detail.address, color = ParkGray)
                             Spacer(modifier = Modifier.weight(1f))
                             TextButton(onClick = { /* TODO */ }) {
-                                Text(text = stringResource(Res.string.view_map_button), color = Color.Blue)
+                                Text(text = stringResource(Res.string.action_view_map), color = ParkBlue)
                             }
                         }
 
@@ -173,7 +173,7 @@ fun ParkingDetailsScreen(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = detail.pricePerHour, color = Color.Gray)
+                            Text(text = detail.pricePerHour.format(), color = ParkGray)
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -185,7 +185,7 @@ fun ParkingDetailsScreen(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = detail.schedule, color = Color.Gray)
+                            Text(text = detail.schedule, color = ParkGray)
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -198,7 +198,7 @@ fun ParkingDetailsScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = if (detail.isAvailable) stringResource(Res.string.available) else stringResource(Res.string.not_available),
+                                text = if (detail.isAvailable) stringResource(Res.string.status_available) else stringResource(Res.string.status_full),
                                 color = if (detail.isAvailable) Color(0xFF00C853) else Color.Red,
                                 fontWeight = FontWeight.SemiBold
                             )

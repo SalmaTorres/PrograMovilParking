@@ -17,6 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.shared.ui.ParkBlue
+import com.easypark.app.shared.ui.ParkGray
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReservationTabRow(
@@ -24,7 +28,10 @@ fun ReservationTabRow(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val tabs = listOf("Activas", "Finalizadas")
+    val tabs = listOf(
+        stringResource(Res.string.active_reservations),
+        stringResource(Res.string.history_tab_finished)
+    )
 
     Row(modifier = modifier.fillMaxWidth().background(Color.White)) {
         tabs.forEachIndexed { index, title ->
@@ -39,13 +46,12 @@ fun ReservationTabRow(
             ) {
                 Text(
                     text = title,
-                    color = if (isSelected) ParkBlue else Color.Gray,
+                    color = if (isSelected) ParkBlue else ParkGray,
                     fontSize = 14.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-                
-                // Indicador de pestaña seleccionada
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

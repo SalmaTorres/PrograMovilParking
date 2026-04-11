@@ -4,7 +4,7 @@ data class ParkingModel(
     val id: String,
     val name: String,
     val address: String,
-    val pricePerHour: Double,
+    val pricePerHour: Price,
     val isAvailable: Boolean,
     val latitude: Double,
     val longitude: Double,

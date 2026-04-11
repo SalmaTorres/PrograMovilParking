@@ -20,11 +20,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkBlueLight
-import com.easypark.app.shared.ui.ParkError
-import com.easypark.app.shared.ui.ParkSuccess
+import com.easypark.app.shared.ui.*
+import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EarningsStatCard(
@@ -60,7 +59,7 @@ fun EarningsStatCard(
 
             Text(
                 text = title,
-                color = Color.Gray,
+                color = ParkGray,
                 fontSize = 12.sp
             )
 
@@ -69,7 +68,7 @@ fun EarningsStatCard(
                     text = value,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = ParkTextDark
                 )
                 if (subValue.contains("/")) {
                     Text(
@@ -84,7 +83,10 @@ fun EarningsStatCard(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = if (subValue.contains("/")) "Limited capacity" else subValue,
+                text = if (isAlert)
+                    stringResource(Res.string.earnings_limited_capacity)
+                else
+                    subValue,
                 color = if (isAlert) ParkError else ParkSuccess,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium

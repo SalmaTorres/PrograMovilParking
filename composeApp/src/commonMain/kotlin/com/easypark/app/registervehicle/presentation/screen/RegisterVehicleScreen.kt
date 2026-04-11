@@ -47,7 +47,7 @@ fun RegisterVehicleScreen(
     Scaffold(
         topBar = {
             ParkHeader(
-                title = stringResource(Res.string.register_vehicle_title),
+                title = stringResource(Res.string.vehicle_registration_title),
                 onBackClick = { viewModel.onEvent(RegisterVehicleEvent.OnBackClick) }
             )
         },
@@ -59,7 +59,7 @@ fun RegisterVehicleScreen(
                     .padding(16.dp)
             ) {
                 ParkButton(
-                    text = stringResource(Res.string.finish),
+                    text = stringResource(Res.string.action_finish),
                     onClick = { viewModel.onEvent(RegisterVehicleEvent.OnSubmitClick) }
                 )
             }
@@ -86,13 +86,13 @@ fun RegisterVehicleScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = stringResource(Res.string.vehicle_details),
+                text = stringResource(Res.string.parking_details_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = ParkTextDark
             )
             Text(
-                text = stringResource(Res.string.vehicle_description),
+                text = stringResource(Res.string.parking_description),
                 fontSize = 14.sp,
                 color = ParkGray
             )
@@ -102,24 +102,24 @@ fun RegisterVehicleScreen(
             ParkTextField(
                 value = state.plate,
                 onValueChange = { viewModel.onEvent(RegisterVehicleEvent.OnPlateChange(it)) },
-                label = "Placa",
-                placeholder = "e.g. ABC-123",
+                label = stringResource(Res.string.label_plate),
+                placeholder = stringResource(Res.string.vehicle_plate_hint),
                 isError = state.isPlateError
             )
 
             ParkTextField(
                 value = state.model,
                 onValueChange = { viewModel.onEvent(RegisterVehicleEvent.OnModelChange(it)) },
-                label = "Modelo",
-                placeholder = "e.g. Toyota Camry",
+                label = stringResource(Res.string.label_model),
+                placeholder = stringResource(Res.string.vehicle_model_hint),
                 isError = state.isModelError
             )
 
             ParkTextField(
                 value = state.color,
                 onValueChange = { viewModel.onEvent(RegisterVehicleEvent.OnColorChange(it)) },
-                label = "Color",
-                placeholder = "e.g. Blanco",
+                label = stringResource(Res.string.label_color),
+                placeholder = stringResource(Res.string.vehicle_color_hint),
                 isError = state.isColorError
             )
         }

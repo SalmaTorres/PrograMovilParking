@@ -27,12 +27,11 @@ import com.easypark.app.shared.presentation.composable.DriverFooter
 import com.easypark.app.shared.presentation.composable.ParkHeader
 import com.easypark.app.shared.presentation.composable.ParkTextField
 import org.koin.compose.viewmodel.koinViewModel
-import com.easypark.app.findparking.presentation.composable.FindParkingMapComponent
-import com.easypark.app.findparking.presentation.composable.ParkingDetailCard
+import com.easypark.app.findparking.presentation.composable.*
 import com.easypark.app.findparking.presentation.state.FindParkingEffect
-import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.ic_home
+import kotlinproject.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FindParkingScreen(
@@ -44,7 +43,7 @@ fun FindParkingScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is FindParkingEffect.MoveCamera -> { /* Lógica para mover el mapa */ }
+                is FindParkingEffect.MoveCamera -> { }
                 is FindParkingEffect.NavigateToBooking -> {
                     navController.navigate(NavRoute.BookingConfirmation(effect.parkingId))
                 }
@@ -58,7 +57,7 @@ fun FindParkingScreen(
     Scaffold(
         topBar = {
             ParkHeader(
-                title = "Encuentra tu Lugar",
+                title = stringResource(Res.string.find_parking_title),
                 onNotificationClick = { navController.navigate(NavRoute.Notifications) }
             )
         },
@@ -80,10 +79,10 @@ fun FindParkingScreen(
                 ParkTextField(
                     value = state.searchQuery,
                     onValueChange = { viewModel.onEvent(FindParkingEvent.OnQueryChanged(it)) },
-                    placeholder = "Busca tu parqueo...",
+                    placeholder = stringResource(Res.string.hint_search),
                     leadingImage = Res.drawable.ic_home
                 )
-                // Lista de sugerencias
+
                 if (state.suggestions.isNotEmpty() && state.searchQuery.isNotEmpty()) {
                     Surface(
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
@@ -107,7 +106,6 @@ fun FindParkingScreen(
                 }
             }
 
-            // CAPA 3: CARD DE DETALLES (FLOTANTE ABAJO)
             state.selectedParking?.let { parking ->
                 Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)) {
                     ParkingDetailCard(

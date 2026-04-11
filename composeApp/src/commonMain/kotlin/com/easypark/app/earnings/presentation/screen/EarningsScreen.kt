@@ -1,7 +1,6 @@
 package com.easypark.app.earnings.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,9 +29,8 @@ import com.easypark.app.shared.presentation.composable.OwnerFooter
 import com.easypark.app.shared.presentation.composable.ParkHeader
 import com.easypark.app.shared.presentation.composable.ParkLoading
 import com.easypark.app.shared.ui.ParkBackground
-import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.ic_calendar
-import kotlinproject.composeapp.generated.resources.ic_garage
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -46,7 +44,7 @@ fun EarningsScreen(
         containerColor = ParkBackground,
         topBar = {
             ParkHeader(
-                title = "Downtown Plaza Garage",
+                title = "Downtown Plaza Garage", // variable que sera nombre del parqueo
                 onNotificationClick = {
                     navController.navigate(NavRoute.Notifications)
                 }
@@ -77,7 +75,6 @@ fun EarningsScreen(
             ) {
                 item { Spacer(modifier = Modifier.height(8.dp)) }
 
-                // Tarjeta Principal de Ingresos
                 state.summary?.let { summary ->
                     item {
                         EarningsSummaryCard(
@@ -86,21 +83,20 @@ fun EarningsScreen(
                         )
                     }
 
-                    // Fila de Tarjetas de Estadísticas
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                              EarningsStatCard(
-                                title = "Reservas activas",
-                                value = summary.activeReservations.toString(),
-                                subValue = "↑ ${summary.reservationChange}% vs last week",
-                                icon = Res.drawable.ic_calendar,
-                                modifier = Modifier.weight(1f)
+                                 title = stringResource(Res.string.active_reservations),
+                                 value = summary.activeReservations.toString(),
+                                 subValue = stringResource(Res.string.earnings_vs_last_week, summary.reservationChange),
+                                 icon = Res.drawable.ic_calendar,
+                                 modifier = Modifier.weight(1f)
                             )
                             EarningsStatCard(
-                                title = "Espacios ocupados",
+                                title = stringResource(Res.string.earnings_occupied_spaces),
                                 value = summary.occupiedSpaces.toString(),
                                 subValue = "/${summary.totalSpaces}",
                                 icon = Res.drawable.ic_garage,
@@ -111,10 +107,9 @@ fun EarningsScreen(
                     }
                 }
 
-                // Sección de Ingresos Recientes
                 item {
                     Text(
-                        text = "Ingresos",
+                        text = stringResource(Res.string.earnings_recent_history),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,

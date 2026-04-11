@@ -18,15 +18,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkGray
-import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.ic_calendar
-import kotlinproject.composeapp.generated.resources.ic_garage
-import kotlinproject.composeapp.generated.resources.ic_home
-import org.jetbrains.compose.resources.painterResource
-import androidx.compose.foundation.layout.navigationBarsPadding
+import com.easypark.app.shared.ui.*
 import com.easypark.app.navigation.NavRoute
+import kotlinproject.composeapp.generated.resources.*
+import androidx.compose.foundation.layout.navigationBarsPadding
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 private fun FooterItem(
@@ -47,7 +44,7 @@ private fun FooterItem(
             painter = painterResource(imageRes),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
-            colorFilter = ColorFilter.tint(color) // Esto pintará tu JPG del color del estado
+            colorFilter = ColorFilter.tint(color)
         )
         Text(
             text = label,
@@ -58,7 +55,6 @@ private fun FooterItem(
     }
 }
 
-// --- FOOTER CONDUCTOR ---
 @Composable
 fun DriverFooter(
     currentRoute: NavRoute,
@@ -72,13 +68,13 @@ fun DriverFooter(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             FooterItem(
-                label = "Inicio",
+                label = stringResource(Res.string.nav_home),
                 imageRes = Res.drawable.ic_home,
                 isSelected = currentRoute is NavRoute.FindParking,
                 onClick = { onNavigate(NavRoute.FindParking) }
             )
             FooterItem(
-                label = "Mis Reservas",
+                label = stringResource(Res.string.nav_my_bookings),
                 imageRes = Res.drawable.ic_calendar,
                 isSelected = currentRoute is NavRoute.ReservationSummary,
                 onClick = { onNavigate(NavRoute.ReservationSummary) }
@@ -87,7 +83,6 @@ fun DriverFooter(
     }
 }
 
-// --- FOOTER DUEÑO ---
 @Composable
 fun OwnerFooter(
     currentRoute: NavRoute,
@@ -101,19 +96,19 @@ fun OwnerFooter(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             FooterItem(
-                label = "Reservas",
+                label = stringResource(Res.string.nav_bookings),
                 imageRes = Res.drawable.ic_calendar,
                 isSelected = currentRoute is NavRoute.ReservationHistory,
                 onClick = { onNavigate(NavRoute.ReservationHistory) }
             )
             FooterItem(
-                label = "Inicio",
+                label = stringResource(Res.string.nav_home),
                 imageRes = Res.drawable.ic_home,
                 isSelected = currentRoute is NavRoute.Earnings,
                 onClick = { onNavigate(NavRoute.Earnings) }
             )
             FooterItem(
-                label = "Espacios",
+                label = stringResource(Res.string.nav_spaces),
                 imageRes = Res.drawable.ic_garage,
                 isSelected = currentRoute is NavRoute.SpaceManagement,
                 onClick = { onNavigate(NavRoute.SpaceManagement) }

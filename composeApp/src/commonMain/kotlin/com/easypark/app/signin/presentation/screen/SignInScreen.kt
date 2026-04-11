@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.easypark_logo
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -71,9 +73,9 @@ fun SignInScreen(
             onValueChange = {
                 viewModel.onEvent(SignInEvent.OnEmailChange(it))
             },
-            placeholder = "name@company.com",
+            placeholder = stringResource(Res.string.hint_email),
             isError = state.isEmailError,
-            label = "Correo"
+            label = stringResource(Res.string.label_email)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -86,7 +88,7 @@ fun SignInScreen(
             placeholder = "********",
             isError = state.isPasswordError,
             isPassword = true,
-            label = "Contraseña"
+            label = stringResource(Res.string.label_password)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -95,12 +97,12 @@ fun SignInScreen(
             onClick = {
                 viewModel.onEvent(SignInEvent.OnLoginClick)
             },
-            text = "Iniciar Sesion"
+            text = stringResource(Res.string.action_signin)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("O")
+        Text(text = stringResource(Res.string.signin_or_separator))
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -108,7 +110,7 @@ fun SignInScreen(
             onClick = {
                 viewModel.onEvent(SignInEvent.OnRegisterClick)
             },
-            text = "Crear una cuenta",
+            text = stringResource(Res.string.action_create_account),
             isSecondary = true
         )
     }

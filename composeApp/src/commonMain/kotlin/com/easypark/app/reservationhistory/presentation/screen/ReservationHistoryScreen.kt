@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +28,11 @@ import com.easypark.app.shared.presentation.composable.ParkHeader
 import com.easypark.app.shared.presentation.composable.ParkLoading
 import com.easypark.app.shared.presentation.composable.ParkTextField
 import com.easypark.app.shared.ui.ParkBackground
+import com.easypark.app.shared.ui.ParkGray
 import org.koin.compose.viewmodel.koinViewModel
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReservationHistoryScreen(
@@ -44,18 +47,16 @@ fun ReservationHistoryScreen(
         topBar = {
             Column {
                 ParkHeader(
-                    title = "Reservas",
+                    title = stringResource(Res.string.history_title),
                     onNotificationClick = { navController.navigate(NavRoute.Notifications) }
                 )
-                
-                // Buscador
+
                 ParkTextField(
                     value = state.searchQuery,
                     onValueChange = { viewModel.onQueryChanged(it) },
-                    placeholder = "Buscar por nombre...",
+                    placeholder = stringResource(Res.string.hint_search),
                 )
 
-                // Pestañas
                 ReservationTabRow(
                     selectedTabIndex = state.selectedTab,
                     onTabSelected = { viewModel.onTabSelected(it) }
@@ -85,7 +86,6 @@ fun ReservationHistoryScreen(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Sección Activas: Si hay reservas que terminan pronto, mostrar el separador
                 val endingSoon = filteredReservations.filter { it.status == ReservationStatus.ENDING_SOON }
                 val normallyActive = filteredReservations.filter { it.status == ReservationStatus.ACTIVE }
                 
@@ -98,8 +98,8 @@ fun ReservationHistoryScreen(
                 if (endingSoon.isNotEmpty()) {
                     item {
                         Text(
-                            text = "TERMINA PRONTO",
-                            color = Color.Gray,
+                            text = stringResource(Res.string.history_status_ending_soon),
+                            color = ParkGray,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
@@ -110,7 +110,6 @@ fun ReservationHistoryScreen(
                     }
                 }
 
-                // Si no hay ninguna "Activa", pero estamos en la pestaña 1 (Finalizadas)
                 if (state.selectedTab == 1) {
                     items(filteredReservations) { reservation ->
                         ReservationCard(reservation = reservation)

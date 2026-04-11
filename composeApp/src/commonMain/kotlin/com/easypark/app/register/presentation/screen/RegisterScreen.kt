@@ -2,7 +2,9 @@ package com.easypark.app.register.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,12 +21,12 @@ import com.easypark.app.register.presentation.viewmodel.RegisterViewModel
 import com.easypark.app.shared.domain.model.UserType
 import com.easypark.app.shared.presentation.composable.ParkButton
 import com.easypark.app.shared.presentation.composable.ParkTextField
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkBlueLight
+import com.easypark.app.shared.ui.*
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.register_bg
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -73,31 +75,33 @@ fun RegisterScreen(
             IconButton(
                 onClick = { viewModel.onEvent(RegisterEvent.OnLoginClick) },
                 modifier = Modifier
-                    .padding(top = 16.dp, start = 8.dp)
+                    .statusBarsPadding()
+                    .padding(start = 8.dp)
                     .align(Alignment.TopStart)
             ) {
                 Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
-                    contentDescription = "Atrás",
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = stringResource(Res.string.back),
                     tint = Color.White
                 )
             }
 
             Text(
-                text = "REGISTRATE",
+                text = stringResource(Res.string.register_title),
                 color = Color.White,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 16.dp)
+                    .padding(start = 16.dp, top = 20.dp)
             )
         }
 
-        Column (
-            modifier = Modifier.padding(24.dp, 0.dp)
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-
             Spacer(modifier = Modifier.height(10.dp))
 
             ParkTextField(
@@ -105,8 +109,8 @@ fun RegisterScreen(
                 onValueChange = {
                     viewModel.onEvent(RegisterEvent.OnNameChange(it))
                 },
-                placeholder = "Introduce tu nombre",
-                label = "Nombre Completo",
+                placeholder = stringResource(Res.string.hint_name),
+                label = stringResource(Res.string.label_name),
                 isError = state.isNameError,
             )
 
@@ -117,8 +121,8 @@ fun RegisterScreen(
                 onValueChange = {
                     viewModel.onEvent(RegisterEvent.OnEmailChange(it))
                 },
-                placeholder = "Introduce tu correo electronico",
-                label = "Correo electronico",
+                label = stringResource(Res.string.label_email),
+                placeholder = stringResource(Res.string.hint_email),
                 isError = state.isEmailError
             )
 
@@ -129,8 +133,8 @@ fun RegisterScreen(
                 onValueChange = {
                     viewModel.onEvent(RegisterEvent.OnPhoneChange(it))
                 },
-                placeholder = "Introduce tu numero de celular",
-                label = "Numero de celular",
+                label = stringResource(Res.string.label_phone),
+                placeholder = stringResource(Res.string.hint_phone),
                 isError = state.isPhoneError
             )
 
@@ -141,15 +145,22 @@ fun RegisterScreen(
                 onValueChange = {
                     viewModel.onEvent(RegisterEvent.OnPasswordChange(it))
                 },
-                placeholder = "Crea una contraseña",
+                label = stringResource(Res.string.label_password),
+                placeholder = stringResource(Res.string.hint_password),
                 isPassword = true,
-                label = "Contraseña",
                 isError = state.isPasswordError
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Text("Quiero ser...")
+            Text(
+                text = stringResource(Res.string.register_role_selection),
+                fontWeight = FontWeight.Bold,
+                color = ParkTextDark,
+                fontSize = 14.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -163,7 +174,11 @@ fun RegisterScreen(
                         containerColor = if (isConductor) ParkBlue else ParkBlueLight
                     )
                 ) {
-                    Text("Conductor", color = if (isConductor) Color.White else Color.Black)
+                    Text(
+                        text = stringResource(Res.string.role_driver),
+                        color = if (isConductor) Color.White else ParkTextDark,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
                 val isDueno = state.role == UserType.OWNER
@@ -174,7 +189,11 @@ fun RegisterScreen(
                         containerColor = if (isDueno) ParkBlue else ParkBlueLight
                     )
                 ) {
-                    Text("Dueño", color = if (isDueno) Color.White else Color.Black)
+                    Text(
+                        text = stringResource(Res.string.role_owner),
+                        color = if (isDueno) Color.White else ParkTextDark,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
 
@@ -184,7 +203,7 @@ fun RegisterScreen(
                 onClick = {
                     viewModel.onEvent(RegisterEvent.OnRegisterClick)
                 },
-                text = "Siguiente"
+                text = stringResource(Res.string.action_next),
             )
         }
     }

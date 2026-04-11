@@ -22,9 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.reservationhistory.domain.model.ReservationItem
 import com.easypark.app.reservationhistory.domain.model.ReservationStatus
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkError
-import com.easypark.app.shared.ui.ParkSuccess
+import com.easypark.app.shared.ui.*
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReservationCard(
@@ -34,13 +35,14 @@ fun ReservationCard(
     val statusColor = when (reservation.status) {
         ReservationStatus.ACTIVE -> ParkSuccess
         ReservationStatus.ENDING_SOON -> Color(0xFFF57C00) // Orange
-        ReservationStatus.FINISHED -> Color.Gray
+        ReservationStatus.FINISHED -> ParkGray
     }
 
     val statusText = when (reservation.status) {
-        ReservationStatus.ACTIVE -> "ACTIVA"
-        ReservationStatus.ENDING_SOON -> reservation.timeLeftText?.uppercase() ?: "TERMINA PRONTO"
-        ReservationStatus.FINISHED -> "FINALIZADA"
+        ReservationStatus.ACTIVE -> stringResource(Res.string.status_active)
+        ReservationStatus.ENDING_SOON -> reservation.timeLeftText?.uppercase()
+            ?: stringResource(Res.string.history_status_ending_soon)
+        ReservationStatus.FINISHED -> stringResource(Res.string.status_finished)
     }
 
     Surface(
@@ -69,20 +71,20 @@ fun ReservationCard(
                 text = reservation.clientName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = ParkTextDark,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
             Text(
-                text = "P ${reservation.spaceLabel}",
-                color = Color.Gray,
+                text = stringResource(Res.string.label_spaces, reservation.spaceLabel),
+                color = ParkGray,
                 fontSize = 14.sp
             )
             
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "🕒 ${reservation.startTime} - ${reservation.endTime}",
-                    color = Color.Gray,
+                    color = ParkGray,
                     fontSize = 14.sp
                 )
             }

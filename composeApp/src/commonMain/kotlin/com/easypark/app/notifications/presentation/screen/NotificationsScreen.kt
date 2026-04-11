@@ -23,7 +23,11 @@ import com.easypark.app.notifications.presentation.state.NotificationsEvent
 import com.easypark.app.notifications.presentation.viewmodel.NotificationsViewModel
 import com.easypark.app.shared.presentation.composable.ParkHeader
 import com.easypark.app.shared.ui.ParkGray
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.notifications_empty
+import kotlinproject.composeapp.generated.resources.notifications_title
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -44,7 +48,7 @@ fun NotificationsScreen(
     Scaffold(
         topBar = {
             ParkHeader(
-                title = "Notificaciones",
+                title = stringResource(Res.string.notifications_title),
                 onBackClick = { viewModel.onEvent(NotificationsEvent.OnBackClick) },
                 onNotificationClick = null
             )
@@ -59,7 +63,7 @@ fun NotificationsScreen(
             if (state.list.isEmpty() && !state.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "No hay más notificaciones recientes",
+                        text = stringResource(Res.string.notifications_empty),
                         color = ParkGray,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
@@ -83,7 +87,7 @@ fun NotificationsScreen(
                     item {
                         Spacer(modifier = Modifier.height(32.dp))
                         Text(
-                            text = "No hay más notificaciones recientes",
+                            text = stringResource(Res.string.notifications_empty),
                             modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
                             textAlign = TextAlign.Center,
                             color = ParkGray,

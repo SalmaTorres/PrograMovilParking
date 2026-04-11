@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
@@ -22,7 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.shared.ui.ParkBlue
 import com.easypark.app.shared.ui.ParkBlueLight
+import com.easypark.app.shared.ui.ParkGray
 import com.easypark.app.shared.ui.ParkSuccess
+import com.easypark.app.shared.ui.ParkTextDark
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.earnings_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EarningsSummaryCard(
@@ -41,8 +45,8 @@ fun EarningsSummaryCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Total ingresos",
-                    color = Color.Gray,
+                    text = stringResource(Res.string.earnings_title),
+                    color = ParkGray,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -66,7 +70,7 @@ fun EarningsSummaryCard(
                 text = "$${formatAmount(total)}",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Color.Black
+                color = ParkTextDark
             )
 
             Spacer(modifier = Modifier.height(16.dp))

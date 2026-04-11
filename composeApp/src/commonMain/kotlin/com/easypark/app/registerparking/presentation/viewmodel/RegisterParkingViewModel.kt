@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.registerparking.domain.usecase.RegisterParkingUseCase
 import com.easypark.app.registerparking.presentation.state.*
+import com.easypark.app.shared.domain.model.Currency
 import com.easypark.app.shared.domain.model.ParkingModel
+import com.easypark.app.shared.domain.model.Price
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -73,7 +75,10 @@ class RegisterParkingViewModel(
                 address = s.address,
                 latitude = s.latitude,
                 longitude = s.longitude,
-                pricePerHour = s.pricePerHour.toDoubleOrNull() ?: 0.0,
+                pricePerHour = Price(
+                    amount = s.pricePerHour.toDoubleOrNull() ?: 0.0,
+                    currency = Currency.BOB
+                ),
                 isAvailable = true,
                 totalSpaces = s.totalSpaces.toIntOrNull() ?: 0
             )

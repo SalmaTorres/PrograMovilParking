@@ -17,14 +17,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.easypark.app.shared.ui.ParkError
+import com.easypark.app.shared.ui.ParkSuccess
 import com.easypark.app.spacemanagement.domain.model.ParkingSpot
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ParkingSpotItem(spot: ParkingSpot) {
     val borderColor = if (spot.isOccupied) Color(0xFFFCA5A5) else Color(0xFF86EFAC)
     val bgColor = if (spot.isOccupied) Color(0xFFFEF2F2) else Color(0xFFF0FDF4)
-    val textColor = if (spot.isOccupied) Color(0xFFDC2626) else Color(0xFF16A34A)
-    val statusText = if (spot.isOccupied) "OCUPADO" else "LIBRE"
+    val textColor = if (spot.isOccupied) ParkSuccess else ParkError
+
+    val statusText = if (spot.isOccupied)
+        stringResource(Res.string.status_occupied)
+    else
+        stringResource(Res.string.status_free)
 
     Box(
         modifier = Modifier

@@ -17,7 +17,10 @@ import com.easypark.app.registerparking.presentation.state.RegisterParkingEvent
 import com.easypark.app.registerparking.presentation.viewmodel.RegisterParkingViewModel
 import com.easypark.app.shared.presentation.composable.*
 import com.easypark.app.shared.ui.*
+import kotlinproject.composeapp.generated.resources.Res
+import kotlinproject.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -56,7 +59,7 @@ fun RegisterParkingScreen(
             .padding(horizontal = 20.dp)
     ) {
         ParkHeader(
-            title = "Registra tu parqueo",
+            title = stringResource(Res.string.parking_registration_title),
             onBackClick = { viewModel.onEvent(RegisterParkingEvent.OnClickBack) }
         )
 
@@ -65,22 +68,22 @@ fun RegisterParkingScreen(
         ParkTextField(
             value = state.name,
             onValueChange = { viewModel.onEvent(RegisterParkingEvent.OnNameChanged(it)) },
-            label = "Nombre del parqueo",
-            placeholder = "e.g. Downtown Central Garage",
+            label = stringResource(Res.string.label_name),
+            placeholder = stringResource(Res.string.parking_name_hint),
             isError = state.isNameError
         )
 
         ParkTextField(
             value = state.address,
             onValueChange = { viewModel.onEvent(RegisterParkingEvent.OnAddressChanged(it)) },
-            label = "Direccion",
-            placeholder = "Ingresa tu direccion exacta",
+            label = stringResource(Res.string.label_address),
+            placeholder = stringResource(Res.string.parking_address_hint),
             isError = state.isAddressError
         )
 
         Spacer(Modifier.height(12.dp))
         Text(
-            text = "Localizacion",
+            text = stringResource(Res.string.label_location),
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             color = ParkTextDark
@@ -101,8 +104,8 @@ fun RegisterParkingScreen(
                 ParkTextField(
                     value = state.pricePerHour,
                     onValueChange = { viewModel.onEvent(RegisterParkingEvent.OnPriceChanged(it)) },
-                    label = "Precio por hora",
-                    placeholder = "$ 5.00",
+                    label = stringResource(Res.string.label_price_hour),
+                    placeholder = stringResource(Res.string.parking_price_hint),
                     isError = state.isPriceError
                 )
             }
@@ -110,7 +113,7 @@ fun RegisterParkingScreen(
                 ParkTextField(
                     value = state.totalSpaces,
                     onValueChange = { viewModel.onEvent(RegisterParkingEvent.OnSpacesChanged(it)) },
-                    label = "Cant. espacios",
+                    label = stringResource(Res.string.label_spaces),
                     placeholder = "25",
                     isError = state.isSpacesError
                 )
@@ -123,7 +126,7 @@ fun RegisterParkingScreen(
             ParkLoading()
         } else {
             ParkButton(
-                text = "Finalizar",
+                text = stringResource(Res.string.action_finish),
                 onClick = { viewModel.onEvent(RegisterParkingEvent.OnClickRegister) }
             )
         }

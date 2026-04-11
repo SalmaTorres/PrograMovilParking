@@ -20,20 +20,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.easypark.app.shared.ui.ParkBlue
 import com.easypark.app.spacemanagement.domain.model.SpaceSummary
+import kotlinproject.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SummaryCard(summary: SpaceSummary) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF0F3CC9)) // Azul del diseño
+        colors = CardDefaults.cardColors(containerColor = ParkBlue)
     ) {
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
             Text(
-                text = "CAPACIDAD TOTAL",
+                text = stringResource(Res.string.spaces_card_total_capacity),
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium
@@ -43,13 +46,13 @@ fun SummaryCard(summary: SpaceSummary) {
                 modifier = Modifier.padding(top = 8.dp)
             ) {
                 Text(
-                    text = "${summary.totalCapacity}",
+                    text = summary.totalCapacity.toString(),
                     color = Color.White,
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = " Espacios",
+                    text = " " + stringResource(Res.string.label_spaces),
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 14.sp,
                     modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
@@ -64,12 +67,12 @@ fun SummaryCard(summary: SpaceSummary) {
             ) {
                 Column {
                     Text(
-                        text = "Ocupados",
+                        text = stringResource(Res.string.spaces_card_occupied),
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 12.sp
                     )
                     Text(
-                        text = "${summary.occupied}",
+                        text = summary.occupied.toString(),
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
@@ -83,12 +86,12 @@ fun SummaryCard(summary: SpaceSummary) {
 
                 Column {
                     Text(
-                        text = "Disponibles",
+                        text = stringResource(Res.string.spaces_card_available),
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 12.sp
                     )
                     Text(
-                        text = "${summary.available}",
+                        text = summary.available.toString(),
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold

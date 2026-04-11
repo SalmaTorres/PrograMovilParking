@@ -4,16 +4,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.shared.domain.model.ParkingModel
 import com.easypark.app.shared.presentation.composable.ParkButton
 import com.easypark.app.shared.presentation.composable.ParkCard
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkError
-import com.easypark.app.shared.ui.ParkSuccess
+import com.easypark.app.shared.ui.*
+import kotlinproject.composeapp.generated.resources.*
+import kotlinproject.composeapp.generated.resources.status_available
+import kotlinproject.composeapp.generated.resources.status_full
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ParkingDetailCard(
@@ -28,7 +29,7 @@ fun ParkingDetailCard(
                 text = parking.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                color = Color.Black
+                color = ParkTextDark
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -38,14 +39,17 @@ fun ParkingDetailCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "${parking.pricePerHour} Bs/hora",
+                    text = "${parking.pricePerHour.format()} / h",
                     color = ParkBlue,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
 
                 Text(
-                    text = if (parking.isAvailable) "Disponible" else "Lleno",
+                    text = if (parking.isAvailable)
+                        stringResource(Res.string.status_available)
+                    else
+                        stringResource(Res.string.status_full),
                     color = if (parking.isAvailable) ParkSuccess else ParkError,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
@@ -58,18 +62,18 @@ fun ParkingDetailCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Box(modifier = Modifier.weight(1.2f)) {
+                Box(modifier = Modifier.weight(1f)) {
                     ParkButton(
-                        text = "Reservar",
+                        text = stringResource(Res.string.action_reserve),
                         onClick = onReserve,
                         enabled = parking.isAvailable,
                         modifier = Modifier.height(38.dp)
                     )
                 }
 
-                Box(modifier = Modifier.weight(1.2f)) {
+                Box(modifier = Modifier.weight(1f)) {
                     ParkButton(
-                        text = "Ver Más",
+                        text = stringResource(Res.string.action_see_more),
                         onClick = onDetails,
                         isSecondary = true,
                         modifier = Modifier.height(38.dp)
