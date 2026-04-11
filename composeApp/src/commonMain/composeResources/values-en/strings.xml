@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Loco xml export: Android strings
+ Project: EasyPark
+ Locale: en-US, English (USA)
+ Exported by: Salma Torres
+ Exported at: Sat, 11 Apr 2026 12:13:39 -0400
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- 1. IDENTIDAD Y GENERAL -->
+    <string name="app_name">EasyPark</string>
+    <string name="loading">Loading...</string>
+    <string name="error_generic">An unexpected error occurred</string>
+    <string name="back">Back</string>
+    <!-- 2. ACCIONES (Botones) -->
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
+    <string name="action_save">Save</string>
+    <string name="action_reserve">Reserve</string>
+    <string name="action_see_more">See More</string>
+    <string name="action_rate">Rate</string>
+    <string name="action_view_map">View Map</string>
+    <string name="action_signin">Sign In</string>
+    <string name="action_create_account">Create Account</string>
+    <!-- 3. ETIQUETAS DE FORMULARIO (Reutilizables en Login/Registro/Detalle) -->
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="label_name">Full Name</string>
+    <string name="label_phone">Phone Number</string>
+    <string name="label_plate">Plate Number</string>
+    <string name="label_model">Model</string>
+    <string name="label_color">Color</string>
+    <string name="label_address">Address</string>
+    <string name="label_price_hour">Price/hour</string>
+    <string name="label_spaces">Spaces</string>
+    <string name="label_location">Location</string>
+    <string name="label_duration">Duration</string>
+    <string name="label_total_cost">Total Cost</string>
+    <string name="label_payment_method">Payment Method</string>
+    <!-- 4. HINTS / PLACEHOLDERS -->
+    <string name="hint_email">name@company.com</string>
+    <string name="hint_name">e.g. John Doe</string>
+    <string name="hint_phone">e.g. 73000001</string>
+    <string name="hint_password">******</string>
+    <string name="hint_search">Search parking...</string>
+    <string name="parking_name_hint">e.g. Downtown Central Garage</string>
+    <string name="parking_address_hint">e.g. Av. America #123</string>
+    <string name="parking_price_hint">$5.00</string>
+    <string name="vehicle_plate_hint">e.g. ABC-1234</string>
+    <string name="vehicle_model_hint">e.g. Toyota Camry 2024</string>
+    <string name="vehicle_color_hint">e.g. White</string>
+    <!-- 5. ESTADOS Y ROLES (Conceptos compartidos) -->
+    <string name="status_available">Available</string>
+    <string name="status_full">Full</string>
+    <string name="status_occupied">OCCUPIED</string>
+    <string name="status_free">FREE</string>
+    <string name="status_active">Active</string>
+    <string name="status_finished">Finished</string>
+    <string name="role_driver">Driver</string>
+    <string name="role_owner">Owner</string>
+    <!-- 6. TEXTOS LARGOS O ESPECÍFICOS (Títulos de cabecera) -->
+    <string name="register_title">REGISTER</string>
+    <string name="register_role_selection">I want to be a...</string>
+    <string name="vehicle_registration_title">Register your vehicle</string>
+    <string name="vehicle_description">Please provide your vehicle info.</string>
+    <string name="parking_description">Please provide your parking info.</string>
+    <string name="parking_registration_title">Register your parking</string>
+    <string name="find_parking_title">Find your Spot</string>
+    <string name="booking_conf_title">Confirm your Booking</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_empty">No recent notifications</string>
+    <string name="earnings_title">Earnings</string>
+    <string name="spaces_title">Space Management</string>
+    <string name="history_title">Bookings</string>
+    <string name="active_reservations">Actives</string>
+    <string name="history_tab_finished">Finished</string>
+    <string name="earnings_occupied_spaces">Occupied spaces</string>
+    <string name="earnings_vs_last_week">↑</string>
+    <string name="earnings_recent_history">Recent income</string>
+    <string name="payment_cash">Cash</string>
+    <string name="payment_qr">QR Code</string>
+    <string name="earnings_limited_capacity">Limited capacity</string>
+    <string name="parking_details_title">Parking details</string>
+    <string name="history_status_ending_soon">Ending soon</string>
+    <string name="signin_or_separator">Or</string>
+    <string name="spaces_card_total_capacity">Total capacity</string>
+    <string name="spaces_card_occupied">Occupied</string>
+    <string name="spaces_card_available">Available</string>
+    <string name="spaces_list_section_title">Parking Spots</string>
+    <!-- 7. FORMATOS DINÁMICOS -->
+    <string name="format_duration_singular">%1$s Hour</string>
+    <string name="format_duration_plural">%1$s Hours</string>
+    <string name="format_reviews">reviews</string>
+    <string name="format_price_bob">%s Bs/hour</string>
+    <string name="format_space_p">P %s</string>
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_my_bookings">My Bookings</string>
+    <string name="nav_bookings">Bookings</string>
+    <string name="nav_spaces">Spaces</string>
+</resources>
