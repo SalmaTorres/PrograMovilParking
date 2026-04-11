@@ -1,27 +1,39 @@
-# --- CONFIGURACIÓN ---
-# Esta llave tiene permisos para SUBIR (POST)
-$IMPORT_KEY ="R1A8b4FfYtBGyy7c8cOa1V8K0sg2eDEft:"
+# Función para leer el archivo local.properties
+function Get-Property($key) {
+    $file = "local.properties"
+    if (Test-Path $file) {
+        $line = Get-Content $file | Select-String -Pattern "^$key="
+        if ($line) {
+            return $line.ToString().Split("=")[1].Trim()
+        }
+    }
+    return $null
+}
 
-# Esta llave solo tiene permisos para DESCARGAR (GET)
-$EXPORT_KEY = "xOSycCwdPIuVZUty4hAU10A36iTElxF0:"
+# --- CONFIGURACIÓN DINÁMICA ---
+$IMPORT_VAL = Get-Property "loco.import.key"
+$EXPORT_VAL = Get-Property "loco.export.key"
+
+if (!$IMPORT_VAL -or !$EXPORT_VAL) {
+    Write-Host "Error: No se encontraron las llaves en local.properties" -ForegroundColor Red
+    exit
+}
+
+$IMPORT_KEY = "$IMPORT_VAL`:"
+$EXPORT_KEY = "$EXPORT_VAL`:"
 
 $BASE_PATH = "composeApp/src/commonMain/composeResources"
-$LANGUAGES = @("en") # Agrega aquí más idiomas: @("en", "pt", "fr")
+$LANGUAGES = @("en")
 
-# --- 1. PUSH: SUBIR EL ESPAÑOL (FUENTE DE VERDAD) ---
-# Usamos la IMPORT_KEY porque vamos a realizar un envío (POST)
+# --- 1. PUSH ---
 Write-Host "Subiendo strings nuevos de Español a Loco.biz..." -ForegroundColor Cyan
 curl.exe -u $IMPORT_KEY --data-binary "@$BASE_PATH/values/strings.xml" "https://localise.biz/api/import/xml?locale=es&index=id"
 
-# --- 2. PULL: DESCARGAR TRADUCCIONES ---
+# --- 2. PULL ---
 foreach ($lang in $LANGUAGES) {
     Write-Host "Descargando idioma [$lang]..." -ForegroundColor Green
-
-    # Crear la carpeta si no existe (values-en, values-pt, etc)
     $folder = "$BASE_PATH/values-$lang"
     if (!(Test-Path $folder)) { New-Item -ItemType Directory -Path $folder }
-
-    # Usamos la EXPORT_KEY porque solo vamos a leer datos (GET)
     curl.exe -L -u $EXPORT_KEY "https://localise.biz/api/export/locale/$lang.xml" -o "$folder/strings.xml"
 }
 
