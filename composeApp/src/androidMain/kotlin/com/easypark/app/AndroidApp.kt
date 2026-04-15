@@ -4,6 +4,7 @@ import android.app.Application
 import com.easypark.app.di.getModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import com.easypark.app.core.background.LogScheduler
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
@@ -15,5 +16,8 @@ class AndroidApp : Application() {
             androidContext(this@AndroidApp)
             modules(getModules()) // Carga la lista de módulos que creamos antes
         }
+
+        // Programar tareas en segundo plano
+        LogScheduler(this).schedulePeriodicLogUpload()
     }
 }
