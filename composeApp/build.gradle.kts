@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.googleGmsGoogleServices)
 }
 
 kotlin {
@@ -101,4 +102,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+dependencies {
+    implementation(libs.firebase.messaging)
 }

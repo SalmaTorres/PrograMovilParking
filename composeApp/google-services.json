@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1065030762545",
+    "project_id": "easypark-af2ed",
+    "storage_bucket": "easypark-af2ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065030762545:android:65a0ea62548e8f67309510",
+        "android_client_info": {
+          "package_name": "com.easypark.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAliK2Exi6eDcKU18u5l8eEokVSMmJ_gtI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

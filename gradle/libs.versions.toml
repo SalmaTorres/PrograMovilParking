@@ -21,6 +21,8 @@ koin = "4.1.1"
 androidx-navigation = "2.8.0-alpha10"
 kotlinx-serialization = "1.7.3"
 ui = "1.10.6"
+googleGmsGoogleServices = "4.4.4"
+firebaseMessaging = "25.0.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -52,6 +54,7 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -61,3 +64,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry-plugin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }

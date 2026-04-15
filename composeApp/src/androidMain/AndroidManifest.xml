@@ -3,6 +3,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name="com.easypark.app.AndroidApp"
@@ -21,6 +23,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".core.data.notification.FirebaseService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <meta-data android:name="io.sentry.dsn" android:value="https://679be237f8cee2500812c0a19b4a9a36@o4510864575692800.ingest.us.sentry.io/4510865563975680" />
         <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
     </application>
