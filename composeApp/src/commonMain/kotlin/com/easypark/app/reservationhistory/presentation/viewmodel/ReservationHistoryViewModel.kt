@@ -32,6 +32,7 @@ class ReservationHistoryViewModel(
                         reservations = list
                     )
                 }
+                applyFilters()
             } catch (e: Exception) {
                 _state.update {
                     it.copy(
@@ -44,21 +45,32 @@ class ReservationHistoryViewModel(
     }
 
     fun onQueryChanged(query: String) {
-        _state.value = _state.value.copy(searchQuery = query)
+        _state.update { it.copy(searchQuery = query) }
+        applyFilters()
     }
 
     fun onTabSelected(index: Int) {
-        _state.value = _state.value.copy(selectedTab = index)
+        _state.update { it.copy(selectedTab = index) }
+        applyFilters()
     }
 
-    fun getFilteredReservations() = _state.value.reservations.filter { reservation ->
-        val matchesTab = if (_state.value.selectedTab == 0) {
-            reservation.status == ReservationStatus.ACTIVE || reservation.status == ReservationStatus.ENDING_SOON
-        } else {
-            reservation.status == ReservationStatus.FINISHED
+    private fun applyFilters() {
+        _state.update { currentState ->
+            val filtered = currentState.reservations.filter { reservation ->
+                val matchesTab = if (currentState.selectedTab == 0) {
+                    reservation.status == ReservationStatus.ACTIVE || reservation.status == ReservationStatus.ENDING_SOON
+                } else {
+                    reservation.status == ReservationStatus.FINISHED
+                }
+                val matchesSearch = if (currentState.searchQuery.isBlank()) {
+                    true
+                } else {
+                    reservation.clientName.contains(currentState.searchQuery, ignoreCase = true)
+                }
+                
+                matchesTab && matchesSearch
+            }
+            currentState.copy(filteredReservations = filtered)
         }
-        val matchesSearch = reservation.clientName.contains(_state.value.searchQuery, ignoreCase = true)
-        
-        matchesTab && matchesSearch
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,11 +30,7 @@ import com.easypark.app.shared.presentation.composable.ParkHeader
 import com.easypark.app.shared.presentation.composable.ParkLoading
 import com.easypark.app.shared.presentation.composable.ParkTextField
 import com.easypark.app.shared.ui.ParkBackground
-import com.easypark.app.shared.ui.ParkGray
 import org.koin.compose.viewmodel.koinViewModel
-import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReservationHistoryScreen(
@@ -40,23 +38,25 @@ fun ReservationHistoryScreen(
     viewModel: ReservationHistoryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    val filteredReservations = viewModel.getFilteredReservations()
 
     Scaffold(
         containerColor = ParkBackground,
         topBar = {
             Column {
                 ParkHeader(
-                    title = stringResource(Res.string.history_title),
+                    title = "Reservas",
                     onNotificationClick = { navController.navigate(NavRoute.Notifications) }
                 )
-
+                
+                // Buscador
                 ParkTextField(
                     value = state.searchQuery,
                     onValueChange = { viewModel.onQueryChanged(it) },
-                    placeholder = stringResource(Res.string.hint_search),
+                    placeholder = "Buscar por nombre...",
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
 
+                // Pestañas
                 ReservationTabRow(
                     selectedTabIndex = state.selectedTab,
                     onTabSelected = { viewModel.onTabSelected(it) }
@@ -86,8 +86,9 @@ fun ReservationHistoryScreen(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                val endingSoon = filteredReservations.filter { it.status == ReservationStatus.ENDING_SOON }
-                val normallyActive = filteredReservations.filter { it.status == ReservationStatus.ACTIVE }
+                // Sección Activas: Si hay reservas que terminan pronto, mostrar el separador
+                val endingSoon = state.filteredReservations.filter { it.status == ReservationStatus.ENDING_SOON }
+                val normallyActive = state.filteredReservations.filter { it.status == ReservationStatus.ACTIVE }
                 
                 item { Spacer(modifier = Modifier.height(8.dp)) }
 
@@ -98,8 +99,8 @@ fun ReservationHistoryScreen(
                 if (endingSoon.isNotEmpty()) {
                     item {
                         Text(
-                            text = stringResource(Res.string.history_status_ending_soon),
-                            color = ParkGray,
+                            text = "TERMINA PRONTO",
+                            color = Color.Gray,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
@@ -110,8 +111,9 @@ fun ReservationHistoryScreen(
                     }
                 }
 
+                // Pestaña de Finalizadas (Tab index 1)
                 if (state.selectedTab == 1) {
-                    items(filteredReservations) { reservation ->
+                    items(state.filteredReservations) { reservation ->
                         ReservationCard(reservation = reservation)
                     }
                 }
