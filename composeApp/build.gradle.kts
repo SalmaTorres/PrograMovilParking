@@ -46,6 +46,8 @@ kotlin {
                 implementation(libs.retrofit)
                 implementation(libs.retrofit.gson)
                 implementation(libs.glide)
+
+                implementation("com.google.android.gms:play-services-location:21.0.1")
             }
         }
 
