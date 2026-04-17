@@ -1,6 +1,6 @@
 package com.easypark.app.register.presentation.state
 
-import com.easypark.app.shared.domain.model.UserType
+import com.easypark.app.core.domain.model.UserType
 
 sealed interface RegisterEvent {
 

@@ -6,7 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.easypark.app.navigation.AppNavHost
-import com.easypark.app.shared.ui.ParkBackground
+import com.easypark.app.core.ui.ParkBackground
 
 @Composable
 fun App() {

@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
-import com.easypark.app.shared.domain.model.UserType
-import com.easypark.app.shared.presentation.composable.ParkButton
-import com.easypark.app.shared.presentation.composable.ParkTextField
+import com.easypark.app.core.domain.model.UserType
+import com.easypark.app.core.presentation.composable.ParkButton
+import com.easypark.app.core.presentation.composable.ParkTextField
 import com.easypark.app.signin.presentation.state.*
 import com.easypark.app.signin.presentation.viewmodel.SignInViewModel
 import kotlinx.coroutines.flow.collectLatest

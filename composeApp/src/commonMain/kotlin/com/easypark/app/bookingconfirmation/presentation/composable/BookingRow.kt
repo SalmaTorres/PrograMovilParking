@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.easypark.app.shared.ui.ParkGray
+import com.easypark.app.core.ui.ParkGray
 
 @Composable
 fun BookingRow(label: String, value: String) {

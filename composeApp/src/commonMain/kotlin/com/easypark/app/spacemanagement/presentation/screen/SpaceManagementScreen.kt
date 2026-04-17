@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
-import com.easypark.app.shared.presentation.composable.OwnerFooter
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.ui.ParkError
+import com.easypark.app.core.presentation.composable.OwnerFooter
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.ui.ParkError
 import com.easypark.app.spacemanagement.presentation.composable.ParkingSpotItem
 import com.easypark.app.spacemanagement.presentation.composable.SummaryCard
 import com.easypark.app.spacemanagement.presentation.viewmodel.SpaceManagementViewModel

@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEffect
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEvent
-import com.easypark.app.shared.presentation.composable.ParkButton
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.ui.*
+import com.easypark.app.core.presentation.composable.ParkButton
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.ui.*
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest

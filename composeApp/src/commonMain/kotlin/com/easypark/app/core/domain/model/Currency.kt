@@ -1,4 +1,4 @@
-package com.easypark.app.shared.domain.model
+package com.easypark.app.core.domain.model
 
 enum class Currency(val symbol: String) {
     BOB("Bs"),

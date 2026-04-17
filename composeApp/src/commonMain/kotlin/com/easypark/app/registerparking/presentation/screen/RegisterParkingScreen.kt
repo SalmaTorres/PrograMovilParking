@@ -15,8 +15,8 @@ import com.easypark.app.registerparking.presentation.composable.ParkingMapSectio
 import com.easypark.app.registerparking.presentation.state.RegisterParkingEffect
 import com.easypark.app.registerparking.presentation.state.RegisterParkingEvent
 import com.easypark.app.registerparking.presentation.viewmodel.RegisterParkingViewModel
-import com.easypark.app.shared.presentation.composable.*
-import com.easypark.app.shared.ui.*
+import com.easypark.app.core.presentation.composable.*
+import com.easypark.app.core.ui.*
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest

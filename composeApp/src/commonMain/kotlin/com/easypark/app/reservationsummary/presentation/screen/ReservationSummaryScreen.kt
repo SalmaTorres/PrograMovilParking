@@ -24,11 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.reservationsummary.presentation.viewmodel.ReservationSummaryViewModel
-import com.easypark.app.shared.presentation.composable.DriverFooter
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkBackground
-import com.easypark.app.shared.ui.ParkGray
+import com.easypark.app.core.presentation.composable.DriverFooter
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.ui.ParkBlue
+import com.easypark.app.core.ui.ParkBackground
+import com.easypark.app.core.ui.ParkGray
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

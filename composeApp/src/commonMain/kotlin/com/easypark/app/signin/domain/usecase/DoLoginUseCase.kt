@@ -1,6 +1,6 @@
 package com.easypark.app.signin.domain.usecase
 
-import com.easypark.app.shared.domain.model.UserType
+import com.easypark.app.core.domain.model.UserType
 import com.easypark.app.signin.domain.repository.AuthenticationRepository
 
 class DoLoginUseCase(

@@ -1,7 +1,7 @@
 package com.easypark.app.signin.data.repository
 
-import com.easypark.app.shared.domain.model.User
-import com.easypark.app.shared.domain.model.UserType
+import com.easypark.app.core.domain.model.User
+import com.easypark.app.core.domain.model.UserType
 import com.easypark.app.signin.domain.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl : AuthenticationRepository {

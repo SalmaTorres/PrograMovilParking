@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.easypark.app.findparking.presentation.state.FindParkingUIState
-import com.easypark.app.shared.domain.model.ParkingModel
+import com.easypark.app.core.domain.model.ParkingModel
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 

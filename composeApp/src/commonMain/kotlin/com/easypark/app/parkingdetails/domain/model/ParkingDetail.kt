@@ -1,6 +1,6 @@
 package com.easypark.app.parkingdetails.domain.model
 
-import com.easypark.app.shared.domain.model.Price
+import com.easypark.app.core.domain.model.Price
 
 data class ParkingDetail(
     val id: String,

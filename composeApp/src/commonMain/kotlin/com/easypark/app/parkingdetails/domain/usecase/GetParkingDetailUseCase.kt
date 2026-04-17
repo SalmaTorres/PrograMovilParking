@@ -1,7 +1,7 @@
 package com.easypark.app.parkingdetails.domain.usecase
 
 import com.easypark.app.parkingdetails.domain.model.ParkingDetail
-import com.easypark.app.shared.domain.repository.ParkingRepository
+import com.easypark.app.core.domain.repository.ParkingRepository
 
 class GetParkingDetailUseCase(
     val repository: ParkingRepository

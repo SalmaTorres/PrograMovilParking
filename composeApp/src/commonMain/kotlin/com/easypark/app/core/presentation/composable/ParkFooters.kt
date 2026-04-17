@@ -1,4 +1,4 @@
-package com.easypark.app.shared.presentation.composable
+package com.easypark.app.core.presentation.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.*
+import com.easypark.app.core.ui.*
 import com.easypark.app.navigation.NavRoute
 import kotlinproject.composeapp.generated.resources.*
 import androidx.compose.foundation.layout.navigationBarsPadding

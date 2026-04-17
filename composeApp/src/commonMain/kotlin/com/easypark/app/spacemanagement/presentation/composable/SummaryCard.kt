@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.ParkBlue
+import com.easypark.app.core.ui.ParkBlue
 import com.easypark.app.spacemanagement.domain.model.SpaceSummary
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

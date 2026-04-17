@@ -18,10 +18,10 @@ import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.register.presentation.state.*
 import com.easypark.app.register.presentation.viewmodel.RegisterViewModel
-import com.easypark.app.shared.domain.model.UserType
-import com.easypark.app.shared.presentation.composable.ParkButton
-import com.easypark.app.shared.presentation.composable.ParkTextField
-import com.easypark.app.shared.ui.*
+import com.easypark.app.core.domain.model.UserType
+import com.easypark.app.core.presentation.composable.ParkButton
+import com.easypark.app.core.presentation.composable.ParkTextField
+import com.easypark.app.core.ui.*
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import kotlinproject.composeapp.generated.resources.Res

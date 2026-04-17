@@ -23,9 +23,9 @@ import androidx.navigation.NavHostController
 import com.easypark.app.findparking.presentation.state.FindParkingEvent
 import com.easypark.app.findparking.presentation.viewmodel.FindParkingViewModel
 import com.easypark.app.navigation.NavRoute
-import com.easypark.app.shared.presentation.composable.DriverFooter
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.presentation.composable.ParkTextField
+import com.easypark.app.core.presentation.composable.DriverFooter
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.presentation.composable.ParkTextField
 import org.koin.compose.viewmodel.koinViewModel
 import com.easypark.app.findparking.presentation.composable.*
 import com.easypark.app.findparking.presentation.state.FindParkingEffect

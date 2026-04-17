@@ -1,11 +1,11 @@
-package com.easypark.app.shared.data.repository
+package com.easypark.app.core.data.repository
 
 import com.easypark.app.bookingconfirmation.domain.model.BookingConfirmation
 import com.easypark.app.parkingdetails.domain.model.ParkingDetail
-import com.easypark.app.shared.domain.model.Currency
-import com.easypark.app.shared.domain.model.ParkingModel
-import com.easypark.app.shared.domain.model.Price
-import com.easypark.app.shared.domain.repository.ParkingRepository
+import com.easypark.app.core.domain.model.Currency
+import com.easypark.app.core.domain.model.ParkingModel
+import com.easypark.app.core.domain.model.Price
+import com.easypark.app.core.domain.repository.ParkingRepository
 import com.easypark.app.reservationsummary.domain.model.ReservationSummaryModel
 
 class ParkingRepositoryImpl : ParkingRepository {

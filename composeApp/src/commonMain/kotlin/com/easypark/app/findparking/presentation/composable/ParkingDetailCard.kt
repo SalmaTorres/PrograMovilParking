@@ -7,10 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.domain.model.ParkingModel
-import com.easypark.app.shared.presentation.composable.ParkButton
-import com.easypark.app.shared.presentation.composable.ParkCard
-import com.easypark.app.shared.ui.*
+import com.easypark.app.core.domain.model.ParkingModel
+import com.easypark.app.core.presentation.composable.ParkButton
+import com.easypark.app.core.presentation.composable.ParkCard
+import com.easypark.app.core.ui.*
 import kotlinproject.composeapp.generated.resources.*
 import kotlinproject.composeapp.generated.resources.status_available
 import kotlinproject.composeapp.generated.resources.status_full

@@ -1,4 +1,4 @@
-package com.easypark.app.shared.presentation.composable
+package com.easypark.app.core.presentation.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

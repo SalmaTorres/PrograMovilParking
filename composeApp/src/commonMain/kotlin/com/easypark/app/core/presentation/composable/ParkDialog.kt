@@ -1,4 +1,4 @@
-package com.easypark.app.shared.presentation.composable
+package com.easypark.app.core.presentation.composable
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkGray
+import com.easypark.app.core.ui.ParkBlue
+import com.easypark.app.core.ui.ParkGray
 
 @Composable
 fun ParkDialog(

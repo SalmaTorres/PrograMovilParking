@@ -21,8 +21,8 @@ import com.easypark.app.notifications.presentation.composable.NotificationItem
 import com.easypark.app.notifications.presentation.state.NotificationsEffect
 import com.easypark.app.notifications.presentation.state.NotificationsEvent
 import com.easypark.app.notifications.presentation.viewmodel.NotificationsViewModel
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.ui.ParkGray
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.ui.ParkGray
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.notifications_empty
 import kotlinproject.composeapp.generated.resources.notifications_title

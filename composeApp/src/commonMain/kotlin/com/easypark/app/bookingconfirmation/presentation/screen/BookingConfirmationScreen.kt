@@ -24,10 +24,10 @@ import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmati
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEvent
 import com.easypark.app.bookingconfirmation.presentation.state.PaymentMethod
 import com.easypark.app.navigation.NavRoute
-import com.easypark.app.shared.presentation.composable.ParkButton
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkGray
+import com.easypark.app.core.presentation.composable.ParkButton
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.ui.ParkBlue
+import com.easypark.app.core.ui.ParkGray
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest

@@ -1,4 +1,4 @@
-package com.easypark.app.shared.ui
+package com.easypark.app.core.ui
 
 import androidx.compose.ui.graphics.Color
 

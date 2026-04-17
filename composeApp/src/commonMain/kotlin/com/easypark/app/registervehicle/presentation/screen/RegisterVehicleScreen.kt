@@ -14,9 +14,9 @@ import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.registervehicle.presentation.state.*
 import com.easypark.app.registervehicle.presentation.viewmodel.RegisterVehicleViewModel
-import com.easypark.app.shared.presentation.composable.*
-import com.easypark.app.shared.ui.ParkGray
-import com.easypark.app.shared.ui.ParkTextDark
+import com.easypark.app.core.presentation.composable.*
+import com.easypark.app.core.ui.ParkGray
+import com.easypark.app.core.ui.ParkTextDark
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

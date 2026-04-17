@@ -1,4 +1,4 @@
-package com.easypark.app.shared.presentation.composable
+package com.easypark.app.core.presentation.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkBlueLight
+import com.easypark.app.core.ui.ParkBlue
+import com.easypark.app.core.ui.ParkBlueLight
 
 @Composable
 fun ParkButton(

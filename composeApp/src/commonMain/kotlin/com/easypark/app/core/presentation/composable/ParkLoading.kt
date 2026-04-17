@@ -1,4 +1,4 @@
-package com.easypark.app.shared.presentation.composable
+package com.easypark.app.core.presentation.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkGray
+import com.easypark.app.core.ui.ParkBlue
+import com.easypark.app.core.ui.ParkGray
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

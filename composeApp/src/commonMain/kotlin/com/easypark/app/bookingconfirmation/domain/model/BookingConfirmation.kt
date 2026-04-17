@@ -1,6 +1,6 @@
 package com.easypark.app.bookingconfirmation.domain.model
 
-import com.easypark.app.shared.domain.model.Price
+import com.easypark.app.core.domain.model.Price
 
 data class BookingConfirmation(
     val locationName: String,

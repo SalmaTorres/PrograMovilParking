@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,11 +24,11 @@ import com.easypark.app.reservationhistory.domain.model.ReservationStatus
 import com.easypark.app.reservationhistory.presentation.composable.ReservationCard
 import com.easypark.app.reservationhistory.presentation.composable.ReservationTabRow
 import com.easypark.app.reservationhistory.presentation.viewmodel.ReservationHistoryViewModel
-import com.easypark.app.shared.presentation.composable.OwnerFooter
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.presentation.composable.ParkLoading
-import com.easypark.app.shared.presentation.composable.ParkTextField
-import com.easypark.app.shared.ui.ParkBackground
+import com.easypark.app.core.presentation.composable.OwnerFooter
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.presentation.composable.ParkLoading
+import com.easypark.app.core.presentation.composable.ParkTextField
+import com.easypark.app.core.ui.ParkBackground
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

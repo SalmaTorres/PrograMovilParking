@@ -1,4 +1,4 @@
-package com.easypark.app.shared.presentation.composable
+package com.easypark.app.core.presentation.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -24,9 +24,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.ParkBlueLight
-import com.easypark.app.shared.ui.ParkGray
-import com.easypark.app.shared.ui.ParkTextDark
+import com.easypark.app.core.ui.ParkBlueLight
+import com.easypark.app.core.ui.ParkGray
+import com.easypark.app.core.ui.ParkTextDark
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

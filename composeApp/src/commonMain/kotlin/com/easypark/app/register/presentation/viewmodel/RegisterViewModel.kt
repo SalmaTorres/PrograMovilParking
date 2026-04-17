@@ -2,11 +2,9 @@ package com.easypark.app.register.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.easypark.app.register.domain.model.RegisterModel
 import com.easypark.app.register.domain.usecase.DoRegisterUseCase
 import com.easypark.app.register.presentation.state.*
-import com.easypark.app.shared.domain.model.UserType
-import kotlinx.coroutines.channels.Channel
+import com.easypark.app.core.domain.model.UserType
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
