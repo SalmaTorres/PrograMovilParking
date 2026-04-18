@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ParkingDetailsViewModel(
-    private val parkingId: String,
+    private val parkingId: Int,
     private val getParkingDetailUseCase: GetParkingDetailUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ParkingDetailsUIState())
@@ -47,10 +47,12 @@ class ParkingDetailsViewModel(
         viewModelScope.launch {
             try {
                 val detail = getParkingDetailUseCase(parkingId)
-                _state.update { it.copy(isLoading = false, parkingDetail = detail) }
+                _state.update { it.copy(
+                    isLoading = false,
+                    parkingDetail = detail) }
             } catch (e: Exception) {
                 _state.update { it.copy(isLoading = false) }
-                emit(ParkingDetailsEffect.ShowError("No se pudo cargar el detalle"))
+                emit(ParkingDetailsEffect.ShowError("Error al conectar con la base de datos"))
             }
         }
     }

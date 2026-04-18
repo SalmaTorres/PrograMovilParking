@@ -28,7 +28,10 @@ data class ParkingEntity(
     val rating: Float? = 0.0f,
 
     @ColumnInfo(name = "totalSpaces")
-    val totalSpaces: Int? = 0
+    val totalSpaces: Int,
+
+    @ColumnInfo(name = "schedule")
+    val schedule: String? = "08:00 - 22:00",
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

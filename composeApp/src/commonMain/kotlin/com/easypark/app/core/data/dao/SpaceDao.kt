@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.easypark.app.core.data.entity.ReservationEntity
 import com.easypark.app.core.data.entity.SpaceEntity
 
 @Dao
@@ -29,4 +28,10 @@ interface SpaceDao {
 
     @Query("DELETE FROM space")
     suspend fun deleteAll()
+
+    @Query("SELECT COUNT(*) FROM space WHERE parkingId = :parkingId")
+    suspend fun countTotal(parkingId: Int): Int
+
+    @Query("SELECT COUNT(*) FROM space WHERE parkingId = :parkingId AND state = 'LIBRE'")
+    suspend fun countAvailable(parkingId: Int): Int
 }

@@ -51,8 +51,14 @@ class FindParkingViewModel(
 
     private fun loadInitialData() {
         viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
             val list = getParkingsUseCase()
-            _state.update { it.copy(allParkings = list) }
+
+            _state.update { it.copy(
+                allParkings = list,
+                isLoading = false
+            )}
         }
     }
 

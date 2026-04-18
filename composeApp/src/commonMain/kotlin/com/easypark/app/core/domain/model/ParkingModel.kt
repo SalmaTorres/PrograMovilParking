@@ -9,5 +9,8 @@ data class ParkingModel(
     val longitude: Double,
     val pricePerHour: Price,
     val rating: Float? = 0.0f,
-    val totalSpaces: Int? = 0
+    val totalSpaces: Int,
+    val schedule: String? = "08:00 - 22:00",
+    val reviewCount: Int? = 0,
+    val isAvailable: Boolean
 )
