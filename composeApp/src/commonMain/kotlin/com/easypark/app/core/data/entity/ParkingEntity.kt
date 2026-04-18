@@ -22,10 +22,13 @@ data class ParkingEntity(
     val longitude: Double,
 
     @ColumnInfo(name = "pricePerHour")
-    val pricePerHour: Float,
+    val pricePerHour: Double,
 
     @ColumnInfo(name = "rating")
-    val rating: Float? = 0.0f
+    val rating: Float? = 0.0f,
+
+    @ColumnInfo(name = "totalSpaces")
+    val totalSpaces: Int? = 0
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

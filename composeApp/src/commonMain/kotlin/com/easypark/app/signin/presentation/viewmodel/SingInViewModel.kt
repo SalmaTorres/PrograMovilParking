@@ -48,7 +48,6 @@ class SignInViewModel(
             _state.update { it.copy(isLoading = false) }
 
             if (userTypeResult != null) {
-                // Pasamos el tipo de usuario al efecto
                 emit(SignInEffect.NavigateToHome(userTypeResult))
             } else {
                 emit(SignInEffect.ShowError("Email o contraseña incorrectos"))

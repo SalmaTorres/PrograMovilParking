@@ -4,6 +4,7 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.easypark.app.core.data.dao.NotificationDao
 import com.easypark.app.core.data.dao.ParkingDao
 import com.easypark.app.core.data.dao.ReservationDao
@@ -16,6 +17,8 @@ import com.easypark.app.core.data.entity.ReservationEntity
 import com.easypark.app.core.data.entity.SpaceEntity
 import com.easypark.app.core.data.entity.UserEntity
 import com.easypark.app.core.data.entity.VehicleEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 
 @Database(
     entities = [
@@ -45,3 +48,10 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
 }
 
 expect fun getDatabaseBuilder(ctx: Any? = null): RoomDatabase.Builder<AppDatabase>
+
+fun createDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase {
+    return builder
+        .setDriver(BundledSQLiteDriver()) // Importante: Usa el driver empaquetado
+        .setQueryCoroutineContext(Dispatchers.IO)
+        .build()
+}

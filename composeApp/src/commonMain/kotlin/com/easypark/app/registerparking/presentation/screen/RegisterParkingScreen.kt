@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.registerparking.presentation.composable.ParkingMapSection
 import com.easypark.app.registerparking.presentation.state.RegisterParkingEffect
@@ -27,11 +28,13 @@ import org.koin.compose.viewmodel.koinViewModel
 fun RegisterParkingScreen(
     navController: NavHostController,
     viewModel: RegisterParkingViewModel = koinViewModel(),
+    userFromStep1: UserModel
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
+        viewModel.initUser(userFromStep1)
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 RegisterParkingEffect.NavigateBack -> {

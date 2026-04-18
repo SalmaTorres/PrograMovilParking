@@ -1,13 +1,13 @@
 package com.easypark.app.core.domain.model
 
 data class ParkingModel(
-    val id: String,
+    val id: Int,
+    val ownerId: Int,
     val name: String,
     val address: String,
-    val pricePerHour: Price,
-    val isAvailable: Boolean,
     val latitude: Double,
     val longitude: Double,
-    val totalSpaces: Int = 0,
-    val rating: Double = 0.0
+    val pricePerHour: Price,
+    val rating: Float? = 0.0f,
+    val totalSpaces: Int? = 0
 )

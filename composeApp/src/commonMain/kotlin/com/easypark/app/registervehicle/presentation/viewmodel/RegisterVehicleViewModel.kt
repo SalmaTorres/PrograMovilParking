@@ -2,7 +2,8 @@ package com.easypark.app.registervehicle.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.easypark.app.registervehicle.domain.model.RegisterVehicleModel
+import com.easypark.app.core.domain.model.UserModel
+import com.easypark.app.core.domain.model.VehicleModel
 import com.easypark.app.registervehicle.domain.usecase.RegisterVehicleUseCase
 import com.easypark.app.registervehicle.presentation.state.*
 import kotlinx.coroutines.flow.*
@@ -12,11 +13,16 @@ class RegisterVehicleViewModel(
     private val useCase: RegisterVehicleUseCase
 ) : ViewModel() {
 
+    private var userFromStep1: UserModel? = null
     private val _state = MutableStateFlow(RegisterVehicleUIState())
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<RegisterVehicleEffect>()
     val effect = _effect.asSharedFlow()
+
+    fun initUser(user: UserModel) {
+        this.userFromStep1 = user
+    }
 
     fun onEvent(event: RegisterVehicleEvent) {
         when (event) {
@@ -40,6 +46,7 @@ class RegisterVehicleViewModel(
 
     private fun submit() {
         val s = _state.value
+        val user = userFromStep1 ?: return
 
         val hasError = s.plate.isEmpty() || s.model.isEmpty() || s.color.isEmpty()
 
@@ -56,13 +63,22 @@ class RegisterVehicleViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = useCase(RegisterVehicleModel(s.plate, s.model, s.color))
+            val vehicleModel = VehicleModel(
+                id = 0,
+                driverId = 0,
+                plate = s.plate,
+                model = s.model,
+                color = s.color
+            )
+
+            val result = useCase(user, vehicleModel)
+
             _state.update { it.copy(isLoading = false) }
 
             if (result) {
                 emit(RegisterVehicleEffect.NavigateNext)
             } else {
-                emit(RegisterVehicleEffect.ShowError("Error al registrar el vehículo"))
+                emit(RegisterVehicleEffect.ShowError("Error al finalizar el registro"))
             }
         }
     }

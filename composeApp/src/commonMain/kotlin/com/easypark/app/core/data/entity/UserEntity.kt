@@ -16,7 +16,10 @@ data class UserEntity(
     val email: String,
 
     @ColumnInfo(name = "cellphone")
-    val cellphone: Int
+    val cellphone: Int,
+
+    @ColumnInfo(name = "password")
+    val password: String
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

@@ -19,7 +19,7 @@ data class ReservationEntity(
     val finalHour: Long = 0,
 
     @ColumnInfo(name = "totalPrice")
-    val totalPrice: Float,
+    val totalPrice: Double,
 
     @ColumnInfo(name = "state")
     val state: String,

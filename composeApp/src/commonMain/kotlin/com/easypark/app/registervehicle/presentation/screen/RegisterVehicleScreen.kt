@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.registervehicle.presentation.state.*
 import com.easypark.app.registervehicle.presentation.viewmodel.RegisterVehicleViewModel
@@ -26,11 +27,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RegisterVehicleScreen(
     navController: NavHostController,
-    viewModel: RegisterVehicleViewModel = koinViewModel()
+    viewModel: RegisterVehicleViewModel = koinViewModel(),
+    userFromStep1: UserModel
 ) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
+        viewModel.initUser(userFromStep1)
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 RegisterVehicleEffect.NavigateBack -> navController.popBackStack()

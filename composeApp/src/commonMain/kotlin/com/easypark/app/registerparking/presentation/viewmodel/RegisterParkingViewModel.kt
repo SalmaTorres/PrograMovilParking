@@ -7,18 +7,24 @@ import com.easypark.app.registerparking.presentation.state.*
 import com.easypark.app.core.domain.model.Currency
 import com.easypark.app.core.domain.model.ParkingModel
 import com.easypark.app.core.domain.model.Price
+import com.easypark.app.core.domain.model.UserModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class RegisterParkingViewModel(
     private val registerUseCase: RegisterParkingUseCase
 ) : ViewModel() {
+    private var userFromStep1: UserModel? = null
 
     private val _state = MutableStateFlow(RegisterParkingUIState())
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<RegisterParkingEffect>()
     val effect = _effect.asSharedFlow()
+
+    fun initUser(user: UserModel) {
+        this.userFromStep1 = user
+    }
 
     fun onEvent(event: RegisterParkingEvent) {
         when (event) {
@@ -49,8 +55,8 @@ class RegisterParkingViewModel(
 
     private fun sendRegistration() {
         val s = _state.value
+        val user = userFromStep1 ?: return
 
-        // 1. Validación de campos obligatorios
         val hasError = s.name.isEmpty() || s.address.isEmpty() ||
                 s.pricePerHour.isEmpty() || s.totalSpaces.isEmpty()
 
@@ -65,12 +71,12 @@ class RegisterParkingViewModel(
             return
         }
 
-        // 2. Ejecución del proceso de registro (Mock)
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            val model = ParkingModel(
-                id = "owner_123", // ID Mock del dueño actual
+            val parkingModel = ParkingModel(
+                id = 0,
+                ownerId = 0, // Se sobreescribirá en el Repo
                 name = s.name,
                 address = s.address,
                 latitude = s.latitude,
@@ -79,12 +85,11 @@ class RegisterParkingViewModel(
                     amount = s.pricePerHour.toDoubleOrNull() ?: 0.0,
                     currency = Currency.BOB
                 ),
-                isAvailable = true,
+                rating = 0.0f,
                 totalSpaces = s.totalSpaces.toIntOrNull() ?: 0
             )
 
-            // Asumimos que el UseCase devuelve Boolean para mantener consistencia con los anteriores
-            val result = registerUseCase.invoke(model)
+            val result = registerUseCase(user, parkingModel)
             _state.update { it.copy(isLoading = false) }
 
             if (result) {
