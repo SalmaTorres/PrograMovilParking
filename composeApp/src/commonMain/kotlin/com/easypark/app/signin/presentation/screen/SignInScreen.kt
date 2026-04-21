@@ -35,11 +35,11 @@ fun SignInScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is SignInEffect.NavigateToHome -> {
-                    if (effect.userType == UserType.OWNER) {
+                    if (effect.userType == "OWNER") {
                         navController.navigate(NavRoute.SpaceManagement) {
                             popUpTo(0)
                         }
-                    } else if (effect.userType == UserType.DRIVER) {
+                    } else if (effect.userType == "DRIVER") {
                         navController.navigate(NavRoute.FindParking) {
                             popUpTo(0)
                         }

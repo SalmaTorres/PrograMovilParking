@@ -8,18 +8,16 @@ class DoLoginUseCase(
     private val repository: AuthRepository,
     private val sessionManager: SessionManager
 ) {
-    suspend operator fun invoke(email: String, pass: String): UserType? {
-        val user = repository.login(email, pass)
+    suspend fun invoke(email: String, pass: String): String? {
+        val user = repository.login(email, pass) ?: return null
 
-        if (user != null) {
-            var parkingId: Int? = null
-
-            if (user.type == UserType.OWNER) {
-                parkingId = repository.getParkingIdByOwner(user.id)
-            }
-
-            sessionManager.saveSession(user, parkingId)
+        var parkingId: Int? = null
+        if (user.type.name == "OWNER") {
+            parkingId = repository.getParkingIdByOwner(user.id)
         }
-        return user?.type
+
+        sessionManager.saveSession(user, parkingId)
+
+        return user.type.name
     }
 }

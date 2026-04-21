@@ -5,11 +5,12 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.easypark.app.bookingconfirmation.data.dao.BookingConfirmationDao
+import com.easypark.app.core.data.dao.ReservationDao
 import com.easypark.app.notifications.data.dao.NotificationDao
 import com.easypark.app.parkingdetails.data.dao.ParkingDetailDao
 import com.easypark.app.core.data.dao.SpaceDao
 import com.easypark.app.core.data.dao.UserDao
-import com.easypark.app.core.data.dao.VehicleDao
 import com.easypark.app.core.data.entity.*
 import com.easypark.app.findparking.data.dao.FindParkingDao
 import com.easypark.app.registerparking.data.dao.RegisterParkingDao
@@ -38,7 +39,6 @@ import kotlinx.coroutines.IO
 abstract class AppDatabase : RoomDatabase() {
     abstract fun spaceDao(): SpaceDao
     abstract fun userDao(): UserDao
-    abstract fun vehicleDao(): VehicleDao
     abstract fun findParkingDao(): FindParkingDao
     abstract fun notificationDao(): NotificationDao
     abstract fun parkingDao(): ParkingDetailDao
@@ -48,6 +48,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun signInDao(): SignInDao
     abstract fun registerDao(): RegisterDao
     abstract fun registerVehicleDao(): RegisterVehicleDao
+    abstract fun reservationDao(): ReservationDao
+    abstract fun bookingConfirmationDao(): BookingConfirmationDao
 }
 
 // The Room compiler generates the `actual` implementations.
@@ -60,7 +62,7 @@ expect fun getDatabaseBuilder(ctx: Any? = null): RoomDatabase.Builder<AppDatabas
 
 fun createDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase {
     return builder
-        .setDriver(BundledSQLiteDriver()) // Importante: Usa el driver empaquetado
+        .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }

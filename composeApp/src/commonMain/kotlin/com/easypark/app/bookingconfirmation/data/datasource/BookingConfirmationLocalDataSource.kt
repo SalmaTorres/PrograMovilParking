@@ -10,4 +10,5 @@ interface BookingConfirmationLocalDataSource {
     suspend fun getParkingById(id: Int): ParkingEntity?
     suspend fun getFirstAvailableSpace(parkingId: Int): SpaceEntity?
     suspend fun updateSpaceStatus(spaceId: Int, newState: String)
+    suspend fun getOwnerIdByParking(parkingId: Int): Int?
 }

@@ -44,4 +44,7 @@ class EarningsRepositoryImpl(
             )
         }
     }
+    override suspend fun getTotalEarnings(parkingId: Int): Double {
+        return 150.75
+    }
 }

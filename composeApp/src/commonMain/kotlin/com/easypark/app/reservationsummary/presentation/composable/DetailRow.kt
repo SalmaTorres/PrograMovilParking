@@ -1,6 +1,7 @@
 package com.easypark.app.reservationsummary.presentation.composable
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,11 +24,11 @@ fun DetailRow(icon: ImageVector, label: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Column {
             Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text(label, fontWeight = FontWeight.Medium)
+            Text(value, fontWeight = FontWeight.Normal)
         }
-        Text(value, fontWeight = FontWeight.Normal)
     }
 }

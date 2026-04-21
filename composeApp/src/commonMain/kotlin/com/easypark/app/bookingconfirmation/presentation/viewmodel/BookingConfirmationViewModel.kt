@@ -66,18 +66,29 @@ class BookingConfirmationViewModel(
             val currentUserId = sessionManager.getUserId()
             val duration = _state.value.bookingConfirmation?.durationHours ?: 1
 
-            if (currentUserId != -1) {
-                val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration)
+            println("DEBUG: Iniciando reserva para usuario $currentUserId en parking $parkingId")
 
-                if (reservationId != null) {
-                    emit(BookingConfirmationEffect.NavigateToSuccess(reservationId))
-                } else {
+            if (currentUserId != -1) {
+                try {
+                    val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration)
+
+                    if (reservationId != null) {
+                        println("DEBUG: Reserva exitosa. ID: $reservationId")
+                        emit(BookingConfirmationEffect.NavigateToSuccess(reservationId))
+                    } else {
+                        println("DEBUG: El UseCase devolvió NULL (Probablemente no hay espacios libres)")
+                        _state.update { it.copy(isLoading = false) }
+                        emit(BookingConfirmationEffect.ShowError("No hay espacios disponibles en este parqueo"))
+                    }
+                } catch (e: Exception) {
+                    println("DEBUG: Error en DB: ${e.message}")
                     _state.update { it.copy(isLoading = false) }
-                    emit(BookingConfirmationEffect.ShowError("Error al procesar la reserva"))
+                    emit(BookingConfirmationEffect.ShowError("Error de base de datos: ${e.message}"))
                 }
             } else {
+                println("DEBUG: Usuario no logueado")
                 _state.update { it.copy(isLoading = false) }
-                emit(BookingConfirmationEffect.ShowError("Sesión expirada. Inicia sesión de nuevo."))
+                emit(BookingConfirmationEffect.ShowError("Sesión expirada"))
             }
         }
     }

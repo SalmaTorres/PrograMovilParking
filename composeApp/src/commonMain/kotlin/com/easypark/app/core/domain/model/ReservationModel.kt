@@ -15,7 +15,8 @@ data class ReservationModel(
     val paymentMethod: String = "CASH",
     val status: String = "ACTIVE"
 ) {
-    val entryTime: String get() = "10:30 AM"
+    val startTimeStr: String get() = "10:30 AM"
+    val endTimeStr: String get() = "12:30 PM"
 
     val durationText: String get() {
         val diff = endTime - startTime

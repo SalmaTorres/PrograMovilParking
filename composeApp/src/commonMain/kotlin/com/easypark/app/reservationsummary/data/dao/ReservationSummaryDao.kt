@@ -16,4 +16,7 @@ interface ReservationSummaryDao {
 
     @Query("SELECT * FROM parking WHERE id = :parkingId")
     suspend fun getParkingById(parkingId: Int): ParkingEntity?
+
+    @Query("SELECT * FROM reservation WHERE driverId = :userId") // <-- Revisa si es driverId
+    suspend fun getReservationsByDriver(userId: Int): List<ReservationEntity>
 }

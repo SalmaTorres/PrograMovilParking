@@ -1,6 +1,5 @@
 package com.easypark.app.reservationhistory.data.repository
 
-import com.easypark.app.core.data.datasource.SpaceLocalDataSource
 import com.easypark.app.core.domain.model.status.ReservationStatus
 import com.easypark.app.reservationhistory.domain.repository.ReservationHistoryRepository
 import com.easypark.app.reservationhistory.data.dao.ReservationHistoryDao
@@ -9,7 +8,6 @@ import com.easypark.app.reservationhistory.domain.model.ReservationItemModel
 class ReservationHistoryRepositoryImpl(
     private val dao: ReservationHistoryDao
 ) : ReservationHistoryRepository {
-
     override suspend fun getReservations(parkingId: Int): List<ReservationItemModel> {
         val entities = dao.getReservationsByParking(parkingId)
 

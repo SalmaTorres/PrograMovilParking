@@ -38,6 +38,7 @@ class SpaceManagementViewModel(
     private fun loadSpaceData() {
         viewModelScope.launch {
             val myParkingId = sessionManager.currentParkingId
+            println("DEBUG-SESSION: El ID del parqueo en sesión es: $myParkingId")
 
             if (myParkingId != null) {
                 _state.update { it.copy(isLoading = true) }

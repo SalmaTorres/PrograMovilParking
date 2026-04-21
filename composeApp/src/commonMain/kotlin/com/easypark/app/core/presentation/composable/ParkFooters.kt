@@ -76,8 +76,8 @@ fun DriverFooter(
             FooterItem(
                 label = stringResource(Res.string.nav_my_bookings),
                 imageRes = Res.drawable.ic_calendar,
-                isSelected = currentRoute is NavRoute.ReservationHistory || currentRoute is NavRoute.ReservationSummary,
-                onClick = { onNavigate(NavRoute.ReservationHistory) }
+                isSelected = currentRoute is NavRoute.ReservationSummary,
+                onClick = { onNavigate(NavRoute.ReservationSummary(0)) }
             )
         }
     }

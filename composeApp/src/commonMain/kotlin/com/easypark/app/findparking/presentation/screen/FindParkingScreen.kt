@@ -107,12 +107,13 @@ fun FindParkingScreen(
             }
 
             state.selectedParking?.let { parking ->
-                Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)) {
+                Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp, start = 16.dp, end = 16.dp)) {
                     ParkingDetailCard(
                         parking = parking,
                         onReserve = { viewModel.onEvent(FindParkingEvent.OnReserveClick) },
                         onDetails = { viewModel.onEvent(FindParkingEvent.OnDetailsClick) },
-                        )
+                        onClose = { viewModel.onEvent(FindParkingEvent.OnDismissDetails) }
+                    )
                 }
             }
         }

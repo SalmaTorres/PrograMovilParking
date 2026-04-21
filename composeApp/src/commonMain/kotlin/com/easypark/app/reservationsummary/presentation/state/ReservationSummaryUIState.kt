@@ -4,6 +4,6 @@ import com.easypark.app.core.domain.model.ReservationModel
 
 data class ReservationSummaryUiState(
     val isLoading: Boolean = false,
-    val reservation: ReservationModel? = null,
+    val reservations: List<ReservationModel> = emptyList(),
     val error: String? = null
 )

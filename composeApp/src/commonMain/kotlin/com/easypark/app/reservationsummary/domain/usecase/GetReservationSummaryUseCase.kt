@@ -6,7 +6,7 @@ import com.easypark.app.reservationsummary.domain.repository.ReservationSummaryR
 class GetReservationSummaryUseCase(
     private val repository: ReservationSummaryRepository
 ) {
-    suspend operator fun invoke(reservationId: Int): ReservationModel {
-        return repository.getReservationSummary(reservationId)
+    suspend operator fun invoke(reservationId: Int): List<ReservationModel> {
+        return repository.getActiveReservations(reservationId)
     }
 }

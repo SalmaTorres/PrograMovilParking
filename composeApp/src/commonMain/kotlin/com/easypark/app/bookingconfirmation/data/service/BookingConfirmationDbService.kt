@@ -18,4 +18,7 @@ class BookingConfirmationDbService(
     override suspend fun updateSpaceStatus(spaceId: Int, newState: String) {
         dao.updateSpaceStatus(spaceId, newState)
     }
+    override suspend fun getOwnerIdByParking(parkingId: Int): Int? {
+        return dao.getParkingById(parkingId)?.ownerId
+    }
 }
