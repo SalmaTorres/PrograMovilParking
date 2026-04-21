@@ -3,6 +3,7 @@ package com.easypark.app.registervehicle.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.core.domain.model.UserModel
+import com.easypark.app.core.domain.session.SessionManager
 import com.easypark.app.registervehicle.domain.model.VehicleModel
 import com.easypark.app.registervehicle.domain.usecase.RegisterVehicleUseCase
 import com.easypark.app.registervehicle.presentation.state.*
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class RegisterVehicleViewModel(
-    private val useCase: RegisterVehicleUseCase
+    private val useCase: RegisterVehicleUseCase,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private var userFromStep1: UserModel? = null
@@ -63,6 +65,7 @@ class RegisterVehicleViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
+
             val vehicleModel = VehicleModel(
                 id = 0,
                 driverId = 0,
@@ -71,14 +74,20 @@ class RegisterVehicleViewModel(
                 color = s.color
             )
 
-            val result = useCase(user, vehicleModel)
+            val user = userFromStep1 ?: return@launch
+
+            val registeredUserId = useCase(user, vehicleModel)
 
             _state.update { it.copy(isLoading = false) }
 
-            if (result) {
+            if (registeredUserId != null) {
+                val finalUser = user.copy(id = registeredUserId)
+
+                sessionManager.saveSession(finalUser, null)
+
                 emit(RegisterVehicleEffect.NavigateNext)
             } else {
-                emit(RegisterVehicleEffect.ShowError("Error al finalizar el registro"))
+                emit(RegisterVehicleEffect.ShowError("Error al registrar el vehículo"))
             }
         }
     }

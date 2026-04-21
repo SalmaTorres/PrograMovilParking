@@ -45,6 +45,9 @@ class EarningsRepositoryImpl(
         }
     }
     override suspend fun getTotalEarnings(parkingId: Int): Double {
-        return 150.75
+        val reservations = reservationDS.readByParking(parkingId)
+        return reservations
+            .filter { it.state == "ACTIVE" || it.state == "PAID" }
+            .sumOf { it.totalPrice }
     }
 }

@@ -10,16 +10,22 @@ import com.easypark.app.registerparking.data.datasource.RegisterParkingLocalData
 class RegisterParkingRepositoryImpl (
     private val localDS: RegisterParkingLocalDataSource
 ): RegisterParkingRepository {
-    override suspend fun completeOwnerRegistration(user: UserModel, parking: ParkingModel): Boolean {
+    override suspend fun completeOwnerRegistration(user: UserModel, parking: ParkingModel): Pair<Int, Int>? {
         return try {
-            val userId = localDS.saveUser(user.toEntity())
-            val parkingId = localDS.saveParking(parking.toEntity(ownerId = userId))
+            val userIdLong = localDS.saveUser(user.toEntity())
+            val userId = userIdLong.toInt()
+
+            val parkingIdLong = localDS.saveParking(parking.toEntity(ownerId = userId))
+            val parkingId = parkingIdLong.toInt()
 
             val spacesToCreate = (1..parking.totalSpaces).map { i ->
                 SpaceEntity(parkingId = parkingId, number = i, state = "LIBRE")
             }
             localDS.saveSpaces(spacesToCreate)
-            true
-        } catch (e: Exception) { false }
+
+            userId to parkingId
+        } catch (e: Exception) {
+            null
+        }
     }
 }

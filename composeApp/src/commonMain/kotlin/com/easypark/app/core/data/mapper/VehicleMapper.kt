@@ -3,7 +3,7 @@ package com.easypark.app.core.data.mapper
 import com.easypark.app.core.data.entity.VehicleEntity
 import com.easypark.app.registervehicle.domain.model.VehicleModel
 
-fun VehicleModel.toEntity() = VehicleEntity(
+fun VehicleModel.toEntity(driverId: Int) = VehicleEntity(
     driverId,
     plate,
     model,

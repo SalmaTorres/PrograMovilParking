@@ -1,8 +1,6 @@
-package com.easypark.app.core.domain.model
-
+import com.easypark.app.core.domain.model.PriceModel
 import kotlinx.serialization.Serializable
 
-@Serializable
 data class ReservationModel(
     val id: Int = 0,
     val parkingName: String,
@@ -15,8 +13,17 @@ data class ReservationModel(
     val paymentMethod: String = "CASH",
     val status: String = "ACTIVE"
 ) {
-    val startTimeStr: String get() = "10:30 AM"
-    val endTimeStr: String get() = "12:30 PM"
+    // Función auxiliar para formatear milisegundos a HH:mm (Ej: 14:30)
+    private fun formatMillisToTime(millis: Long): String {
+        val totalSeconds = millis / 1000
+        val totalMinutes = totalSeconds / 60
+        val hours = (totalMinutes / 60) % 24
+        val minutes = totalMinutes % 60
+        return "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}"
+    }
+
+    val startTimeStr: String get() = formatMillisToTime(startTime)
+    val endTimeStr: String get() = formatMillisToTime(endTime)
 
     val durationText: String get() {
         val diff = endTime - startTime

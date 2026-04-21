@@ -1,8 +1,8 @@
 package com.easypark.app.core.data.mapper
 
+import ReservationModel
 import com.easypark.app.core.data.entity.ReservationEntity
 import com.easypark.app.core.domain.model.PriceModel
-import com.easypark.app.core.domain.model.ReservationModel
 
 fun ReservationModel.toEntity(driverId: Int) = ReservationEntity(
     driverId = driverId,

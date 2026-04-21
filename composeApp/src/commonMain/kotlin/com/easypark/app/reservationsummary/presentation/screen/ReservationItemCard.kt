@@ -1,5 +1,6 @@
 package com.easypark.app.reservationsummary.presentation.screen
 
+import ReservationModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.core.domain.model.ReservationModel
 import com.easypark.app.core.ui.ParkBackground
 import com.easypark.app.core.ui.ParkBlue
 import com.easypark.app.core.ui.ParkGray

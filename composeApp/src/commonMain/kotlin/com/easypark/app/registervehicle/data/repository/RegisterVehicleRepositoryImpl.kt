@@ -9,12 +9,14 @@ import com.easypark.app.registervehicle.domain.repository.RegisterVehicleReposit
 class RegisterVehicleRepositoryImpl(
     private val localDS: RegisterVehicleLocalDataSource
 ) : RegisterVehicleRepository {
-    override suspend fun completeDriverRegistration(user: UserModel, vehicle: VehicleModel): Boolean {
+    override suspend fun completeDriverRegistration(user: UserModel, vehicle: VehicleModel): Int? {
         return try {
-            val userId = localDS.saveUser(user.toEntity())
-            val vehicleEntity = vehicle.toEntity().copy(driverId = userId)
-            localDS.saveVehicle(vehicleEntity)
-            true
-        } catch (e: Exception) { false }
+            val userId = localDS.saveUser(user.toEntity()).toInt()
+            localDS.saveVehicle(vehicle.toEntity(driverId = userId)) // El cambio del punto 1
+
+            userId
+        } catch (e: Exception) {
+            null
+        }
     }
 }

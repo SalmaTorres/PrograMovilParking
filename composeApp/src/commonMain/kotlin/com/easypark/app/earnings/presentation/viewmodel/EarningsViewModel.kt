@@ -24,10 +24,14 @@ class EarningsViewModel(
 
     private fun loadEarningsData() {
         viewModelScope.launch {
+            val user = sessionManager.currentUser.value
             val parkingId = sessionManager.currentParkingId
 
             if (parkingId != null) {
-                _state.update { it.copy(isLoading = true) }
+                _state.update { it.copy(
+                    isLoading = true,
+                    parkingName = user?.name ?: "Mi Parqueo"
+                )}
                 try {
                     val data = getEarningsDataUseCase.execute(parkingId)
                     _state.update { it.copy(

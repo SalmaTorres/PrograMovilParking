@@ -1,6 +1,6 @@
 package com.easypark.app.reservationsummary.presentation.state
 
-import com.easypark.app.core.domain.model.ReservationModel
+import ReservationModel
 
 data class ReservationSummaryUiState(
     val isLoading: Boolean = false,

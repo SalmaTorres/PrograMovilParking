@@ -4,5 +4,5 @@ import com.easypark.app.registerparking.domain.model.ParkingModel
 import com.easypark.app.core.domain.model.UserModel
 
 interface RegisterParkingRepository {
-    suspend fun completeOwnerRegistration(user: UserModel, parking: ParkingModel): Boolean
+    suspend fun completeOwnerRegistration(user: UserModel, parking: ParkingModel): Pair<Int, Int>?
 }

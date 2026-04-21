@@ -5,6 +5,7 @@ import com.easypark.app.earnings.domain.model.EarningsSummaryModel
 
 data class EarningsUiState(
     val isLoading: Boolean = true,
+    val parkingName: String = "Cargando...",
     val summary: EarningsSummaryModel? = null,
     val transactions: List<EarningTransactionModel> = emptyList(),
     val errorMessage: String? = null

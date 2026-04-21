@@ -5,7 +5,7 @@ import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.registerparking.domain.repository.RegisterParkingRepository
 
 class RegisterParkingUseCase(private val repository: RegisterParkingRepository) {
-    suspend operator fun invoke(user: UserModel, parking: ParkingModel): Boolean {
+    suspend operator fun invoke(user: UserModel, parking: ParkingModel): Pair<Int, Int>? {
         return repository.completeOwnerRegistration(user, parking)
     }
 }

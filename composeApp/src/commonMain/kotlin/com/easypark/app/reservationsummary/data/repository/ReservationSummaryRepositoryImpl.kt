@@ -1,10 +1,9 @@
 package com.easypark.app.reservationsummary.data.repository
 
+import ReservationModel
 import com.easypark.app.core.domain.model.PriceModel
-import com.easypark.app.core.domain.model.ReservationModel
 import com.easypark.app.reservationsummary.data.datasource.ReservationSummaryLocalDataSource
 import com.easypark.app.reservationsummary.domain.repository.ReservationSummaryRepository
-// IMPORTANTE: Asegúrate de que estos imports existan
 import kotlin.collections.firstOrNull
 
 class ReservationSummaryRepositoryImpl(

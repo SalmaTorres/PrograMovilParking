@@ -8,11 +8,13 @@ import com.easypark.app.core.domain.model.status.Currency
 import com.easypark.app.registerparking.domain.model.ParkingModel
 import com.easypark.app.core.domain.model.PriceModel
 import com.easypark.app.core.domain.model.UserModel
+import com.easypark.app.core.domain.session.SessionManager
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class RegisterParkingViewModel(
-    private val registerUseCase: RegisterParkingUseCase
+    private val registerUseCase: RegisterParkingUseCase,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
     private var userFromStep1: UserModel? = null
 
@@ -76,7 +78,7 @@ class RegisterParkingViewModel(
 
             val parkingModel = ParkingModel(
                 id = 0,
-                ownerId = 0, // Se sobreescribirá en el Repo
+                ownerId = 0,
                 name = s.name,
                 address = s.address,
                 latitude = s.latitude,
@@ -89,10 +91,15 @@ class RegisterParkingViewModel(
                 totalSpaces = s.totalSpaces.toIntOrNull() ?: 0
             )
 
-            val result = registerUseCase(user, parkingModel)
+            val resultIds = registerUseCase(user, parkingModel)
+
             _state.update { it.copy(isLoading = false) }
 
-            if (result) {
+            if (resultIds != null) {
+                val registeredUser = user.copy(id = resultIds.first)
+
+                sessionManager.saveSession(registeredUser, resultIds.second)
+
                 emit(RegisterParkingEffect.NavigateToSuccess)
             } else {
                 emit(RegisterParkingEffect.ShowError("Error al registrar el parqueo"))

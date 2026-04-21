@@ -44,7 +44,7 @@ fun EarningsScreen(
         containerColor = ParkBackground,
         topBar = {
             ParkHeader(
-                title = "Downtown Plaza Garage", // variable que sera nombre del parqueo
+                title = state.parkingName,
                 onNotificationClick = {
                     navController.navigate(NavRoute.Notifications)
                 }
