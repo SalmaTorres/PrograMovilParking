@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.easypark.app.bookingconfirmation.presentation.screen.BookingConfirmationScreen
 import com.easypark.app.bookingconfirmation.presentation.viewmodel.BookingConfirmationViewModel
+import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.earnings.presentation.screen.EarningsScreen
 import com.easypark.app.findparking.presentation.screen.FindParkingScreen
 import com.easypark.app.notifications.presentation.screen.NotificationsScreen
@@ -21,6 +22,7 @@ import com.easypark.app.signin.presentation.screen.SignInScreen
 import com.easypark.app.spacemanagement.presentation.screen.SpaceManagementScreen
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.reflect.typeOf
 
 @Composable
 fun AppNavHost() {
@@ -38,12 +40,24 @@ fun AppNavHost() {
             RegisterScreen(navController)
         }
 
-        composable<NavRoute.RegisterParking> {
-            RegisterParkingScreen(navController)
+        composable<NavRoute.RegisterParking>(
+            typeMap = mapOf(typeOf<UserModel>() to UserModelType) // <--- ESTO ES LO QUE FALTA
+        ) { backStackEntry ->
+            val args = backStackEntry.toRoute<NavRoute.RegisterParking>()
+            RegisterParkingScreen(
+                navController = navController,
+                userFromStep1 = args.userFromStep1
+            )
         }
 
-        composable<NavRoute.RegisterVehicle> {
-            RegisterVehicleScreen(navController)
+        composable<NavRoute.RegisterVehicle>(
+            typeMap = mapOf(typeOf<UserModel>() to UserModelType)
+        ) { backStackEntry ->
+            val args = backStackEntry.toRoute<NavRoute.RegisterVehicle>()
+            RegisterVehicleScreen(
+                navController = navController,
+                userFromStep1 = args.userFromStep1
+            )
         }
 
         composable<NavRoute.SpaceManagement> {
@@ -72,27 +86,31 @@ fun AppNavHost() {
 
         composable<NavRoute.ParkingDetails> { backStackEntry ->
             val args = backStackEntry.toRoute<NavRoute.ParkingDetails>()
+
             val viewModel = koinViewModel<ParkingDetailsViewModel> {
                 parametersOf(args.id)
             }
 
             ParkingDetailsScreen(
+                parkingId = args.id,
                 viewModel = viewModel,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToBooking = { parkingId ->
-                    navController.navigate(NavRoute.BookingConfirmation(parkingId))
+                onNavigateToBooking = { idDeRegreso ->
+                    navController.navigate(NavRoute.BookingConfirmation(id = idDeRegreso.toInt()))
                 }
             )
         }
 
         composable<NavRoute.BookingConfirmation> { backStackEntry ->
             val args = backStackEntry.toRoute<NavRoute.BookingConfirmation>()
-
-            val viewModel: BookingConfirmationViewModel = koinViewModel {
+            val viewModel = koinViewModel<BookingConfirmationViewModel> {
                 parametersOf(args.id)
             }
 
-            BookingConfirmationScreen(navController = navController, viewModel = viewModel)
+            BookingConfirmationScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
     }
 }

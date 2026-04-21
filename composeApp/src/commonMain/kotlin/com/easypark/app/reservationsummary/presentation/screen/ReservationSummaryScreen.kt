@@ -17,11 +17,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.reservationsummary.presentation.viewmodel.ReservationSummaryViewModel
 import com.easypark.app.core.presentation.composable.DriverFooter
@@ -33,11 +33,14 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import com.easypark.app.reservationsummary.presentation.composable.DetailRow
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ReservationSummaryScreen(
+    reservationId: NavHostController,
     navController: NavController? = null,
-    viewModel: ReservationSummaryViewModel = koinViewModel()
+    viewModel: ReservationSummaryViewModel = koinViewModel { parametersOf(reservationId) }
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -51,9 +54,9 @@ fun ReservationSummaryScreen(
         },
         bottomBar = {
             DriverFooter(
-                currentRoute = NavRoute.ReservationSummary,
+                currentRoute = NavRoute.ReservationSummary(0),
                 onNavigate = { route ->
-                    if (route != NavRoute.ReservationSummary) {
+                    if (route !is NavRoute.ReservationSummary) {
                         navController?.navigate(route)
                     }
                 }
@@ -69,7 +72,6 @@ fun ReservationSummaryScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             state.reservation?.let { reservation ->
-                // Ubicación Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -85,7 +87,6 @@ fun ReservationSummaryScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Detalles Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -93,9 +94,9 @@ fun ReservationSummaryScreen(
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        DetailRow(Icons.Default.Place, stringResource(Res.string.reservation_summary_space), reservation.assignedSpace)
+                        DetailRow(Icons.Default.Place, stringResource(Res.string.reservation_summary_space), "Nro ${reservation.spaceNumber}")
                         DetailRow(Icons.Default.Refresh, stringResource(Res.string.reservation_summary_entry_time), reservation.entryTime)
-                        DetailRow(Icons.Default.Build, stringResource(Res.string.reservation_summary_duration), reservation.estimatedDuration)
+                        DetailRow(Icons.Default.Build, stringResource(Res.string.reservation_summary_location), reservation.durationText)
                         
                         HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp)
                         
@@ -109,7 +110,7 @@ fun ReservationSummaryScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(stringResource(Res.string.reservation_summary_cost), fontWeight = FontWeight.Medium)
                             }
-                            Text("Bs ${reservation.totalCost}", color = ParkBlue, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                            Text("Bs ${reservation.totalPrice}", color = ParkBlue, fontWeight = FontWeight.Bold)
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -130,21 +131,5 @@ fun ReservationSummaryScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun DetailRow(icon: ImageVector, label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(label, fontWeight = FontWeight.Medium)
-        }
-        Text(value, fontWeight = FontWeight.Normal)
     }
 }

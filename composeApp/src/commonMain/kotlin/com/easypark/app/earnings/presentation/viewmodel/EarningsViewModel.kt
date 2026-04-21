@@ -2,13 +2,16 @@ package com.easypark.app.earnings.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.easypark.app.core.domain.session.SessionManager
 import com.easypark.app.earnings.domain.usecase.GetEarningsDataUseCase
+import com.easypark.app.earnings.presentation.state.EarningsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class EarningsViewModel(
+    private val sessionManager: SessionManager,
     private val getEarningsDataUseCase: GetEarningsDataUseCase
 ) : ViewModel() {
 
@@ -21,23 +24,22 @@ class EarningsViewModel(
 
     private fun loadEarningsData() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
-            try {
-                val data = getEarningsDataUseCase.execute()
-                _state.update {
-                    it.copy(
+            val parkingId = sessionManager.currentParkingId
+
+            if (parkingId != null) {
+                _state.update { it.copy(isLoading = true) }
+                try {
+                    val data = getEarningsDataUseCase.execute(parkingId)
+                    _state.update { it.copy(
                         isLoading = false,
                         summary = data.summary,
                         transactions = data.history
-                    )
+                    )}
+                } catch (e: Exception) {
+                    _state.update { it.copy(isLoading = false, errorMessage = e.message) }
                 }
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = e.message ?: "Error desconocido"
-                    )
-                }
+            } else {
+                _state.update { it.copy(errorMessage = "No se encontró el parqueo") }
             }
         }
     }

@@ -18,7 +18,7 @@ import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.register.presentation.state.*
 import com.easypark.app.register.presentation.viewmodel.RegisterViewModel
-import com.easypark.app.core.domain.model.UserType
+import com.easypark.app.core.domain.model.status.UserType
 import com.easypark.app.core.presentation.composable.ParkButton
 import com.easypark.app.core.presentation.composable.ParkTextField
 import com.easypark.app.core.ui.*
@@ -40,14 +40,14 @@ fun RegisterScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                RegisterEffect.NavigateToLogin -> {
+                is RegisterEffect.NavigateToLogin -> {
                     navController.navigate(NavRoute.SignIn)
                 }
-                RegisterEffect.NavigateToRegisterVehicle -> {
-                    navController.navigate(NavRoute.RegisterVehicle)
+                is RegisterEffect.NavigateToRegisterVehicle -> {
+                    navController.navigate(NavRoute.RegisterVehicle(effect.user))
                 }
-                RegisterEffect.NavigateToRegisterParking -> {
-                    navController.navigate(NavRoute.RegisterParking)
+                is RegisterEffect.NavigateToRegisterParking -> {
+                    navController.navigate(NavRoute.RegisterParking(effect.user))
                 }
                 is RegisterEffect.ShowError -> {
                     println("Error: ${effect.message}")

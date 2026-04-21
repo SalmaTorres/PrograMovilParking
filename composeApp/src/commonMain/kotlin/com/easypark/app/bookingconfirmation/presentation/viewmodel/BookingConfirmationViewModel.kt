@@ -2,10 +2,12 @@ package com.easypark.app.bookingconfirmation.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.easypark.app.bookingconfirmation.domain.usecase.GetBookingConfirmationUseCase
+import com.easypark.app.bookingconfirmation.domain.usecase.ConfirmReservationUseCase
+import com.easypark.app.bookingconfirmation.domain.usecase.GetBookingInfoUseCase
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEffect
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEvent
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationUIState
+import com.easypark.app.core.domain.session.SessionManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -14,8 +16,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BookingConfirmationViewModel(
-    private val parkingId: String,
-    private val getBookingConfirmationUseCase: GetBookingConfirmationUseCase
+    private val parkingId: Int,
+    private val getBookingInfoUseCase: GetBookingInfoUseCase,
+    private val confirmReservationUseCase: ConfirmReservationUseCase,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BookingConfirmationUIState())
@@ -25,14 +29,14 @@ class BookingConfirmationViewModel(
     val effect = _effect.asSharedFlow()
 
     init {
-        loadBookingConfirmation()
+        loadInfo()
     }
 
-    private fun loadBookingConfirmation() {
-        _state.update { it.copy(isLoading = true) }
+    private fun loadInfo() {
         viewModelScope.launch {
-            val detail = getBookingConfirmationUseCase(parkingId)
-            _state.update { it.copy(isLoading = false, bookingConfirmation = detail) }
+            _state.update { it.copy(isLoading = true) }
+            val info = getBookingInfoUseCase(parkingId)
+            _state.update { it.copy(isLoading = false, bookingConfirmation = info) }
         }
     }
 
@@ -42,14 +46,38 @@ class BookingConfirmationViewModel(
                 _state.update { it.copy(selectedPaymentMethod = event.method) }
             }
             is BookingConfirmationEvent.OnDurationChange -> {
-                _state.update { 
-                    val updatedBooking = it.bookingConfirmation?.copy(durationHours = event.hours)
-                    it.copy(bookingConfirmation = updatedBooking) 
+                _state.update { s ->
+                    val newBooking = s.bookingConfirmation?.copy(
+                        durationHours = event.hours,
+                        totalCost = s.bookingConfirmation.pricePerHour * event.hours
+                    )
+                    s.copy(bookingConfirmation = newBooking)
                 }
             }
             BookingConfirmationEvent.OnBackClick -> emit(BookingConfirmationEffect.NavigateBack)
-            BookingConfirmationEvent.OnConfirmClick -> {
-                emit(BookingConfirmationEffect.NavigateToSuccess)
+            is BookingConfirmationEvent.OnConfirmClick -> confirm()
+        }
+    }
+
+    private fun confirm() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            val currentUserId = sessionManager.getUserId()
+            val duration = _state.value.bookingConfirmation?.durationHours ?: 1
+
+            if (currentUserId != -1) {
+                val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration)
+
+                if (reservationId != null) {
+                    emit(BookingConfirmationEffect.NavigateToSuccess(reservationId))
+                } else {
+                    _state.update { it.copy(isLoading = false) }
+                    emit(BookingConfirmationEffect.ShowError("Error al procesar la reserva"))
+                }
+            } else {
+                _state.update { it.copy(isLoading = false) }
+                emit(BookingConfirmationEffect.ShowError("Sesión expirada. Inicia sesión de nuevo."))
             }
         }
     }

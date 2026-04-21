@@ -1,6 +1,6 @@
 package com.easypark.app.findparking.presentation.state
 
-import com.easypark.app.core.domain.model.ParkingModel
+import com.easypark.app.registerparking.domain.model.ParkingModel
 
 sealed interface FindParkingEvent {
     data class OnQueryChanged(val query: String) : FindParkingEvent

@@ -6,6 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "reservation")
 data class ReservationEntity(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Int = 0,
+
     @ColumnInfo(name = "spaceId")
     val spaceId: Int,
 
@@ -26,8 +30,4 @@ data class ReservationEntity(
 
     @ColumnInfo(name = "methodPay")
     val methodPay: String
-) {
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    var id: Int = 0
-}
+)

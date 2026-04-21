@@ -41,10 +41,7 @@ class SignInViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-
-            // Aquí recibimos el UserType (OWNER, DRIVER o null)
             val userTypeResult = useCase.invoke(currentState.email, currentState.password)
-
             _state.update { it.copy(isLoading = false) }
 
             if (userTypeResult != null) {

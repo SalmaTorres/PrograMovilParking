@@ -1,6 +1,6 @@
 package com.easypark.app.register.presentation.state
 
-import com.easypark.app.core.domain.model.UserType
+import com.easypark.app.core.domain.model.status.UserType
 
 data class RegisterUIState(
     val name: String = "",

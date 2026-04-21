@@ -4,5 +4,5 @@ class SpaceModel (
     val id: Int,
     val parkingId: Int,
     val number: Int,
-    val state: String = "Libre"
+    val state: String = "LIBRE"
 )

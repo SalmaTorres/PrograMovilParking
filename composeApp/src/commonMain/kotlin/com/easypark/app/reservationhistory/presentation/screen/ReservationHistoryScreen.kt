@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
-import com.easypark.app.reservationhistory.domain.model.ReservationStatus
+import com.easypark.app.core.domain.model.status.ReservationStatus
 import com.easypark.app.reservationhistory.presentation.composable.ReservationCard
 import com.easypark.app.reservationhistory.presentation.composable.ReservationTabRow
 import com.easypark.app.reservationhistory.presentation.viewmodel.ReservationHistoryViewModel

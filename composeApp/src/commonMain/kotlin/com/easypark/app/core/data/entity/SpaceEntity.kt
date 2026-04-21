@@ -13,7 +13,7 @@ data class SpaceEntity (
     val number: Int,
 
     @ColumnInfo(name = "state")
-    val state: String = "Libre",
+    val state: String = "LIBRE",
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

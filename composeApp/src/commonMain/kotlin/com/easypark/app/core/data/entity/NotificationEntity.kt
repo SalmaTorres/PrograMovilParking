@@ -8,13 +8,10 @@ import androidx.room.PrimaryKey
 data class NotificationEntity (
     @ColumnInfo(name = "userId")
     val userId: Int,
-
     @ColumnInfo(name = "title")
     val title: String,
-
     @ColumnInfo(name = "content")
     val content: String,
-
     @ColumnInfo(name = "state")
     val state: String
 ) {

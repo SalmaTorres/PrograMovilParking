@@ -2,7 +2,6 @@ package com.easypark.app.notifications.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.easypark.app.notifications.domain.model.NotificationModel
 import com.easypark.app.notifications.domain.usecase.GetNotificationsUseCase
 import com.easypark.app.notifications.presentation.state.NotificationsEffect
 import com.easypark.app.notifications.presentation.state.NotificationsEvent

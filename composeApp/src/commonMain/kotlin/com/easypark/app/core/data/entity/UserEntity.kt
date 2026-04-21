@@ -16,7 +16,7 @@ data class UserEntity(
     val email: String,
 
     @ColumnInfo(name = "cellphone")
-    val cellphone: Int,
+    val cellphone: String,
 
     @ColumnInfo(name = "password")
     val password: String

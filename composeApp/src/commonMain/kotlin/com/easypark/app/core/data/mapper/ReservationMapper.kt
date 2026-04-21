@@ -1,27 +1,28 @@
 package com.easypark.app.core.data.mapper
 
 import com.easypark.app.core.data.entity.ReservationEntity
-import com.easypark.app.core.domain.model.Currency
-import com.easypark.app.core.domain.model.Price
+import com.easypark.app.core.domain.model.PriceModel
 import com.easypark.app.core.domain.model.ReservationModel
 
-fun ReservationModel.toEntity() = ReservationEntity(
-    spaceId,
-    driverId,
-    startHour,
-    finalHour,
+fun ReservationModel.toEntity(driverId: Int) = ReservationEntity(
+    driverId = driverId,
+    spaceId = spaceId,
+    startHour = startTime,
+    finalHour = endTime,
     totalPrice = totalPrice.amount,
-    state,
-    methodPay
+    state = status,
+    methodPay = paymentMethod,
 )
 
-fun ReservationEntity.toModel() =  ReservationModel(
-    id,
-    spaceId,
-    driverId,
-    startHour,
-    finalHour,
-    totalPrice = Price(totalPrice, Currency.BOB),
-    state,
-    methodPay
+fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber: Int) = ReservationModel(
+    id = this.id,
+    spaceId = this.spaceId,
+    spaceNumber = spaceNumber,
+    parkingName = parkingName,
+    address = address,
+    startTime = this.startHour,
+    endTime = this.finalHour,
+    totalPrice = PriceModel(amount = this.totalPrice),
+    status = this.state,
+    paymentMethod = this.methodPay
 )

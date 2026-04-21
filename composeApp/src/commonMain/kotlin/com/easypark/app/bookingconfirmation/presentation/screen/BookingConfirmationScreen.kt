@@ -46,11 +46,15 @@ fun BookingConfirmationScreen(
             when (effect) {
                 BookingConfirmationEffect.NavigateBack -> navController.popBackStack()
 
-                BookingConfirmationEffect.NavigateToSuccess -> {
-                    navController.navigate(NavRoute.ReservationSummary) {
-                        popUpTo(NavRoute.BookingConfirmation("")) { inclusive = true }
+                is BookingConfirmationEffect.NavigateToSuccess -> {
+                    navController.navigate(NavRoute.ReservationSummary(effect.reservationId)) {
+
+                        popUpTo(NavRoute.BookingConfirmation(state.bookingConfirmation?.parkingId?: 0)) {
+                            inclusive = true
+                        }
                     }
                 }
+                is BookingConfirmationEffect.ShowError -> { /* Mostrar un Toast o SnackBar */ }
             }
         }
     }

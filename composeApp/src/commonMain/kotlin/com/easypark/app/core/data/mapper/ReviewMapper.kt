@@ -1,10 +1,16 @@
 package com.easypark.app.core.data.mapper
 
 import com.easypark.app.core.data.entity.ReviewEntity
-import com.easypark.app.core.domain.model.ReviewModel
+import com.easypark.app.parkingdetails.domain.model.ReviewModel
 
+fun ReviewModel.toEntity() = ReviewEntity(
+    userId,
+    parkingId,
+    rating
+)
 fun ReviewEntity.toModel() = ReviewModel(
-    id = id,
-    idUser = "Usuario",
-    rating = rating
+    id,
+    userId,
+    parkingId,
+    rating
 )

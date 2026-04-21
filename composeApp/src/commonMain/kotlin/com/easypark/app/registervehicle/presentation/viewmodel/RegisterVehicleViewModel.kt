@@ -3,7 +3,7 @@ package com.easypark.app.registervehicle.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.core.domain.model.UserModel
-import com.easypark.app.core.domain.model.VehicleModel
+import com.easypark.app.registervehicle.domain.model.VehicleModel
 import com.easypark.app.registervehicle.domain.usecase.RegisterVehicleUseCase
 import com.easypark.app.registervehicle.presentation.state.*
 import kotlinx.coroutines.flow.*

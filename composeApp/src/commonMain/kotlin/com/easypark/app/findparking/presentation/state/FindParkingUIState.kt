@@ -1,6 +1,6 @@
 package com.easypark.app.findparking.presentation.state
 
-import com.easypark.app.core.domain.model.ParkingModel
+import com.easypark.app.registerparking.domain.model.ParkingModel
 
 data class FindParkingUIState(
     val searchQuery: String = "",

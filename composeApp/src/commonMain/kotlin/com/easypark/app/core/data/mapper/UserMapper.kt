@@ -2,21 +2,21 @@ package com.easypark.app.core.data.mapper
 
 import com.easypark.app.core.data.entity.UserEntity
 import com.easypark.app.core.domain.model.UserModel
-import com.easypark.app.core.domain.model.UserType
+import com.easypark.app.core.domain.model.status.UserType
 
 fun UserModel.toEntity() = UserEntity(
-    name,
-    type = type.name,
-    email,
-    cellphone,
-    password
+    name = name,
+    email = email,
+    cellphone = "",
+    password = password,
+    type = type.name
 )
 
 fun UserEntity.toModel() =  UserModel(
-    id,
-    name,
-    type = UserType.valueOf(type),
-    email,
-    cellphone,
-    password
+    id = id,
+    name = name,
+    email = email,
+    cellphone = cellphone.toIntOrNull() ?: 0,
+    password = password,
+    type = UserType.valueOf(type)
 )

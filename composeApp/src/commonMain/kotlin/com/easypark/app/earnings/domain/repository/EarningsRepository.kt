@@ -1,9 +1,9 @@
 package com.easypark.app.earnings.domain.repository
 
-import com.easypark.app.earnings.domain.model.EarningTransaction
-import com.easypark.app.earnings.domain.model.EarningsSummary
+import com.easypark.app.earnings.domain.model.EarningTransactionModel
+import com.easypark.app.earnings.domain.model.EarningsSummaryModel
 
 interface EarningsRepository {
-    suspend fun getEarningsSummary(): EarningsSummary
-    suspend fun getEarningsHistory(): List<EarningTransaction>
+    suspend fun getEarningsSummary(id: Int): EarningsSummaryModel
+    suspend fun getEarningsHistory(id: Int): List<EarningTransactionModel>
 }

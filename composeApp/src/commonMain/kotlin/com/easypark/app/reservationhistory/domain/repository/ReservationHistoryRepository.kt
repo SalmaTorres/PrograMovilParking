@@ -1,7 +1,7 @@
 package com.easypark.app.reservationhistory.domain.repository
 
-import com.easypark.app.reservationhistory.domain.model.ReservationItem
+import com.easypark.app.reservationhistory.domain.model.ReservationItemModel
 
 interface ReservationHistoryRepository {
-    suspend fun getReservations(): List<ReservationItem>
+    suspend fun getReservations(userId: Int): List<ReservationItemModel>
 }

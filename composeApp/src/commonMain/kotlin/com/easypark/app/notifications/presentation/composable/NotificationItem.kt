@@ -21,10 +21,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.notifications.domain.model.NotificationModel
 import com.easypark.app.core.ui.ParkBlueLight
 import com.easypark.app.core.ui.ParkGray
 import com.easypark.app.core.ui.ParkTextDark
+import com.easypark.app.notifications.domain.model.NotificationModel
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

@@ -1,7 +1,7 @@
 package com.easypark.app.core.data.mapper
 
 import com.easypark.app.core.data.entity.VehicleEntity
-import com.easypark.app.core.domain.model.VehicleModel
+import com.easypark.app.registervehicle.domain.model.VehicleModel
 
 fun VehicleModel.toEntity() = VehicleEntity(
     driverId,

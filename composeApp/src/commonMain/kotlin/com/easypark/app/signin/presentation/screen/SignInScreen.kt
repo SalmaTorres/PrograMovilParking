@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.easypark.app.navigation.NavRoute
-import com.easypark.app.core.domain.model.UserType
+import com.easypark.app.core.domain.model.status.UserType
 import com.easypark.app.core.presentation.composable.ParkButton
 import com.easypark.app.core.presentation.composable.ParkTextField
 import com.easypark.app.signin.presentation.state.*

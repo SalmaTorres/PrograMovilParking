@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.core.domain.model.ParkingModel
+import com.easypark.app.registerparking.domain.model.ParkingModel
 import com.easypark.app.core.presentation.composable.ParkButton
 import com.easypark.app.core.presentation.composable.ParkCard
 import com.easypark.app.core.ui.*

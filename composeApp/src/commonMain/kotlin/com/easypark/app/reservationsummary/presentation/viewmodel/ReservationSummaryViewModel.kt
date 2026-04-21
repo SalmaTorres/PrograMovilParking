@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReservationSummaryViewModel(
+    private val reservationId: Int,
     private val getReservationSummaryUseCase: GetReservationSummaryUseCase
 ) : ViewModel() {
 
@@ -17,15 +18,15 @@ class ReservationSummaryViewModel(
     val state = _state.asStateFlow()
 
     init {
-        loadReservationSummary("mock_id")
+        loadReservationSummary()
     }
 
-    fun loadReservationSummary(id: String) {
+    private fun loadReservationSummary() {
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                val reservation = getReservationSummaryUseCase(id)
-                _state.update { it.copy(reservation = reservation, isLoading = false) }
+                val summary = getReservationSummaryUseCase(reservationId)
+                _state.update { it.copy(reservation = summary, isLoading = false) }
             } catch (e: Exception) {
                 _state.update { it.copy(error = e.message, isLoading = false) }
             }

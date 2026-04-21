@@ -46,7 +46,7 @@ fun ParkingSpotItem(spot: ParkingSpot) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = spot.code,
+                text = spot.number.toString(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = textColor
