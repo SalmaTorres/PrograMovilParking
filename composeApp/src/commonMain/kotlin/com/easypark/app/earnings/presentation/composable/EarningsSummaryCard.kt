@@ -19,11 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkBlueLight
-import com.easypark.app.shared.ui.ParkGray
-import com.easypark.app.shared.ui.ParkSuccess
-import com.easypark.app.shared.ui.ParkTextDark
+import com.easypark.app.core.ui.ParkBlue
+import com.easypark.app.core.ui.ParkBlueLight
+import com.easypark.app.core.ui.ParkGray
+import com.easypark.app.core.ui.ParkSuccess
+import com.easypark.app.core.ui.ParkTextDark
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.earnings_title
 import org.jetbrains.compose.resources.stringResource

@@ -3,12 +3,15 @@ package com.easypark.app.registerparking.presentation.composable
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.renderscript.RenderScript
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Icon
@@ -21,8 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.easypark.app.core.ui.ParkBlue
 import com.easypark.app.registerparking.presentation.state.RegisterParkingUIState
-import com.easypark.app.shared.ui.ParkBlue
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import org.osmdroid.config.Configuration
@@ -33,6 +36,7 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import com.google.android.gms.tasks.OnSuccessListener
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -40,6 +44,7 @@ actual fun ParkingMapSection(
     state: RegisterParkingUIState,
     onLocationChanged: (Double, Double) -> Unit
 ) {
+    Text("Vista de mapa no disponible")
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {

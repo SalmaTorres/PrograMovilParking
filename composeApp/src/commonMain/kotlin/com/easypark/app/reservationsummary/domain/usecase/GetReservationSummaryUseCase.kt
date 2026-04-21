@@ -1,12 +1,12 @@
 package com.easypark.app.reservationsummary.domain.usecase
 
-import com.easypark.app.reservationsummary.domain.model.ReservationSummaryModel
-import com.easypark.app.shared.domain.repository.ParkingRepository
+import ReservationModel
+import com.easypark.app.reservationsummary.domain.repository.ReservationSummaryRepository
 
 class GetReservationSummaryUseCase(
-    private val repository: ParkingRepository
+    private val repository: ReservationSummaryRepository
 ) {
-    suspend operator fun invoke(reservationId: String): ReservationSummaryModel {
-        return repository.getReservationSummary(reservationId)
+    suspend operator fun invoke(reservationId: Int): List<ReservationModel> {
+        return repository.getActiveReservations(reservationId)
     }
 }

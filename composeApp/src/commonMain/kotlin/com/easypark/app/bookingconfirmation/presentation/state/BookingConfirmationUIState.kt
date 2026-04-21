@@ -1,10 +1,10 @@
 package com.easypark.app.bookingconfirmation.presentation.state
 
-import com.easypark.app.bookingconfirmation.domain.model.BookingConfirmation
+import com.easypark.app.bookingconfirmation.domain.model.BookingConfirmationModel
 
 data class BookingConfirmationUIState(
     val isLoading: Boolean = false,
-    val bookingConfirmation: BookingConfirmation? = null,
+    val bookingConfirmation: BookingConfirmationModel? = null,
     val selectedPaymentMethod: PaymentMethod = PaymentMethod.CASH
 )
 

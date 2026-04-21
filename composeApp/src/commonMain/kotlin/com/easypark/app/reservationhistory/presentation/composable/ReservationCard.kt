@@ -20,16 +20,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.reservationhistory.domain.model.ReservationItem
-import com.easypark.app.reservationhistory.domain.model.ReservationStatus
-import com.easypark.app.shared.ui.*
+import com.easypark.app.reservationhistory.domain.model.ReservationItemModel
+import com.easypark.app.core.domain.model.status.ReservationStatus
+import com.easypark.app.core.ui.*
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReservationCard(
-    reservation: ReservationItem,
+    reservation: ReservationItemModel,
     modifier: Modifier = Modifier
 ) {
     val statusColor = when (reservation.status) {

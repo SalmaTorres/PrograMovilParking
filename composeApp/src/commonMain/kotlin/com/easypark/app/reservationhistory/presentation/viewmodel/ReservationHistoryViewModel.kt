@@ -2,7 +2,8 @@ package com.easypark.app.reservationhistory.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.easypark.app.reservationhistory.domain.model.ReservationStatus
+import com.easypark.app.core.domain.model.status.ReservationStatus
+import com.easypark.app.core.domain.session.SessionManager
 import com.easypark.app.reservationhistory.domain.usecase.GetReservationHistoryUseCase
 import com.easypark.app.reservationhistory.presentation.state.ReservationHistoryUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReservationHistoryViewModel(
+    private val sessionManager: SessionManager,
     private val getReservationHistoryUseCase: GetReservationHistoryUseCase
 ) : ViewModel() {
 
@@ -23,23 +25,16 @@ class ReservationHistoryViewModel(
 
     private fun loadReservations() {
         viewModelScope.launch {
+            val parkingId = sessionManager.currentParkingId ?: return@launch
+
             _state.update { it.copy(isLoading = true, errorMessage = null) }
             try {
-                val list = getReservationHistoryUseCase.execute()
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        reservations = list
-                    )
-                }
+                val list = getReservationHistoryUseCase(parkingId)
+
+                _state.update { it.copy(isLoading = false, reservations = list) }
                 applyFilters()
             } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = e.message ?: "Error desconocido"
-                    )
-                }
+                _state.update { it.copy(isLoading = false, errorMessage = e.message) }
             }
         }
     }
@@ -58,7 +53,8 @@ class ReservationHistoryViewModel(
         _state.update { currentState ->
             val filtered = currentState.reservations.filter { reservation ->
                 val matchesTab = if (currentState.selectedTab == 0) {
-                    reservation.status == ReservationStatus.ACTIVE || reservation.status == ReservationStatus.ENDING_SOON
+                    reservation.status == ReservationStatus.ACTIVE ||
+                    reservation.status == ReservationStatus.ENDING_SOON
                 } else {
                     reservation.status == ReservationStatus.FINISHED
                 }

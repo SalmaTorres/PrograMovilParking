@@ -2,11 +2,10 @@ package com.easypark.app.register.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.easypark.app.register.domain.model.RegisterModel
+import com.easypark.app.core.domain.model.UserModel
+import com.easypark.app.core.domain.model.status.UserType
 import com.easypark.app.register.domain.usecase.DoRegisterUseCase
 import com.easypark.app.register.presentation.state.*
-import com.easypark.app.shared.domain.model.UserType
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -21,7 +20,6 @@ class RegisterViewModel(
 
     fun onEvent(event: RegisterEvent) {
         when (event) {
-            // Al escribir, quitamos el estado de error inmediatamente
             is RegisterEvent.OnNameChange -> _state.update {
                 it.copy(name = event.name, isNameError = false)
             }
@@ -44,30 +42,48 @@ class RegisterViewModel(
 
     private fun register() {
         val s = _state.value
-        // Validación antes de llamar al UseCase
-        val hasError = s.name.isEmpty() || s.email.isEmpty() || s.phone.isEmpty() || s.password.isEmpty()
+
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        val isEmailValid = s.email.matches(emailPattern.toRegex())
+        val isPasswordValid = s.password.length >= 6
+
+        val hasError = s.name.isEmpty() || !isEmailValid || s.phone.isEmpty() || !isPasswordValid
 
         if (hasError) {
             _state.update { it.copy(
                 isNameError = it.name.isEmpty(),
-                isEmailError = it.email.isEmpty(),
+                isEmailError = !isEmailValid,
                 isPhoneError = it.phone.isEmpty(),
-                isPasswordError = it.password.isEmpty()
+                isPasswordError = !isPasswordValid
             )}
+
+            val errorMsg = if(!isEmailValid) "Email inválido" else "La contraseña debe tener 6+ caracteres"
+            emit(RegisterEffect.ShowError(errorMsg))
             return
         }
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = useCase(s.name, s.email, s.phone, s.password, s.role.name)
+            val isAvailable = useCase.invoke(s.email)
             _state.update { it.copy(isLoading = false) }
 
-            if (result) {
+            if (isAvailable) {
+                val userData = UserModel(
+                    id = 0,
+                    name = s.name,
+                    email = s.email,
+                    cellphone = s.phone.toIntOrNull() ?: 0,
+                    password = s.password,
+                    type = s.role
+                )
+
                 if (s.role == UserType.DRIVER) {
-                    emit(RegisterEffect.NavigateToRegisterVehicle)
+                    emit(RegisterEffect.NavigateToRegisterVehicle(userData))
                 } else {
-                    emit(RegisterEffect.NavigateToRegisterParking)
+                    emit(RegisterEffect.NavigateToRegisterParking(userData))
                 }
+            } else {
+                emit(RegisterEffect.ShowError("Email ya registrado"))
             }
         }
     }

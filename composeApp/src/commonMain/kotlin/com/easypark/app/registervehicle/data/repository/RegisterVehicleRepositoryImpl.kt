@@ -1,16 +1,22 @@
 package com.easypark.app.registervehicle.data.repository
 
-import com.easypark.app.registervehicle.domain.model.RegisterVehicleModel
+import com.easypark.app.registervehicle.data.datasource.RegisterVehicleLocalDataSource
+import com.easypark.app.core.data.mapper.toEntity
+import com.easypark.app.core.domain.model.UserModel
+import com.easypark.app.registervehicle.domain.model.VehicleModel
 import com.easypark.app.registervehicle.domain.repository.RegisterVehicleRepository
 
-class RegisterVehicleRepositoryImpl : RegisterVehicleRepository {
+class RegisterVehicleRepositoryImpl(
+    private val localDS: RegisterVehicleLocalDataSource
+) : RegisterVehicleRepository {
+    override suspend fun completeDriverRegistration(user: UserModel, vehicle: VehicleModel): Int? {
+        return try {
+            val userId = localDS.saveUser(user.toEntity()).toInt()
+            localDS.saveVehicle(vehicle.toEntity(driverId = userId)) // El cambio del punto 1
 
-    override suspend fun registerVehicle(data: RegisterVehicleModel): Boolean {
-
-        if (data.plate.isBlank()) return false
-        if (data.model.isBlank()) return false
-        if (data.color.isBlank()) return false
-
-        return true
+            userId
+        } catch (e: Exception) {
+            null
+        }
     }
 }

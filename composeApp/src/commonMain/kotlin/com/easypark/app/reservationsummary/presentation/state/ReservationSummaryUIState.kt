@@ -1,9 +1,9 @@
 package com.easypark.app.reservationsummary.presentation.state
 
-import com.easypark.app.reservationsummary.domain.model.ReservationSummaryModel
+import ReservationModel
 
 data class ReservationSummaryUiState(
     val isLoading: Boolean = false,
-    val reservation: ReservationSummaryModel? = null,
+    val reservations: List<ReservationModel> = emptyList(),
     val error: String? = null
 )

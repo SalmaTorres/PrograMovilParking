@@ -1,34 +1,27 @@
 package com.easypark.app.reservationsummary.presentation.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.reservationsummary.presentation.viewmodel.ReservationSummaryViewModel
-import com.easypark.app.shared.presentation.composable.DriverFooter
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.ui.ParkBlue
-import com.easypark.app.shared.ui.ParkBackground
-import com.easypark.app.shared.ui.ParkGray
+import com.easypark.app.core.presentation.composable.DriverFooter
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.presentation.composable.ParkLoading
+import com.easypark.app.core.ui.ParkBlue
+import com.easypark.app.core.ui.ParkGray
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -36,7 +29,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ReservationSummaryScreen(
-    navController: NavController? = null,
+    navController: NavController,
     viewModel: ReservationSummaryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -45,106 +38,66 @@ fun ReservationSummaryScreen(
         topBar = {
             ParkHeader(
                 title = stringResource(Res.string.reservation_summary_title),
-                onBackClick = { navController?.popBackStack() },
+                onBackClick = { navController.popBackStack() },
                 onNotificationClick = null
             )
         },
         bottomBar = {
             DriverFooter(
-                currentRoute = NavRoute.ReservationSummary,
+                currentRoute = NavRoute.ReservationSummary(0),
                 onNavigate = { route ->
-                    if (route != NavRoute.ReservationSummary) {
-                        navController?.navigate(route)
+                    if (route !is NavRoute.ReservationSummary) {
+                        navController.navigate(route)
                     }
                 }
             )
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            state.reservation?.let { reservation ->
-                // Ubicación Card
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = ParkBackground)
+            if (state.isLoading) {
+                ParkLoading()
+            } else if (state.reservations.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(stringResource(Res.string.reservation_summary_location), color = ParkGray, fontSize = 12.sp)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(reservation.parkingName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text(reservation.address, color = ParkGray, fontSize = 14.sp)
+                    items(state.reservations) { reservation ->
+                        ReservationItemCard(reservation = reservation)
                     }
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Detalles Card
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        DetailRow(Icons.Default.Place, stringResource(Res.string.reservation_summary_space), reservation.assignedSpace)
-                        DetailRow(Icons.Default.Refresh, stringResource(Res.string.reservation_summary_entry_time), reservation.entryTime)
-                        DetailRow(Icons.Default.Build, stringResource(Res.string.reservation_summary_duration), reservation.estimatedDuration)
-                        
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp)
-                        
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.AccountBox, contentDescription = null, tint = ParkBlue, modifier = Modifier.size(20.dp))
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(stringResource(Res.string.reservation_summary_cost), fontWeight = FontWeight.Medium)
-                            }
-                            Text("Bs ${reservation.totalCost}", color = ParkBlue, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        }
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.Menu, contentDescription = null, modifier = Modifier.size(20.dp))
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(stringResource(Res.string.reservation_summary_payment), fontWeight = FontWeight.Medium)
-                            }
-                            Text(reservation.paymentMethod, color = ParkGray)
-                        }
+                    Icon(
+                        Icons.Default.Info,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = ParkGray
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        "No tienes reservas activas",
+                        fontWeight = FontWeight.Bold,
+                        color = ParkGray,
+                        fontSize = 18.sp
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Button(
+                        onClick = { navController.navigate(NavRoute.FindParking) },
+                        colors = ButtonDefaults.buttonColors(containerColor = ParkBlue)
+                    ) {
+                        Text("Buscar un parqueo")
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun DetailRow(icon: ImageVector, label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(label, fontWeight = FontWeight.Medium)
-        }
-        Text(value, fontWeight = FontWeight.Normal)
     }
 }
