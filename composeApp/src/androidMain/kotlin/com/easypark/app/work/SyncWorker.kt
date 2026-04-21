@@ -1,7 +1,6 @@
 package com.easypark.app.work
 
 import android.content.Context
-import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.easypark.app.findparking.domain.usecase.GetParkingsUseCase
 import org.koin.core.component.KoinComponent
