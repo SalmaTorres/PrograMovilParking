@@ -25,12 +25,12 @@ val presentationModule = module {
     viewModelOf(::EarningsViewModel)
     viewModelOf(::ReservationHistoryViewModel)
     viewModelOf(::FindParkingViewModel)
-    viewModelOf(::ReservationSummaryViewModel)
     viewModelOf(::RegisterVehicleViewModel)
-    viewModel { (id: String) ->
-        ParkingDetailsViewModel(parkingId = id, getParkingDetailUseCase = get())
+    viewModel { (parkingId: Int) ->
+        ParkingDetailsViewModel(parkingId, get(), get(), get())
     }
-    viewModel { (id: String) ->
-        BookingConfirmationViewModel(parkingId = id, getBookingConfirmationUseCase = get())
+    viewModel { (parkingId: Int) ->
+        BookingConfirmationViewModel(parkingId, get(), get(), get())
     }
+    viewModelOf(::ReservationSummaryViewModel)
 }

@@ -3,8 +3,8 @@ package com.easypark.app.registerparking.presentation.state
 data class RegisterParkingUIState (
     val name: String = "",
     val address: String = "",
-    val latitude: Double = -16.5000,
-    val longitude: Double = -68.1500,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
     val pricePerHour: String = "",
     val totalSpaces: String = "",
     val isLoading: Boolean = false,

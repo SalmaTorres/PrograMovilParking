@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,21 +23,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEffect
 import com.easypark.app.parkingdetails.presentation.state.ParkingDetailsEvent
-import com.easypark.app.shared.presentation.composable.ParkButton
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.ui.*
+import com.easypark.app.core.presentation.composable.ParkButton
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.ui.*
+import com.easypark.app.parkingdetails.presentation.composable.DetailItem
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ParkingDetailsScreen(
+    parkingId: Int,
     onNavigateBack: () -> Unit,
-    onNavigateToBooking: (String) -> Unit,
-    viewModel: ParkingDetailsViewModel = koinViewModel()
+    onNavigateToBooking: (Int) -> Unit,
+    viewModel: ParkingDetailsViewModel = koinViewModel { parametersOf(parkingId) }
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -50,7 +57,6 @@ fun ParkingDetailsScreen(
             }
         }
     }
-
 
     Scaffold(
         topBar = {
@@ -119,28 +125,27 @@ fun ParkingDetailsScreen(
                                             color = ParkBlue,
                                             fontSize = 28.sp,
                                             modifier = Modifier
-                                                .clickable {
-                                                    val newRating = if (state.userRating == i) 0 else i
-                                                    viewModel.onEvent(ParkingDetailsEvent.OnRate(newRating))
-                                                }
+                                                .clickable { viewModel.onEvent(ParkingDetailsEvent.OnRate(i)) }
                                                 .padding(horizontal = 4.dp)
                                         )
                                     }
                                 }
                             } else {
-                                val displayStars = if (state.userRating > 0) {
-                                    "★".repeat(state.userRating) + "☆".repeat(5 - state.userRating)
-                                } else {
-                                    "★★★☆☆"
-                                }
+                                val starsInt = detail.rating?.toInt() ?: 0
+                                val displayStars = "★".repeat(starsInt) + "☆".repeat(5 - starsInt)
+
                                 Text(text = displayStars, color = ParkBlue, fontSize = 20.sp)
                                 Spacer(modifier = Modifier.width(8.dp))
+
+                                // Mostramos el decimal (ej: 4.3)
                                 Text(
-                                    text = "${detail.rating.toInt()} (${detail.reviewCount} ${stringResource(Res.string.format_reviews)})",
+                                    text = "${detail.rating ?: 0.0} (${detail.reviewCount} ${stringResource(Res.string.format_reviews)})",
                                     color = ParkGray
                                 )
                             }
+
                             Spacer(modifier = Modifier.weight(1f))
+
                             TextButton(onClick = { isRatingMode = !isRatingMode }) {
                                 Text(
                                     text = if (isRatingMode) stringResource(Res.string.action_save) else stringResource(Res.string.action_rate),
@@ -150,43 +155,15 @@ fun ParkingDetailsScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_garage),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = detail.address, color = ParkGray)
-                            Spacer(modifier = Modifier.weight(1f))
-                            TextButton(onClick = { /* TODO */ }) {
-                                Text(text = stringResource(Res.string.action_view_map), color = ParkBlue)
-                            }
-                        }
+                        DetailItem(icon = Icons.Default.LocationOn, text = detail.address, label = "Dirección")
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_garage),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = detail.pricePerHour.format(), color = ParkGray)
-                        }
+                        DetailItem(icon = Icons.Default.Payments, text = detail.pricePerHour.format(), label = "Precio por hora")
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_garage),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = detail.schedule, color = ParkGray)
-                        }
+                        DetailItem(icon = Icons.Default.AccessTime, text = detail.schedule ?: "24 Horas", label = "Horario")
 
                         Spacer(modifier = Modifier.height(16.dp))
 

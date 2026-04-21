@@ -47,6 +47,3 @@ Nota sobre Iconos: En los footers he usado ColorFilter.tint(color). Esto signifi
 - Cero Hardcoded Text: Todo texto estático debe estar en `strings.xml`.
 - Iconos: Usar imágenes de `drawable` con `painterResource(Res.drawable.nombre)`.
 - Colores: Usar las variables de `shared/ui` (`ParkBlue`, `ParkGray`, etc.) para que el modo oscuro sea más fácil de implementar después.
-
-### 6. Datos (Mocks)
-Los Mocks deben ser consistentes. Si creas un parqueo en el `Mock` de registro, asegúrate de que ese mismo ID devuelva datos coherentes en el `Mock` de detalles.

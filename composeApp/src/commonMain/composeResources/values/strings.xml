@@ -78,6 +78,30 @@
     <string name="payment_qr">QR</string>
     <string name="earnings_limited_capacity">Capacidad limitada</string>
     <string name="parking_details_title">Detalles del parqueo</string>
+    <string name="reviews">reseñas</string>
+    <string name="rate_button">Calificar</string>
+    <string name="view_map_button">Ver mapa</string>
+    <string name="available">Disponible</string>
+    <string name="not_available">No disponible</string>
+    <string name="reserve_button">Reservar</string>
+    <string name="booking_confirmation_title">Confirma tu Reserva</string>
+    <string name="location_label">Ubicación</string>
+    <string name="space_label">Espacio</string>
+    <string name="duration_label">Duración</string>
+    <string name="total_cost_label">Costo Total</string>
+    <string name="payment_method_title">Selecciona tu método de pago</string>
+    <string name="cash_payment">Efectivo</string>
+    <string name="qr_payment">Pagar con QR</string>
+    <string name="confirm_booking_button">Confirmar reserva</string>
+
+    <string name="reservation_summary_title">Información de Reserva</string>
+    <string name="reservation_summary_location">Ubicación</string>
+    <string name="reservation_summary_space">Espacio Asignado</string>
+    <string name="reservation_summary_entry_time">Hora de Entrada</string>
+    <string name="reservation_summary_duration">Duración Estimada</string>
+    <string name="reservation_summary_cost">Costo Total</string>
+    <string name="reservation_summary_payment">Método de Pago</string>
+
     <string name="history_status_ending_soon">Termina pronto</string>
     <string name="signin_or_separator">O</string>
     <string name="spaces_card_total_capacity">Capacidad total</string>

@@ -14,14 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.earnings.domain.model.EarningTransaction
-import com.easypark.app.shared.ui.ParkGray
-import com.easypark.app.shared.ui.ParkSuccess
-import com.easypark.app.shared.ui.ParkTextDark
+import com.easypark.app.core.ui.ParkGray
+import com.easypark.app.core.ui.ParkSuccess
+import com.easypark.app.core.ui.ParkTextDark
+import com.easypark.app.earnings.domain.model.EarningTransactionModel
 
 @Composable
 fun EarningItemRow(
-    transaction: EarningTransaction,
+    transaction: EarningTransactionModel,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -50,7 +50,7 @@ fun EarningItemRow(
             }
 
             Text(
-                text = "${transaction.currency} ${transaction.amount.toInt()}.00",
+                text = "${transaction.amount} ${transaction.currency}",
                 color = ParkSuccess,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold

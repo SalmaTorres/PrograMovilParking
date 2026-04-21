@@ -4,6 +4,6 @@ import com.easypark.app.spacemanagement.domain.model.ParkingSpot
 import com.easypark.app.spacemanagement.domain.model.SpaceSummary
 
 interface SpaceManagementRepository {
-    suspend fun getSpaceSummary(): SpaceSummary
-    suspend fun getParkingSpots(): List<ParkingSpot>
+    suspend fun getSpaceSummary(parkingId: Int): SpaceSummary
+    suspend fun getParkingSpots(parkingId: Int): List<ParkingSpot>
 }

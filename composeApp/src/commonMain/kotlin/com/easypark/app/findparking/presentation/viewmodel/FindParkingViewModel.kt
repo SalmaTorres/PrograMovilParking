@@ -27,22 +27,42 @@ class FindParkingViewModel(
     fun onEvent(event: FindParkingEvent) {
         when (event) {
             is FindParkingEvent.OnQueryChanged -> {
-                val filtered = _state.value.allParkings.filter {
-                    it.name.contains(event.query, ignoreCase = true)
+                val query = event.query
+                if (query.isEmpty()) {
+                    _state.update { it.copy(
+                        searchQuery = "",
+                        suggestions = emptyList(),
+                        selectedParking = null
+                    ) }
+                } else {
+                    val filtered = _state.value.allParkings.filter {
+                        it.name.contains(query, ignoreCase = true)
+                    }
+                    _state.update { it.copy(searchQuery = query, suggestions = filtered) }
                 }
-                _state.update { it.copy(searchQuery = event.query, suggestions = filtered) }
             }
+
             is FindParkingEvent.OnSuggestionSelected -> {
-                _state.update { it.copy(searchQuery = event.parking.name, suggestions = emptyList(), selectedParking = event.parking) }
+                _state.update { it.copy(
+                    searchQuery = event.parking.name,
+                    suggestions = emptyList(),
+                    selectedParking = event.parking
+                ) }
                 emit(FindParkingEffect.MoveCamera(event.parking.latitude, event.parking.longitude))
             }
+
             is FindParkingEvent.OnMarkerClicked -> {
                 _state.update { it.copy(selectedParking = event.parking) }
             }
-            FindParkingEvent.OnDismissDetails -> _state.update { it.copy(selectedParking = null) }
+
+            FindParkingEvent.OnDismissDetails -> {
+                _state.update { it.copy(selectedParking = null) }
+            }
+
             FindParkingEvent.OnReserveClick -> {
                 _state.value.selectedParking?.let { emit(FindParkingEffect.NavigateToBooking(it.id)) }
             }
+
             FindParkingEvent.OnDetailsClick -> {
                 _state.value.selectedParking?.let { emit(FindParkingEffect.NavigateToDetails(it.id)) }
             }
@@ -51,8 +71,16 @@ class FindParkingViewModel(
 
     private fun loadInitialData() {
         viewModelScope.launch {
-            val list = getParkingsUseCase()
-            _state.update { it.copy(allParkings = list) }
+            _state.update { it.copy(isLoading = true) }
+            try {
+                val list = getParkingsUseCase()
+                _state.update { it.copy(
+                    allParkings = list,
+                    isLoading = false
+                )}
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoading = false) }
+            }
         }
     }
 

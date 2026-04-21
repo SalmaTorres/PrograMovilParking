@@ -1,12 +1,11 @@
 package com.easypark.app.registerparking.domain.usecase
 
-import com.easypark.app.shared.domain.model.ParkingModel
-import com.easypark.app.shared.domain.repository.ParkingRepository
+import com.easypark.app.registerparking.domain.model.ParkingModel
+import com.easypark.app.core.domain.model.UserModel
+import com.easypark.app.registerparking.domain.repository.RegisterParkingRepository
 
-class RegisterParkingUseCase(
-    private val repository: ParkingRepository
-) {
-    suspend fun invoke(model: ParkingModel): Boolean {
-        return repository.registerParking(model)
+class RegisterParkingUseCase(private val repository: RegisterParkingRepository) {
+    suspend operator fun invoke(user: UserModel, parking: ParkingModel): Pair<Int, Int>? {
+        return repository.completeOwnerRegistration(user, parking)
     }
 }

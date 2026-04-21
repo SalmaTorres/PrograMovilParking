@@ -11,12 +11,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.navigation.NavRoute
 import com.easypark.app.registervehicle.presentation.state.*
 import com.easypark.app.registervehicle.presentation.viewmodel.RegisterVehicleViewModel
-import com.easypark.app.shared.presentation.composable.*
-import com.easypark.app.shared.ui.ParkGray
-import com.easypark.app.shared.ui.ParkTextDark
+import com.easypark.app.core.presentation.composable.*
+import com.easypark.app.core.ui.ParkGray
+import com.easypark.app.core.ui.ParkTextDark
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -26,25 +27,36 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RegisterVehicleScreen(
     navController: NavHostController,
-    viewModel: RegisterVehicleViewModel = koinViewModel()
+    viewModel: RegisterVehicleViewModel = koinViewModel(),
+    userFromStep1: UserModel
 ) {
     val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
+        viewModel.initUser(userFromStep1)
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 RegisterVehicleEffect.NavigateBack -> navController.popBackStack()
                 RegisterVehicleEffect.NavigateNext -> {
                     navController.navigate(NavRoute.FindParking) {
-                        popUpTo(NavRoute.SignIn) { inclusive = true }
+                        popUpTo(0)
                     }
                 }
-                is RegisterVehicleEffect.ShowError -> println(effect.message)
+                is RegisterVehicleEffect.ShowError -> {
+                    snackbarHostState.showSnackbar(effect.message)
+                }
             }
         }
     }
 
     Scaffold(
+        snackbarHost = { 
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.navigationBarsPadding().imePadding()
+            ) 
+        },
         topBar = {
             ParkHeader(
                 title = stringResource(Res.string.vehicle_registration_title),

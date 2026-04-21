@@ -25,10 +25,10 @@ import com.easypark.app.earnings.presentation.composable.EarningsStatCard
 import com.easypark.app.earnings.presentation.composable.EarningsSummaryCard
 import com.easypark.app.earnings.presentation.viewmodel.EarningsViewModel
 import com.easypark.app.navigation.NavRoute
-import com.easypark.app.shared.presentation.composable.OwnerFooter
-import com.easypark.app.shared.presentation.composable.ParkHeader
-import com.easypark.app.shared.presentation.composable.ParkLoading
-import com.easypark.app.shared.ui.ParkBackground
+import com.easypark.app.core.presentation.composable.OwnerFooter
+import com.easypark.app.core.presentation.composable.ParkHeader
+import com.easypark.app.core.presentation.composable.ParkLoading
+import com.easypark.app.core.ui.ParkBackground
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,7 +44,7 @@ fun EarningsScreen(
         containerColor = ParkBackground,
         topBar = {
             ParkHeader(
-                title = "Downtown Plaza Garage", // variable que sera nombre del parqueo
+                title = state.parkingName,
                 onNotificationClick = {
                     navController.navigate(NavRoute.Notifications)
                 }

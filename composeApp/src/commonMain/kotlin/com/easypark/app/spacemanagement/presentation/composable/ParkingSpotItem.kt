@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.easypark.app.shared.ui.ParkError
-import com.easypark.app.shared.ui.ParkSuccess
+import com.easypark.app.core.ui.ParkError
+import com.easypark.app.core.ui.ParkSuccess
 import com.easypark.app.spacemanagement.domain.model.ParkingSpot
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -46,7 +46,7 @@ fun ParkingSpotItem(spot: ParkingSpot) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = spot.code,
+                text = spot.number.toString(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = textColor
