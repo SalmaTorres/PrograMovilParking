@@ -17,6 +17,7 @@ import com.easypark.app.reservationhistory.data.dao.ReservationHistoryDao
 import com.easypark.app.reservationsummary.data.dao.ReservationSummaryDao
 import com.easypark.app.signin.data.dao.SignInDao
 import com.easypark.app.register.data.dao.RegisterDao
+import com.easypark.app.registervehicle.data.dao.RegisterVehicleDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
@@ -46,6 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reservationSummaryDao(): ReservationSummaryDao
     abstract fun signInDao(): SignInDao
     abstract fun registerDao(): RegisterDao
+    abstract fun registerVehicleDao(): RegisterVehicleDao
 }
 
 // The Room compiler generates the `actual` implementations.

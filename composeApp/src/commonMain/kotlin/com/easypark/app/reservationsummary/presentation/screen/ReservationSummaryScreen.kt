@@ -38,8 +38,8 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ReservationSummaryScreen(
-    reservationId: NavHostController,
-    navController: NavController? = null,
+    reservationId: Int,
+    navController: NavController,
     viewModel: ReservationSummaryViewModel = koinViewModel { parametersOf(reservationId) }
 ) {
     val state by viewModel.state.collectAsState()
@@ -48,7 +48,7 @@ fun ReservationSummaryScreen(
         topBar = {
             ParkHeader(
                 title = stringResource(Res.string.reservation_summary_title),
-                onBackClick = { navController?.popBackStack() },
+                onBackClick = { navController.popBackStack() },
                 onNotificationClick = null
             )
         },
@@ -57,7 +57,7 @@ fun ReservationSummaryScreen(
                 currentRoute = NavRoute.ReservationSummary(0),
                 onNavigate = { route ->
                     if (route !is NavRoute.ReservationSummary) {
-                        navController?.navigate(route)
+                        navController.navigate(route)
                     }
                 }
             )

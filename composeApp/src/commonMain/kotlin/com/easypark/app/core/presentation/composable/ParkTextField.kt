@@ -46,7 +46,8 @@ fun ParkTextField(
     placeholder: String,
     leadingImage: org.jetbrains.compose.resources.DrawableResource? = null,
     isPassword: Boolean = false,
-    isError: Boolean = false
+    isError: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -77,9 +78,7 @@ fun ParkTextField(
                     }
                 }
             },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Next
-            ),
+            keyboardOptions = keyboardOptions,
             leadingIcon = leadingImage?.let {
                 { Image(painterResource(it), null, Modifier.size(18.dp)) }
             },

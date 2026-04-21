@@ -16,6 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
+        Configuration.getInstance().userAgentValue = packageName
         if (org.koin.core.context.GlobalContext.getOrNull() == null) {
             startKoin {
                 androidContext(this@MainActivity)

@@ -7,7 +7,7 @@ import com.easypark.app.core.domain.model.status.UserType
 fun UserModel.toEntity() = UserEntity(
     name = name,
     email = email,
-    cellphone = "",
+    cellphone = cellphone.toString(),
     password = password,
     type = type.name
 )

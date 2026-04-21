@@ -47,7 +47,7 @@ fun SpaceManagementScreen(
                 currentRoute = NavRoute.SpaceManagement,
                 onNavigate = { route ->
                     navController.navigate(route) {
-                        popUpTo(NavRoute.SpaceManagement) { saveState = true }
+                        popUpTo<NavRoute.SpaceManagement> { saveState = true }
                         launchSingleTop = true
                         restoreState = true
                     }

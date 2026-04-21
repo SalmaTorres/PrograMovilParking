@@ -77,4 +77,5 @@ val dataModule = module {
     single { get<AppDatabase>().reservationHistoryDao() }
     single { get<AppDatabase>().signInDao() }
     single { get<AppDatabase>().registerDao() }
+    single { get<AppDatabase>().registerVehicleDao() }
 }

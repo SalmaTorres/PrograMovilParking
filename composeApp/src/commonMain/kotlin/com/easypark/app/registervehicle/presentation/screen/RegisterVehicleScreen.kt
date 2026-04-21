@@ -31,6 +31,7 @@ fun RegisterVehicleScreen(
     userFromStep1: UserModel
 ) {
     val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.initUser(userFromStep1)
@@ -39,15 +40,23 @@ fun RegisterVehicleScreen(
                 RegisterVehicleEffect.NavigateBack -> navController.popBackStack()
                 RegisterVehicleEffect.NavigateNext -> {
                     navController.navigate(NavRoute.FindParking) {
-                        popUpTo(NavRoute.SignIn) { inclusive = true }
+                        popUpTo(0)
                     }
                 }
-                is RegisterVehicleEffect.ShowError -> println(effect.message)
+                is RegisterVehicleEffect.ShowError -> {
+                    snackbarHostState.showSnackbar(effect.message)
+                }
             }
         }
     }
 
     Scaffold(
+        snackbarHost = { 
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.navigationBarsPadding().imePadding()
+            ) 
+        },
         topBar = {
             ParkHeader(
                 title = stringResource(Res.string.vehicle_registration_title),

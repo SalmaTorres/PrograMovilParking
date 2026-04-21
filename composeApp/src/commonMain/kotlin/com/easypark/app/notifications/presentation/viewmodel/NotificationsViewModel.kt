@@ -39,8 +39,12 @@ class NotificationsViewModel(
     private fun loadNotifications() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val list = getNotificationsUseCase()
-            _state.update { it.copy(list = list, isLoading = false) }
+            try {
+                val list = getNotificationsUseCase()
+                _state.update { it.copy(list = list, isLoading = false) }
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoading = false) }
+            }
         }
     }
 

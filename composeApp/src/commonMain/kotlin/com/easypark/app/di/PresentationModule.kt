@@ -27,7 +27,6 @@ val presentationModule = module {
     viewModelOf(::FindParkingViewModel)
     viewModelOf(::ReservationSummaryViewModel)
     viewModelOf(::RegisterVehicleViewModel)
-    viewModelOf(::ReservationSummaryViewModel)
     viewModel { (parkingId: Int) ->
         ParkingDetailsViewModel(parkingId, get(), get(), get())
     }
