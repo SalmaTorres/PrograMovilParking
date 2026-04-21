@@ -33,10 +33,11 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.activity.compose)
+            implementation( libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation("org.osmdroid:osmdroid-android:6.1.18")
+            implementation("com.google.android.gms:play-services-location:21.0.1")
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
