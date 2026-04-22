@@ -11,6 +11,8 @@ import com.easypark.app.core.data.remote.FirebaseManager
 import com.easypark.app.core.data.remote.RemoteConfigManager
 import com.easypark.app.core.data.service.ReservationDbService
 import com.easypark.app.core.data.service.SpaceDbService
+import com.easypark.app.core.data.repository.RemoteConfigRepositoryImpl
+import com.easypark.app.core.domain.repository.RemoteConfigRepository
 import com.easypark.app.core.domain.session.SessionManager
 import com.easypark.app.earnings.data.repository.EarningsRepositoryImpl
 import com.easypark.app.earnings.domain.repository.EarningsRepository
@@ -82,6 +84,7 @@ val dataModule = module {
     singleOf(::EarningsRepositoryImpl).bind<EarningsRepository>()
     singleOf(::ReservationHistoryRepositoryImpl).bind<ReservationHistoryRepository>()
     singleOf(::NotificationsRepositoryImpl).bind<NotificationsRepository>()
+    singleOf(::RemoteConfigRepositoryImpl).bind<RemoteConfigRepository>()
 
     single { get<AppDatabase>().userDao() }
     single { get<AppDatabase>().parkingDao() }
@@ -96,6 +99,7 @@ val dataModule = module {
     single { get<AppDatabase>().registerVehicleDao() }
     single { get<AppDatabase>().reservationDao() }
     single { get<AppDatabase>().bookingConfirmationDao() }
+    single { get<AppDatabase>().remoteConfigDao() }
 
     singleOf(::RemoteConfigManager)
 }

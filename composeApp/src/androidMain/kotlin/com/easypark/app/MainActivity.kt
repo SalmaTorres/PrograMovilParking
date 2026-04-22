@@ -16,6 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.easypark.app.core.sync.ConfigSyncWorker
 
 class MainActivity : ComponentActivity() {
 
@@ -35,6 +38,9 @@ class MainActivity : ComponentActivity() {
 
         askNotificationPermission()
         fetchFcmToken()
+
+        val syncWorkRequest = OneTimeWorkRequestBuilder<ConfigSyncWorker>().build()
+        WorkManager.getInstance(applicationContext).enqueue(syncWorkRequest)
 
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = packageName
