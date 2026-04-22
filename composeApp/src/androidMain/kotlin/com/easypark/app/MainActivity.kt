@@ -14,8 +14,13 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.easypark.app.core.work.CleanupWorker
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
 
@@ -35,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
         askNotificationPermission()
         fetchFcmToken()
+        scheduleCleanupWorker()
 
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = packageName
@@ -47,6 +53,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             App()
         }
+    }
+
+    private fun scheduleCleanupWorker() {
+        val cleanupRequest = PeriodicWorkRequestBuilder<CleanupWorker>(15, TimeUnit.MINUTES)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "CleanupWork",
+            ExistingPeriodicWorkPolicy.KEEP,
+            cleanupRequest
+        )
+        Log.d("MainActivity", "CleanupWorker programado.")
     }
 
     private fun askNotificationPermission() {

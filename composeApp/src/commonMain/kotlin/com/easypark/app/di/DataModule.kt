@@ -13,8 +13,12 @@ import com.easypark.app.signin.domain.repository.AuthRepository
 import com.easypark.app.signin.data.repository.AuthRepositoryImpl
 import com.easypark.app.register.domain.repository.RegisterRepository
 import com.easypark.app.register.data.repository.RegisterRepositoryImpl
+import com.easypark.app.register.data.datasource.RegisterLocalDataSource
+import com.easypark.app.register.data.service.RegisterDbService
 import com.easypark.app.registervehicle.domain.repository.RegisterVehicleRepository
 import com.easypark.app.registervehicle.data.repository.RegisterVehicleRepositoryImpl
+import com.easypark.app.registervehicle.data.datasource.RegisterVehicleLocalDataSource
+import com.easypark.app.registervehicle.data.service.RegisterVehicleDbService
 import com.easypark.app.registerparking.domain.repository.RegisterParkingRepository
 import com.easypark.app.registerparking.data.repository.RegisterParkingRepositoryImpl
 import com.easypark.app.core.domain.session.SessionManager
@@ -45,6 +49,8 @@ val dataModule = module {
     single { RemoteConfigManager() }
     single { SessionManager() }
     single<SignInLocalDataSource> { SignInDbService(get()) }
+    single<RegisterLocalDataSource> { RegisterDbService(get()) }
+    single<RegisterVehicleLocalDataSource> { RegisterVehicleDbService(get()) }
 
     // Repositories
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
