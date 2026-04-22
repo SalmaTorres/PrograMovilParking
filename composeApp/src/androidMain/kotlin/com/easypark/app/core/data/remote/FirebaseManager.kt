@@ -22,6 +22,14 @@ actual class FirebaseManager actual constructor() {
         }
     }
 
+    actual suspend fun getFCMToken(): String? {
+        return try {
+            com.google.firebase.messaging.FirebaseMessaging.getInstance().token.await()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     actual fun observeData(path: String) = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

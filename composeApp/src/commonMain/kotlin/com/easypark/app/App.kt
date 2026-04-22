@@ -12,8 +12,17 @@ import com.easypark.app.core.ui.ParkBackground
 import com.easypark.app.core.work.rememberBackgroundTaskManager
 import com.easypark.app.navigation.AppNavHost
 
+import com.easypark.app.core.data.remote.FirebaseManager
+
 @Composable
 fun App() {
+    val firebaseManager = remember { FirebaseManager() }
+
+    LaunchedEffect(Unit) {
+        val token = firebaseManager.getFCMToken()
+        println("FCM TOKEN: $token")
+    }
+
     MaterialTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
