@@ -64,12 +64,11 @@ class RegisterViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val isAvailable = useCase.invoke(s.email)
-            _state.update { it.copy(isLoading = false) }
+            val isAvailable = useCase.checkEmail(s.email)
 
             if (isAvailable) {
                 val userData = UserModel(
-                    id = 0,
+                    id = (100..999).random(),
                     name = s.name,
                     email = s.email,
                     cellphone = s.phone.toIntOrNull() ?: 0,
@@ -77,12 +76,15 @@ class RegisterViewModel(
                     type = s.role
                 )
 
+                _state.update { it.copy(isLoading = false) }
+
                 if (s.role == UserType.DRIVER) {
                     emit(RegisterEffect.NavigateToRegisterVehicle(userData))
                 } else {
                     emit(RegisterEffect.NavigateToRegisterParking(userData))
                 }
             } else {
+                _state.update { it.copy(isLoading = false) }
                 emit(RegisterEffect.ShowError("Email ya registrado"))
             }
         }

@@ -27,26 +27,30 @@ class NotificationsViewModel(
     private val _effect = MutableSharedFlow<NotificationsEffect>()
     val effect = _effect.asSharedFlow()
 
-    init { loadNotifications() }
+    init {
+        startRealtimeNotifications()
+    }
 
     fun onEvent(event: NotificationsEvent) {
         when (event) {
-            NotificationsEvent.LoadNotifications -> loadNotifications()
+            NotificationsEvent.LoadNotifications -> startRealtimeNotifications()
             NotificationsEvent.OnBackClick -> emit(NotificationsEffect.NavigateBack)
         }
     }
 
-    private fun loadNotifications() {
+    private fun startRealtimeNotifications() {
         val userId = sessionManager.getUserId()
         if (userId == -1) return
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            try {
-                val list = getNotificationsUseCase(userId)
-                _state.update { it.copy(list = list, isLoading = false) }
-            } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false) }
+
+            getNotificationsUseCase.observe(userId).collect { newList ->
+                _state.update { it.copy(
+                    list = newList,
+                    isLoading = false
+                )}
+                println("LOG: ¡Ha llegado una nueva notificación en tiempo real!")
             }
         }
     }

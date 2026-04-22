@@ -2,6 +2,7 @@ package com.easypark.app.bookingconfirmation.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.easypark.app.bookingconfirmation.domain.repository.BookingConfirmationRepository
 import com.easypark.app.bookingconfirmation.domain.usecase.ConfirmReservationUseCase
 import com.easypark.app.bookingconfirmation.domain.usecase.GetBookingInfoUseCase
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEffect
@@ -19,6 +20,7 @@ class BookingConfirmationViewModel(
     private val parkingId: Int,
     private val getBookingInfoUseCase: GetBookingInfoUseCase,
     private val confirmReservationUseCase: ConfirmReservationUseCase,
+    private val repository: BookingConfirmationRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -59,21 +61,38 @@ class BookingConfirmationViewModel(
         }
     }
 
+    private fun observeLiveStatus(reservationId: Int) {
+        viewModelScope.launch {
+            repository.observeBookingRealtime(reservationId.toString()).collect { reservation ->
+                reservation?.let { liveData ->
+                    _state.update { it.copy(
+                        // Suponiendo que tu UIState tenga estos campos
+                        // status = liveData.status
+                    )}
+                    println("LOG TIEMPO REAL: El estado de la reserva ahora es: ${liveData.status}")
+                }
+            }
+        }
+    }
+
     private fun confirm() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
             val currentUserId = sessionManager.getUserId()
             val duration = _state.value.bookingConfirmation?.durationHours ?: 1
+            val paymentMethod = _state.value.selectedPaymentMethod
+            val clientName = sessionManager.currentUser.value?.name ?: "Unknown"
 
             println("DEBUG: Iniciando reserva para usuario $currentUserId en parking $parkingId")
 
             if (currentUserId != -1) {
                 try {
-                    val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration)
+                    val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration, paymentMethod.name , clientName)
 
                     if (reservationId != null) {
-                        println("DEBUG: Reserva exitosa. ID: $reservationId")
+                        observeLiveStatus(reservationId)
+
                         emit(BookingConfirmationEffect.NavigateToSuccess(reservationId))
                     } else {
                         println("DEBUG: El UseCase devolvió NULL (Probablemente no hay espacios libres)")

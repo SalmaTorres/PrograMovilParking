@@ -7,6 +7,7 @@ import com.easypark.app.bookingconfirmation.domain.repository.BookingConfirmatio
 import com.easypark.app.core.data.datasource.ReservationLocalDataSource
 import com.easypark.app.core.data.datasource.SpaceLocalDataSource
 import com.easypark.app.core.data.db.AppDatabase
+import com.easypark.app.core.data.remote.FirebaseManager
 import com.easypark.app.core.data.service.ReservationDbService
 import com.easypark.app.core.data.service.SpaceDbService
 import com.easypark.app.core.domain.session.SessionManager
@@ -54,6 +55,7 @@ import org.koin.dsl.module
 
 val dataModule = module {
     singleOf(::SessionManager)
+    singleOf(::FirebaseManager)
 
     singleOf(::RegisterDbService).bind<RegisterLocalDataSource>()
     singleOf(::SignInDbService).bind<SignInLocalDataSource>()

@@ -1,15 +1,58 @@
 package com.easypark.app.notifications.data.repository
 
+import com.easypark.app.core.data.remote.FirebaseManager
 import com.easypark.app.notifications.data.datasource.NotificationLocalDataSource
+import com.easypark.app.notifications.data.dto.NotificationDTO
 import com.easypark.app.notifications.domain.model.NotificationModel
 import com.easypark.app.notifications.domain.repository.NotificationsRepository
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.ic_calendar
 import kotlinproject.composeapp.generated.resources.ic_notification
-
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 class NotificationsRepositoryImpl(
-    private val localDS: NotificationLocalDataSource
+    private val localDS: NotificationLocalDataSource,
+    private val firebaseManager: FirebaseManager
 ) : NotificationsRepository {
+    private val jsonParser = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+        coerceInputValues = true
+    }
+
+    override suspend fun observeNotificationsRealtime(userId: Int): Flow<List<NotificationModel>> {
+        return firebaseManager.observeData("notifications/$userId").map { json ->
+            if (json == null) return@map emptyList<NotificationModel>()
+
+            try {
+                val element = jsonParser.parseToJsonElement(json)
+                val dtoList = if (element is kotlinx.serialization.json.JsonObject) {
+                    jsonParser.decodeFromJsonElement<Map<String, NotificationDTO>>(element).values.toList()
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    jsonParser.decodeFromJsonElement<List<NotificationDTO?>>(element).filterNotNull()
+                } else {
+                    emptyList()
+                }
+
+                dtoList.map { dto ->
+                    NotificationModel(
+                        id = dto.id ?: 0,
+                        title = dto.title ?: "",
+                        description = dto.description ?: "",
+                        time = dto.time ?: "Ahora",
+                        icon = if (dto.title?.contains("Reserva") == true)
+                            Res.drawable.ic_calendar else Res.drawable.ic_notification,
+                        isUnread = dto.isUnread ?: true
+                    )
+                }.reversed()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+    }
 
     override suspend fun getNotifications(userId: Int): List<NotificationModel> {
         val entities = localDS.readAll(userId)
