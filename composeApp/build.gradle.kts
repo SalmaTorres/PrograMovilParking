@@ -40,7 +40,10 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation("org.osmdroid:osmdroid-android:6.1.18")
             implementation("com.google.android.gms:play-services-location:21.0.1")
+            
             implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.messaging)
+            implementation(libs.androidx.sqlite.framework)
             implementation(libs.firebase.config)
             implementation(libs.firebase.database)
             implementation(libs.kotlinx.coroutines.play.services)
