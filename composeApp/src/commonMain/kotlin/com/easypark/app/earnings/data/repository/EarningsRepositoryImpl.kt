@@ -2,14 +2,32 @@ package com.easypark.app.earnings.data.repository
 
 import com.easypark.app.core.data.datasource.ReservationLocalDataSource
 import com.easypark.app.core.data.datasource.SpaceLocalDataSource
+import com.easypark.app.core.data.remote.FirebaseManager
+import com.easypark.app.earnings.data.mapper.toEarningsSummary
 import com.easypark.app.earnings.domain.model.EarningTransactionModel
 import com.easypark.app.earnings.domain.model.EarningsSummaryModel
 import com.easypark.app.earnings.domain.repository.EarningsRepository
+import com.easypark.app.registerparking.data.dto.ParkingDTO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 class EarningsRepositoryImpl(
     private val reservationDS: ReservationLocalDataSource,
-    private val spaceDS: SpaceLocalDataSource
+    private val spaceDS: SpaceLocalDataSource,
+    private val firebaseManager: FirebaseManager
 ) : EarningsRepository {
+
+    override suspend fun observeEarningsRealtime(parkingId: Int): Flow<EarningsSummaryModel?> {
+        return firebaseManager.observeData("parkings/$parkingId").map { json ->
+            if (json == null) return@map null
+
+            val dto = Json.decodeFromString<ParkingDTO>(json)
+
+            dto.toEarningsSummary()
+        }
+    }
+
     override suspend fun getEarningsSummary(parkingId: Int): EarningsSummaryModel {
         val reservations = reservationDS.readByParking(parkingId)
         val total = reservations.sumOf { it.totalPrice }

@@ -26,3 +26,11 @@ fun VehicleDTO.toDomain() = VehicleModel(
     model = model ?: "",
     color = color ?: ""
 )
+
+fun VehicleModel.toRemote(driverId: Int) = VehicleDTO(
+    id = id,
+    driverId = driverId,
+    plate = plate,
+    model = model,
+    color = color
+)

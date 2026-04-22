@@ -1,5 +1,6 @@
 package com.easypark.app.core.data.mapper
 
+import com.easypark.app.core.data.dto.PriceDTO
 import com.easypark.app.core.data.entity.ParkingEntity
 import com.easypark.app.registerparking.domain.model.ParkingModel
 import com.easypark.app.core.domain.model.status.Currency
@@ -47,4 +48,19 @@ fun ParkingDTO.toDomain() = ParkingModel(
     reviewCount = reviewCount ?: 0,
     availableSpaces = availableSpaces ?: 0,
     ownerId = ownerId ?: 0
+)
+
+fun ParkingModel.toRemote(id: Int, ownerId: Int) = ParkingDTO(
+    id = id,
+    name = name,
+    address = address,
+    latitude = latitude,
+    longitude = longitude,
+    pricePerHour = PriceDTO(amount = pricePerHour.amount, currency = "BOB"),
+    rating = 0f,
+    totalSpaces = totalSpaces,
+    availableSpaces = totalSpaces,
+    ownerId = ownerId,
+    activeReservations = 0,
+    totalEarnings = 0.0
 )

@@ -9,4 +9,5 @@ class GetParkingDetailUseCase(
     suspend operator fun invoke(id: Int): ParkingModel {
         return repository.getParkingDetail(id)
     }
+    fun observe(id: Int) = repository.observeParkingDetail(id)
 }

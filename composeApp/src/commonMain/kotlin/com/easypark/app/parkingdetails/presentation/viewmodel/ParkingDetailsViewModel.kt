@@ -28,7 +28,7 @@ class ParkingDetailsViewModel(
     val effect = _effect.asSharedFlow()
 
     init {
-        loadParkingDetail()
+        observeParkingLiveChanges()
     }
 
     fun onEvent(event: ParkingDetailsEvent) {
@@ -39,7 +39,7 @@ class ParkingDetailsViewModel(
                     emit(ParkingDetailsEffect.NavigateToBooking(it.id))
                 }
             }
-            ParkingDetailsEvent.OnLoadDetail -> loadParkingDetail()
+            ParkingDetailsEvent.OnLoadDetail -> observeParkingLiveChanges()
             is ParkingDetailsEvent.OnRate -> {
                 _state.update { it.copy(userRating = event.rating) }
                 performRating(event.rating)
@@ -47,17 +47,15 @@ class ParkingDetailsViewModel(
         }
     }
 
-    private fun loadParkingDetail() {
-        _state.update { it.copy(isLoading = true) }
+    private fun observeParkingLiveChanges() {
         viewModelScope.launch {
-            try {
-                val detail = getParkingDetailUseCase(parkingId)
+            _state.update { it.copy(isLoading = true) }
+
+            getParkingDetailUseCase.observe(parkingId).collect { liveDetail ->
                 _state.update { it.copy(
                     isLoading = false,
-                    parkingDetail = detail) }
-            } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false) }
-                emit(ParkingDetailsEffect.ShowError("Error al conectar con la base de datos"))
+                    parkingDetail = liveDetail ?: it.parkingDetail
+                )}
             }
         }
     }
@@ -68,7 +66,7 @@ class ParkingDetailsViewModel(
 
             if (userId != -1) {
                 rateParkingUseCase(parkingId, userId, stars.toFloat())
-                loadParkingDetail()
+                observeParkingLiveChanges()
             } else {
                 emit(ParkingDetailsEffect.ShowError("Debes iniciar sesión para calificar"))
             }

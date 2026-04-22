@@ -16,5 +16,7 @@ data class ParkingDTO (
     val availableSpaces: Int? = 0,
     val schedule: String? = "08:00 - 22:00",
     val reviewCount: Int? = 0,
-    val ownerId: Int? = 0
+    val ownerId: Int? = 0,
+    val totalEarnings: Double? = 0.0,
+    val activeReservations: Int? = 0,
 )
