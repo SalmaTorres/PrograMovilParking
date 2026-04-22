@@ -46,6 +46,8 @@ kotlin {
             implementation(libs.androidx.sqlite.framework)
             implementation(libs.firebase.config)
             implementation(libs.firebase.database)
+            implementation(libs.firebase.inappmessaging.display)
+            implementation(libs.firebase.analytics)
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.androidx.work.runtime)
             implementation(libs.firebase.config)
