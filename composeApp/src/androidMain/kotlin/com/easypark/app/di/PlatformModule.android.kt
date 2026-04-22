@@ -6,9 +6,13 @@ import com.easypark.app.core.data.db.createDatabase
 import com.easypark.app.core.data.db.getDatabaseBuilder
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import androidx.sqlite.driver.AndroidSQLiteDriver
 
 actual val platformModule: Module = module {
     single<AppDatabase> {
-        createDatabase(getDatabaseBuilder(get<Context>()))
+        createDatabase(
+            getDatabaseBuilder(get<Context>()),
+            AndroidSQLiteDriver()
+        )
     }
 }

@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import androidx.sqlite.SQLiteDriver
 import com.easypark.app.bookingconfirmation.data.dao.BookingConfirmationDao
 import com.easypark.app.core.data.dao.ReservationDao
 import com.easypark.app.notifications.data.dao.NotificationDao
@@ -60,9 +61,12 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
 
 expect fun getDatabaseBuilder(ctx: Any? = null): RoomDatabase.Builder<AppDatabase>
 
-fun createDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase {
+fun createDatabase(
+    builder: RoomDatabase.Builder<AppDatabase>,
+    driver: SQLiteDriver = BundledSQLiteDriver()
+): AppDatabase {
     return builder
-        .setDriver(BundledSQLiteDriver())
+        .setDriver(driver)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }
