@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import java.net.URL
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +10,15 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+}
+
+val locoKey: String by lazy {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(localPropertiesFile.inputStream())
+    }
+    properties.getProperty("locoKey") ?: ""
 }
 
 kotlin {
@@ -106,4 +117,41 @@ dependencies {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+tasks.register("downloadLocoTranslations") {
+    group = "localization"
+    description = "Downloads translations from Loco (localise.biz)"
+
+    doLast {
+        if (locoKey.isEmpty()) {
+            throw GradleException("locoKey not found in local.properties")
+        }
+
+        // Mapeo basado en tu configuración de Loco
+        val locales = mapOf(
+            "es-BO" to "values",    // Español (Bolivia) como default
+            "en-GB" to "values-en"  // Inglés (UK)
+        )
+
+        locales.forEach { (locoLocale, folderName) ->
+            println("Downloading translations for $locoLocale...")
+            val url = "https://localise.biz/api/export/locale/$locoLocale.xml?key=$locoKey"
+            
+            val destinationDir = file("src/commonMain/composeResources/$folderName")
+            if (!destinationDir.exists()) destinationDir.mkdirs()
+            
+            val destinationFile = file("${destinationDir.path}/strings.xml")
+            
+            try {
+                val connection = URL(url).openConnection()
+                connection.connect()
+                val content = connection.getInputStream().bufferedReader().readText()
+                destinationFile.writeText(content)
+                println("Saved to ${destinationFile.path}")
+            } catch (e: Exception) {
+                println("Error downloading $locoLocale: ${e.message}")
+            }
+        }
+    }
 }

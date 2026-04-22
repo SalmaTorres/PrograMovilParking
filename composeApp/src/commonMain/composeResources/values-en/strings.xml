@@ -2,11 +2,11 @@
 <!--
  Loco xml export: Android strings
  Project: EasyPark
- Locale: es-BO, Spanish (Bolivia)
+ Locale: en-GB, English (UK)
  Exported by: Jhessael Siancas
- Exported at: Wed, 22 Apr 2026 11:48:27 -0400
+ Exported at: Wed, 22 Apr 2026 11:48:28 -0400
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="login_email">Correo electrónico</string>
-    <string name="login_password">Contraseña</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
 </resources>
