@@ -3,9 +3,9 @@ package com.easypark.app.spacemanagement.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.core.domain.session.SessionManager
-import com.easypark.app.spacemanagement.domain.usecase.GetSpaceDataUseCase
+import com.easypark.app.spacemanagement.domain.model.SpaceSummary
+import com.easypark.app.spacemanagement.domain.repository.SpaceManagementRepository
 import com.easypark.app.spacemanagement.presentation.state.SpaceManagementEffect
-import com.easypark.app.spacemanagement.presentation.state.SpaceManagementEvent
 import com.easypark.app.spacemanagement.presentation.state.SpaceManagementUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SpaceManagementViewModel(
-    private val getSpaceDataUseCase: GetSpaceDataUseCase,
+    private val repository: SpaceManagementRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -26,33 +26,25 @@ class SpaceManagementViewModel(
     val effect = _effect.asSharedFlow()
 
     init {
-        onEvent(SpaceManagementEvent.LoadData)
+        startRealtimeMonitoring()
     }
 
-    fun onEvent(event: SpaceManagementEvent) {
-        when (event) {
-            is SpaceManagementEvent.LoadData -> loadSpaceData()
-        }
-    }
+    private fun startRealtimeMonitoring() {
+        val myParkingId = sessionManager.currentParkingId ?: return
 
-    private fun loadSpaceData() {
         viewModelScope.launch {
-            val myParkingId = sessionManager.currentParkingId
-            println("DEBUG-SESSION: El ID del parqueo en sesión es: $myParkingId")
+            _state.update { it.copy(isLoading = true) }
 
-            if (myParkingId != null) {
-                _state.update { it.copy(isLoading = true) }
-                try {
-                    val summary = getSpaceDataUseCase.getSummary(myParkingId)
-                    val spots = getSpaceDataUseCase.getSpots(myParkingId)
-                    _state.update {
-                        it.copy(isLoading = false, summary = summary, parkingSpots = spots)
-                    }
-                } catch (e: Exception) {
-                    _state.update { it.copy(isLoading = false, errorMessage = e.message) }
-                }
-            } else {
-                _state.update { it.copy(errorMessage = "No tienes un parqueo registrado") }
+            repository.observeParkingSpots(myParkingId).collect { liveSpots ->
+                val total = liveSpots.size
+                val occupied = liveSpots.count { it.isOccupied }
+
+                _state.update { it.copy(
+                    isLoading = false,
+                    parkingSpots = liveSpots,
+                    summary = SpaceSummary(total, occupied, total - occupied)
+                )}
+                println("LOG TIEMPO REAL: Los espacios han cambiado en Firebase")
             }
         }
     }

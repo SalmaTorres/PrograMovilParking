@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.core.domain.model.status.ReservationStatus
 import com.easypark.app.core.domain.session.SessionManager
+import com.easypark.app.reservationhistory.domain.repository.ReservationHistoryRepository
 import com.easypark.app.reservationhistory.domain.usecase.GetReservationHistoryUseCase
 import com.easypark.app.reservationhistory.presentation.state.ReservationHistoryUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,28 +14,31 @@ import kotlinx.coroutines.launch
 
 class ReservationHistoryViewModel(
     private val sessionManager: SessionManager,
-    private val getReservationHistoryUseCase: GetReservationHistoryUseCase
+    private val repository: ReservationHistoryRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ReservationHistoryUiState())
     val state = _state.asStateFlow()
 
     init {
-        loadReservations()
+        startRealtimeObservation()
     }
 
-    private fun loadReservations() {
+    private fun startRealtimeObservation() {
+        val parkingId = sessionManager.currentParkingId ?: return
+
         viewModelScope.launch {
-            val parkingId = sessionManager.currentParkingId ?: return@launch
+            _state.update { it.copy(isLoading = true) }
 
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
-            try {
-                val list = getReservationHistoryUseCase(parkingId)
-
-                _state.update { it.copy(isLoading = false, reservations = list) }
+            repository.observeReservationsRealtime(parkingId).collect { liveList ->
+                _state.update { currentState ->
+                    currentState.copy(
+                        isLoading = false,
+                        reservations = liveList,
+                        errorMessage = null
+                    )
+                }
                 applyFilters()
-            } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false, errorMessage = e.message) }
             }
         }
     }

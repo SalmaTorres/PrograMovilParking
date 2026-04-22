@@ -3,6 +3,7 @@ package com.easypark.app.earnings.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.core.domain.session.SessionManager
+import com.easypark.app.earnings.domain.repository.EarningsRepository
 import com.easypark.app.earnings.domain.usecase.GetEarningsDataUseCase
 import com.easypark.app.earnings.presentation.state.EarningsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,38 +13,28 @@ import kotlinx.coroutines.launch
 
 class EarningsViewModel(
     private val sessionManager: SessionManager,
-    private val getEarningsDataUseCase: GetEarningsDataUseCase
+    private val repository: EarningsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(EarningsUiState())
     val state = _state.asStateFlow()
 
     init {
-        loadEarningsData()
+        startRealtimeObservation()
     }
 
-    private fun loadEarningsData() {
-        viewModelScope.launch {
-            val user = sessionManager.currentUser.value
-            val parkingId = sessionManager.currentParkingId
+    private fun startRealtimeObservation() {
+        val parkingId = sessionManager.currentParkingId ?: return
 
-            if (parkingId != null) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            repository.observeEarningsRealtime(parkingId).collect { liveSummary ->
                 _state.update { it.copy(
-                    isLoading = true,
-                    parkingName = user?.name ?: "Mi Parqueo"
+                    isLoading = false,
+                    summary = liveSummary ?: it.summary,
+                    parkingName = sessionManager.currentUser.value?.name ?: "Mi Parqueo"
                 )}
-                try {
-                    val data = getEarningsDataUseCase.execute(parkingId)
-                    _state.update { it.copy(
-                        isLoading = false,
-                        summary = data.summary,
-                        transactions = data.history
-                    )}
-                } catch (e: Exception) {
-                    _state.update { it.copy(isLoading = false, errorMessage = e.message) }
-                }
-            } else {
-                _state.update { it.copy(errorMessage = "No se encontró el parqueo") }
             }
         }
     }

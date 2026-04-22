@@ -2,6 +2,7 @@ package com.easypark.app.findparking.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.easypark.app.findparking.domain.repository.FindParkingRepository
 import com.easypark.app.findparking.domain.usecase.GetParkingsUseCase
 import com.easypark.app.findparking.presentation.state.FindParkingEffect
 import com.easypark.app.findparking.presentation.state.FindParkingEvent
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FindParkingViewModel(
-    private val getParkingsUseCase: GetParkingsUseCase
+    private val repository: FindParkingRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(FindParkingUIState())
     val state = _state.asStateFlow()
@@ -22,7 +23,9 @@ class FindParkingViewModel(
     private val _effect = MutableSharedFlow<FindParkingEffect>()
     val effect = _effect.asSharedFlow()
 
-    init { loadInitialData() }
+    init {
+        startRealtimeTracking()
+    }
 
     fun onEvent(event: FindParkingEvent) {
         when (event) {
@@ -69,17 +72,22 @@ class FindParkingViewModel(
         }
     }
 
-    private fun loadInitialData() {
+    private fun startRealtimeTracking() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            try {
-                val list = getParkingsUseCase()
+
+            repository.observeParkingsRealtime().collect { updatedList ->
                 _state.update { it.copy(
-                    allParkings = list,
+                    allParkings = updatedList,
                     isLoading = false
                 )}
-            } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false) }
+
+                _state.value.selectedParking?.let { selected ->
+                    val updated = updatedList.find { it.id == selected.id }
+                    if (updated != null) {
+                        _state.update { it.copy(selectedParking = updated) }
+                    }
+                }
             }
         }
     }

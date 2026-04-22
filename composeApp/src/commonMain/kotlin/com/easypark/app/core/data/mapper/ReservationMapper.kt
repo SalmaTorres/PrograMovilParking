@@ -1,8 +1,10 @@
 package com.easypark.app.core.data.mapper
 
 import ReservationModel
+import com.easypark.app.core.data.dto.ReservationDTO
 import com.easypark.app.core.data.entity.ReservationEntity
 import com.easypark.app.core.domain.model.PriceModel
+import kotlin.time.Clock
 
 fun ReservationModel.toEntity(driverId: Int) = ReservationEntity(
     driverId = driverId,
@@ -26,3 +28,22 @@ fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber:
     status = this.state,
     paymentMethod = this.methodPay
 )
+
+fun ReservationDTO.toDomain(): ReservationModel {
+    val currentTime = Clock.System.now().toEpochMilliseconds()
+    val finalEndTime = endTime ?: 0L
+    val finalStatus = if (finalEndTime > 0L && currentTime > finalEndTime) "FINISHED" else (status ?: "ACTIVE")
+
+    return ReservationModel(
+        id = id ?: 0,
+        parkingName = parkingName ?: "",
+        address = address ?: "",
+        spaceId = spaceId ?: 0,
+        spaceNumber = spaceNumber ?: 0,
+        startTime = startTime ?: 0L,
+        endTime = finalEndTime,
+        totalPrice = totalPrice?.toDomain() ?: PriceModel(0.0),
+        paymentMethod = paymentMethod ?: "CASH",
+        status = finalStatus
+    )
+}
