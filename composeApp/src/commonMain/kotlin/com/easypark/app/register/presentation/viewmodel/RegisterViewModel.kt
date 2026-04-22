@@ -76,13 +76,6 @@ class RegisterViewModel(
                     type = s.role
                 )
 
-                try {
-                    useCase.saveCloud(userData)
-                    println("LOG PERSONA 2: Usuario sincronizado en Firebase")
-                } catch (e: Exception) {
-                    println("LOG PERSONA 2: Error al subir a la nube, pero continuamos local")
-                }
-
                 _state.update { it.copy(isLoading = false) }
 
                 if (s.role == UserType.DRIVER) {

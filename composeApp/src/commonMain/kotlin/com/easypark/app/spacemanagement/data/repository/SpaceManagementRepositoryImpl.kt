@@ -17,15 +17,21 @@ class SpaceManagementRepositoryImpl(
     private val spaceDS: SpaceLocalDataSource,
     private val firebaseManager: FirebaseManager
 ) : SpaceManagementRepository {
+    private val jsonConfig = Json {
+        ignoreUnknownKeys = true // Si Firebase tiene campos extra, no crashea
+        isLenient = true         // Permite formatos de texto más flexibles
+        coerceInputValues = true // Si llega un null donde no debe, usa el valor por defecto
+    }
 
     override fun observeParkingSpots(parkingId: Int): Flow<List<ParkingSpot>> {
+        // RUTA CORRECTA: "spaces/$parkingId"
         return firebaseManager.observeData("spaces/$parkingId").map { json ->
-            if (json == null) return@map emptyList<ParkingSpot>()
-
+            if (json == null || json == "null") return@map emptyList()
             try {
-                val spacesMap = Json.decodeFromString<Map<String, SpaceDTO>>(json)
+                val spacesMap = jsonConfig.decodeFromString<Map<String, SpaceDTO>>(json)
                 spacesMap.values.map { it.toParkingSpot() }.sortedBy { it.number }
             } catch (e: Exception) {
+                println("ERROR_SPACES: ${e.message}")
                 emptyList()
             }
         }

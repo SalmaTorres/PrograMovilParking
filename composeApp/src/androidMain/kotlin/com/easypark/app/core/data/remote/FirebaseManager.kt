@@ -7,16 +7,29 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 actual class FirebaseManager actual constructor() {
     private val database = FirebaseDatabase.getInstance().reference
 
     actual suspend fun saveData(path: String, value: String) {
         try {
-            database.child(path).setValue(value).await()
-            println("Firebase Android: Guardado exitoso en $path")
+            val jsonElement = Json.parseToJsonElement(value)
+            val jsonObject = jsonElement.jsonObject
+
+            val mapToSave = mutableMapOf<String, Any?>()
+            jsonObject.forEach { (key, element) ->
+                val content = element.toString().replace("\"", "")
+                val doubleValue = content.toDoubleOrNull()
+                val boolValue = content.toBooleanStrictOrNull()
+
+                mapToSave[key] = doubleValue ?: boolValue ?: content
+            }
+
+            database.child(path).setValue(mapToSave).await()
         } catch (e: Exception) {
-            println("Firebase Android: Error - ${e.message}")
+            database.child(path).setValue(value).await()
         }
     }
 

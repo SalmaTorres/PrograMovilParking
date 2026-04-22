@@ -3,11 +3,11 @@ package com.easypark.app.earnings.data.repository
 import com.easypark.app.core.data.datasource.ReservationLocalDataSource
 import com.easypark.app.core.data.datasource.SpaceLocalDataSource
 import com.easypark.app.core.data.remote.FirebaseManager
-import com.easypark.app.earnings.data.mapper.toEarningsSummary
+import com.easypark.app.earnings.data.dto.EarningsSummaryDTO
+import com.easypark.app.earnings.data.mapper.toDomain
 import com.easypark.app.earnings.domain.model.EarningTransactionModel
 import com.easypark.app.earnings.domain.model.EarningsSummaryModel
 import com.easypark.app.earnings.domain.repository.EarningsRepository
-import com.easypark.app.registerparking.data.dto.ParkingDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
@@ -17,14 +17,21 @@ class EarningsRepositoryImpl(
     private val spaceDS: SpaceLocalDataSource,
     private val firebaseManager: FirebaseManager
 ) : EarningsRepository {
+    private val jsonConfig = Json {
+        ignoreUnknownKeys = true // Si Firebase tiene campos extra, no crashea
+        isLenient = true         // Permite formatos de texto más flexibles
+        coerceInputValues = true // Si llega un null donde no debe, usa el valor por defecto
+    }
 
     override suspend fun observeEarningsRealtime(parkingId: Int): Flow<EarningsSummaryModel?> {
-        return firebaseManager.observeData("parkings/$parkingId").map { json ->
-            if (json == null) return@map null
-
-            val dto = Json.decodeFromString<ParkingDTO>(json)
-
-            dto.toEarningsSummary()
+        return firebaseManager.observeData("parkings/$parkingId/summary").map { json ->
+            if (json == null || json == "null") return@map null
+            try {
+                jsonConfig.decodeFromString<EarningsSummaryDTO>(json).toDomain()
+            } catch (e: Exception) {
+                println("ERROR_EARNINGS: ${e.message}")
+                null
+            }
         }
     }
 

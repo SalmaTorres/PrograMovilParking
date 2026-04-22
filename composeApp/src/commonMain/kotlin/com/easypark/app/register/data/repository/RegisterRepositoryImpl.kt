@@ -24,11 +24,6 @@ class RegisterRepositoryImpl(
             cellphone = user.cellphone,
             type = user.type.name
         )
-
-        val jsonUser = Json.encodeToString(userDto)
-
-        val path = if (user.id == 0) "users/${user.email.replace(".", "_")}" else "users/${user.id}"
-
-        firebaseManager.saveData(path, jsonUser)
+        firebaseManager.saveData("users/${user.id}", Json.encodeToString(userDto))
     }
 }

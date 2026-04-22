@@ -1,10 +1,11 @@
 package com.easypark.app.work
 
 import android.content.Context
-import androidx.work.WorkerParameters
 import com.easypark.app.findparking.domain.usecase.GetParkingsUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
 
 class SyncWorker(
     appContext: Context,

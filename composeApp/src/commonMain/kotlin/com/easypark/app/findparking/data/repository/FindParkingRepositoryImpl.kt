@@ -19,16 +19,21 @@ class FindParkingRepositoryImpl(
     private val reviewDS: ParkingDetailsLocalDataSource,
     private val firebaseManager: FirebaseManager
 ) : FindParkingRepository {
+    private val jsonConfig = Json {
+        ignoreUnknownKeys = true // Si Firebase tiene campos extra, no crashea
+        isLenient = true         // Permite formatos de texto más flexibles
+        coerceInputValues = true // Si llega un null donde no debe, usa el valor por defecto
+    }
 
     override fun observeParkingsRealtime(): Flow<List<ParkingModel>> {
         return firebaseManager.observeData("parkings").map { json ->
-            if (json == null) return@map emptyList<ParkingModel>()
-
+            if (json == null || json == "null" || json == "{}") return@map emptyList()
             try {
-                val parkingsMap = Json.decodeFromString<Map<String, ParkingDTO>>(json)
-
-                parkingsMap.values.map { it.toDomain() }
+                // Intentamos decodificar usando la configuración tolerante
+                val map = jsonConfig.decodeFromString<Map<String, ParkingDTO>>(json)
+                map.values.map { it.toDomain() }
             } catch (e: Exception) {
+                println("ERROR_MAPA: ${e.message}") // Mira esto en tu Logcat
                 emptyList()
             }
         }

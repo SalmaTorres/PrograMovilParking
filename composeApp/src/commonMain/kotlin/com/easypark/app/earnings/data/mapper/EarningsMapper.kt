@@ -1,5 +1,6 @@
 package com.easypark.app.earnings.data.mapper
 
+import com.easypark.app.earnings.data.dto.EarningsSummaryDTO
 import com.easypark.app.earnings.domain.model.EarningsSummaryModel
 import com.easypark.app.registerparking.data.dto.ParkingDTO
 
@@ -11,4 +12,14 @@ fun ParkingDTO.toEarningsSummary() = EarningsSummaryModel(
     percentageChange = 12.5,
     reservationChange = 2,
     isCapacityLimited = ((this.totalSpaces ?: 0) - (this.availableSpaces ?: 0)).toDouble() / (this.totalSpaces ?: 1) > 0.8
+)
+
+fun EarningsSummaryDTO.toDomain() = EarningsSummaryModel(
+    totalEarnings = totalEarnings ?: 0.0,
+    activeReservations = activeReservations ?: 0,
+    occupiedSpaces = occupiedSpaces ?: 0,
+    totalSpaces = totalSpaces ?: 1,
+    percentageChange = 0.0,
+    reservationChange = 0,
+    isCapacityLimited = (occupiedSpaces ?: 0).toDouble() / (totalSpaces ?: 1) > 0.8
 )
