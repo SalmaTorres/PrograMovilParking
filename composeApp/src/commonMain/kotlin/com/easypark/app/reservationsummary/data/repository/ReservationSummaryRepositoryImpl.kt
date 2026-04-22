@@ -10,24 +10,38 @@ import com.easypark.app.reservationsummary.domain.repository.ReservationSummaryR
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 
 class ReservationSummaryRepositoryImpl(
     private val localDS: ReservationSummaryLocalDataSource,
     private val firebaseManager: FirebaseManager
 ) : ReservationSummaryRepository {
 
+    private val jsonParser = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+        coerceInputValues = true
+    }
+
     override fun observeActiveReservations(userId: Int): Flow<List<ReservationModel>> {
         return firebaseManager.observeData("reservations").map { json ->
             if (json == null) return@map emptyList<ReservationModel>()
 
             try {
-                val allReservations = Json.decodeFromString<Map<String, ReservationDTO>>(json)
+                val element = jsonParser.parseToJsonElement(json)
+                val dtoList = if (element is kotlinx.serialization.json.JsonObject) {
+                    jsonParser.decodeFromJsonElement<Map<String, ReservationDTO>>(element).values.toList()
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    jsonParser.decodeFromJsonElement<List<ReservationDTO?>>(element).filterNotNull()
+                } else {
+                    emptyList()
+                }
 
-                allReservations.values
+                dtoList
+                    .filter { it.driverId == userId }
+                    .map { it.toDomain() }
                     .filter { it.status == "ACTIVE" }
-                    .map { dto ->
-                        dto.toDomain()
-                    }
             } catch (e: Exception) {
                 emptyList()
             }

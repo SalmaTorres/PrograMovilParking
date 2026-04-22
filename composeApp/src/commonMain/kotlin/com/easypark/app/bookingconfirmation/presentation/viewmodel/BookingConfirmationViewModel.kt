@@ -81,12 +81,14 @@ class BookingConfirmationViewModel(
 
             val currentUserId = sessionManager.getUserId()
             val duration = _state.value.bookingConfirmation?.durationHours ?: 1
+            val paymentMethod = _state.value.selectedPaymentMethod
+            val clientName = sessionManager.currentUser.value?.name ?: "Unknown"
 
             println("DEBUG: Iniciando reserva para usuario $currentUserId en parking $parkingId")
 
             if (currentUserId != -1) {
                 try {
-                    val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration)
+                    val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration, paymentMethod.name , clientName)
 
                     if (reservationId != null) {
                         observeLiveStatus(reservationId)

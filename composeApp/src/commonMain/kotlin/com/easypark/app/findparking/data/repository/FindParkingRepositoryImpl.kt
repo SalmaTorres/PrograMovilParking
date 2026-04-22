@@ -12,6 +12,7 @@ import com.easypark.app.registerparking.data.dto.ParkingDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 
 class FindParkingRepositoryImpl(
     private val parkingDS: FindParkingLocalDataSource,
@@ -20,18 +21,26 @@ class FindParkingRepositoryImpl(
     private val firebaseManager: FirebaseManager
 ) : FindParkingRepository {
     private val jsonConfig = Json {
-        ignoreUnknownKeys = true // Si Firebase tiene campos extra, no crashea
-        isLenient = true         // Permite formatos de texto más flexibles
-        coerceInputValues = true // Si llega un null donde no debe, usa el valor por defecto
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+        coerceInputValues = true
     }
 
     override fun observeParkingsRealtime(): Flow<List<ParkingModel>> {
         return firebaseManager.observeData("parkings").map { json ->
             if (json == null || json == "null" || json == "{}") return@map emptyList()
             try {
-                // Intentamos decodificar usando la configuración tolerante
-                val map = jsonConfig.decodeFromString<Map<String, ParkingDTO>>(json)
-                map.values.map { it.toDomain() }
+                val element = jsonConfig.parseToJsonElement(json)
+                if (element is kotlinx.serialization.json.JsonObject) {
+                    val map = jsonConfig.decodeFromJsonElement<Map<String, ParkingDTO>>(element)
+                    map.values.map { it.toDomain() }
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    val list = jsonConfig.decodeFromJsonElement<List<ParkingDTO?>>(element)
+                    list.filterNotNull().map { it.toDomain() }
+                } else {
+                    emptyList()
+                }
             } catch (e: Exception) {
                 println("ERROR_MAPA: ${e.message}") // Mira esto en tu Logcat
                 emptyList()

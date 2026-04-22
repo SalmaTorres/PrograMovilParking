@@ -11,20 +11,33 @@ import kotlinproject.composeapp.generated.resources.ic_notification
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-
+import kotlinx.serialization.json.decodeFromJsonElement
 class NotificationsRepositoryImpl(
     private val localDS: NotificationLocalDataSource,
     private val firebaseManager: FirebaseManager
 ) : NotificationsRepository {
+    private val jsonParser = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+        coerceInputValues = true
+    }
 
     override suspend fun observeNotificationsRealtime(userId: Int): Flow<List<NotificationModel>> {
         return firebaseManager.observeData("notifications/$userId").map { json ->
             if (json == null) return@map emptyList<NotificationModel>()
 
             try {
-                val map = Json.decodeFromString<Map<String, NotificationDTO>>(json)
+                val element = jsonParser.parseToJsonElement(json)
+                val dtoList = if (element is kotlinx.serialization.json.JsonObject) {
+                    jsonParser.decodeFromJsonElement<Map<String, NotificationDTO>>(element).values.toList()
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    jsonParser.decodeFromJsonElement<List<NotificationDTO?>>(element).filterNotNull()
+                } else {
+                    emptyList()
+                }
 
-                map.values.map { dto ->
+                dtoList.map { dto ->
                     NotificationModel(
                         id = dto.id ?: 0,
                         title = dto.title ?: "",

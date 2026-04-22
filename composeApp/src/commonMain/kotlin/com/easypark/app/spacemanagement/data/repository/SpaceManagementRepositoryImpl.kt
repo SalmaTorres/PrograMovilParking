@@ -10,6 +10,7 @@ import com.easypark.app.spacemanagement.domain.repository.SpaceManagementReposit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlin.collections.emptyList
 import kotlin.collections.sortedBy
 
@@ -26,10 +27,18 @@ class SpaceManagementRepositoryImpl(
     override fun observeParkingSpots(parkingId: Int): Flow<List<ParkingSpot>> {
         // RUTA CORRECTA: "spaces/$parkingId"
         return firebaseManager.observeData("spaces/$parkingId").map { json ->
-            if (json == null || json == "null") return@map emptyList()
+            if (json == null || json == "null" || json == "{}") return@map emptyList()
             try {
-                val spacesMap = jsonConfig.decodeFromString<Map<String, SpaceDTO>>(json)
-                spacesMap.values.map { it.toParkingSpot() }.sortedBy { it.number }
+                val element = jsonConfig.parseToJsonElement(json)
+                if (element is kotlinx.serialization.json.JsonObject) {
+                    val spacesMap = jsonConfig.decodeFromJsonElement<Map<String, SpaceDTO>>(element)
+                    spacesMap.values.map { it.toParkingSpot() }.sortedBy { it.number }
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    val spacesList = jsonConfig.decodeFromJsonElement<List<SpaceDTO?>>(element)
+                    spacesList.filterNotNull().map { it.toParkingSpot() }.sortedBy { it.number }
+                } else {
+                    emptyList()
+                }
             } catch (e: Exception) {
                 println("ERROR_SPACES: ${e.message}")
                 emptyList()

@@ -26,8 +26,13 @@ class RegisterParkingRepositoryImpl (
             "longitude": ${parking.longitude},
             "availableSpaces": ${parking.totalSpaces},
             "totalSpaces": ${parking.totalSpaces},
-            "rating": 4.5,
-            "ownerId": $userId
+            "rating": 0.0,
+            "reviewCount": 0,
+            "ownerId": $userId,
+            "pricePerHour": {
+                "amount": ${parking.pricePerHour.amount},
+                "currency": "${parking.pricePerHour.currency}"
+            }
         }
     """.trimIndent()
         firebaseManager.saveData("parkings/$parkingId", parkingJson)
@@ -38,24 +43,32 @@ class RegisterParkingRepositoryImpl (
             "totalEarnings": 0.0,
             "activeReservations": 0,
             "occupiedSpaces": 0,
-            "totalSpaces": ${parking.totalSpaces}
+            "totalSpaces": ${parking.totalSpaces},
+            "pricePerHour": {
+                "amount": ${parking.pricePerHour.amount},
+                "currency": "${parking.pricePerHour.currency}"
+            }
         }
     """.trimIndent()
         firebaseManager.saveData("parkings/$parkingId/summary", summaryJson)
 
         // 3. CREAR LOS ESPACIOS (PARA SPACE MANAGEMENT) - ¡ESTO FALTABA!
-        val spaces = mutableMapOf<String, String>()
+        val spacesJsonBuilder = StringBuilder("{")
         for (i in 1..parking.totalSpaces) {
-            val spaceJson = """
-            {
-                "id": $i,
-                "parkingId": $parkingId,
-                "number": $i,
-                "state": "LIBRE"
+            spacesJsonBuilder.append("""
+                "s$i": {
+                    "id": $i,
+                    "parkingId": $parkingId,
+                    "number": $i,
+                    "state": "LIBRE"
+                }
+            """.trimIndent())
+            if (i < parking.totalSpaces) {
+                spacesJsonBuilder.append(",")
             }
-        """.trimIndent()
-            firebaseManager.saveData("spaces/$parkingId/s$i", spaceJson)
         }
+        spacesJsonBuilder.append("}")
+        firebaseManager.saveData("spaces/$parkingId", spacesJsonBuilder.toString())
 
         // 4. Usuario
         val userJson = """
@@ -63,6 +76,7 @@ class RegisterParkingRepositoryImpl (
             "id": $userId,
             "name": "${user.name}",
             "email": "${user.email}",
+            "cellphone": "${user.cellphone}",
             "type": "OWNER"
         }
     """.trimIndent()

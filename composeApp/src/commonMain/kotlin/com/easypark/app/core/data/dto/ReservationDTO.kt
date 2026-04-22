@@ -13,5 +13,8 @@ data class ReservationDTO (
     val endTime: Long? = 0L,
     val totalPrice: PriceDTO? = null,
     val paymentMethod: String? = "CASH",
-    val status: String? = "ACTIVE"
+    val status: String? = "ACTIVE",
+    val driverId: Int? = 0,
+    val clientName: String? = "",
+    val parkingId: Int? = 0
 )

@@ -12,6 +12,7 @@ import com.easypark.app.registerparking.data.dto.ParkingDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
 
 class ParkingDetailRepositoryImpl(
     private val localDS: ParkingDetailsLocalDataSource,
@@ -23,7 +24,8 @@ class ParkingDetailRepositoryImpl(
         return firebaseManager.observeData("parkings/$id").map { json ->
             if (json == null) return@map null
 
-            val dto = Json.decodeFromString<ParkingDTO>(json)
+            val jsonConfig = Json { ignoreUnknownKeys = true; isLenient = true; coerceInputValues = true }
+            val dto = jsonConfig.decodeFromString<ParkingDTO>(json)
             dto.toDomain()
         }
     }
@@ -48,5 +50,16 @@ class ParkingDetailRepositoryImpl(
 
         firebaseManager.saveData("parkings/$parkingId/rating", newAverage.toString())
         firebaseManager.saveData("parkings/$parkingId/reviewCount", allReviews.size.toString())
+
+        val reviewId = Clock.System.now().toEpochMilliseconds()
+        val reviewJson = """
+        {
+            "id": $reviewId,
+            "userId": $userId,
+            "rating": $rating,
+            "timestamp": $reviewId
+        }
+        """.trimIndent()
+        firebaseManager.saveData("reviews/$parkingId/$reviewId", reviewJson)
     }
 }

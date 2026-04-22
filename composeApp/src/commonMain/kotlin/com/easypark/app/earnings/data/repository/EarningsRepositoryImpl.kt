@@ -10,7 +10,9 @@ import com.easypark.app.earnings.domain.model.EarningsSummaryModel
 import com.easypark.app.earnings.domain.repository.EarningsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 
 class EarningsRepositoryImpl(
     private val reservationDS: ReservationLocalDataSource,
@@ -55,18 +57,34 @@ class EarningsRepositoryImpl(
     }
 
     override suspend fun getEarningsHistory(parkingId: Int): List<EarningTransactionModel> {
-        val reservations = reservationDS.readByParking(parkingId)
+        val json = firebaseManager.observeData("reservations").firstOrNull() ?: return emptyList()
 
         val spaces = spaceDS.getMySpaces(parkingId)
         val spaceMap = spaces.associate { it.id to it.number }
 
-        return reservations.map { res ->
-            EarningTransactionModel(
-                id = res.id,
-                date = "HOY",
-                label = "Espacio ${spaceMap[res.spaceId] ?: "?"}",
-                amount = res.totalPrice
-            )
+        return try {
+            val element = jsonConfig.parseToJsonElement(json)
+            val reservationsDTOs = if (element is kotlinx.serialization.json.JsonObject) {
+                jsonConfig.decodeFromJsonElement<Map<String, com.easypark.app.core.data.dto.ReservationDTO>>(element).values.toList()
+            } else if (element is kotlinx.serialization.json.JsonArray) {
+                jsonConfig.decodeFromJsonElement<List<com.easypark.app.core.data.dto.ReservationDTO?>>(element).filterNotNull()
+            } else {
+                emptyList()
+            }
+
+            reservationsDTOs
+                .filter { spaceMap.containsKey(it.spaceId) }
+                .map { res ->
+                    EarningTransactionModel(
+                        id = res.id ?: 0,
+                        date = "HOY",
+                        label = "Espacio ${spaceMap[res.spaceId] ?: "?"}",
+                        amount = res.totalPrice?.amount ?: 0.0
+                    )
+                }.reversed()
+        } catch (e: Exception) {
+            println("ERROR_EARNINGS: ${e.message}")
+            emptyList()
         }
     }
     override suspend fun getTotalEarnings(parkingId: Int): Double {

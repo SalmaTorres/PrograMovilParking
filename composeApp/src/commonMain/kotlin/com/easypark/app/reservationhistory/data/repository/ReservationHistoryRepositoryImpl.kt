@@ -9,29 +9,46 @@ import com.easypark.app.reservationhistory.domain.model.ReservationItemModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
+import com.easypark.app.core.data.mapper.toDomain
 
 class ReservationHistoryRepositoryImpl(
     private val dao: ReservationHistoryDao,
     private val firebaseManager: FirebaseManager
 ) : ReservationHistoryRepository {
 
+    private val jsonParser = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+        coerceInputValues = true
+    }
+
     override fun observeReservationsRealtime(parkingId: Int): Flow<List<ReservationItemModel>> {
          return firebaseManager.observeData("reservations").map { json ->
             if (json == null) return@map emptyList<ReservationItemModel>()
 
             try {
-                val allReservations = Json.decodeFromString<Map<String, ReservationDTO>>(json)
+                val element = jsonParser.parseToJsonElement(json)
+                val dtoList = if (element is kotlinx.serialization.json.JsonObject) {
+                    jsonParser.decodeFromJsonElement<Map<String, ReservationDTO>>(element).values.toList()
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    jsonParser.decodeFromJsonElement<List<ReservationDTO?>>(element).filterNotNull()
+                } else {
+                    emptyList()
+                }
 
-                allReservations.values
-                    .filter { it.id != null }
+                dtoList
+                    .filter { it.id != null && it.parkingId == parkingId }
                     .map { dto ->
+                        val model = dto.toDomain()
                         ReservationItemModel(
                             id = dto.id ?: 0,
-                            clientName = "Usuario ${dto.id}",
+                            clientName = dto.clientName ?: "Usuario ${dto.id}",
                             spaceLabel = "Espacio ${dto.spaceNumber ?: "?"}",
                             startTime = "10:00 AM",
                             endTime = "12:00 PM",
-                            status = if (dto.status == "ACTIVE") ReservationStatus.ACTIVE else ReservationStatus.FINISHED
+                            status = if (model.status == "ACTIVE") ReservationStatus.ACTIVE else ReservationStatus.FINISHED
                         )
                     }
             } catch (e: Exception) {
