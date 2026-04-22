@@ -1,10 +1,17 @@
-<resources>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Loco xml export: Android strings
+ Project: EasyPark
+ Locale: es-BO, Spanish (Bolivia)
+ Exported by: Jhessael Siancas
+ Exported at: Wed, 22 Apr 2026 16:15:31 -0400
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- 1. IDENTIDAD Y GENERAL -->
     <string name="app_name">EasyPark</string>
     <string name="loading">Cargando...</string>
     <string name="error_generic">Ocurrió un error inesperado</string>
     <string name="back">Atrás</string>
-
     <!-- 2. ACCIONES (Botones) -->
     <string name="action_next">Siguiente</string>
     <string name="action_finish">Finalizar</string>
@@ -15,7 +22,6 @@
     <string name="action_view_map">Ver mapa</string>
     <string name="action_signin">Iniciar sesión</string>
     <string name="action_create_account">Crear una cuenta</string>
-
     <!-- 3. ETIQUETAS DE FORMULARIO (Reutilizables en Login/Registro/Detalle) -->
     <string name="label_email">Correo electrónico</string>
     <string name="label_password">Contraseña</string>
@@ -31,7 +37,6 @@
     <string name="label_duration">Duración</string>
     <string name="label_total_cost">Costo Total</string>
     <string name="label_payment_method">Método de pago</string>
-
     <!-- 4. HINTS / PLACEHOLDERS -->
     <string name="hint_email">name@company.com</string>
     <string name="hint_name">e.g. Juan Mamani</string>
@@ -44,7 +49,6 @@
     <string name="vehicle_plate_hint">e.g. ABC-1234</string>
     <string name="vehicle_model_hint">e.g. Toyota Camry 2024</string>
     <string name="vehicle_color_hint">Rojo</string>
-
     <!-- 5. ESTADOS Y ROLES (Conceptos compartidos) -->
     <string name="status_available">Disponible</string>
     <string name="status_full">Lleno</string>
@@ -54,7 +58,6 @@
     <string name="status_finished">Finalizada</string>
     <string name="role_driver">Conductor</string>
     <string name="role_owner">Dueño</string>
-
     <!-- 6. TEXTOS LARGOS O ESPECÍFICOS (Títulos de cabecera) -->
     <string name="register_title">REGÍSTRATE</string>
     <string name="register_role_selection">Quiero ser...</string>
@@ -93,7 +96,6 @@
     <string name="cash_payment">Efectivo</string>
     <string name="qr_payment">Pagar con QR</string>
     <string name="confirm_booking_button">Confirmar reserva</string>
-
     <string name="reservation_summary_title">Información de Reserva</string>
     <string name="reservation_summary_location">Ubicación</string>
     <string name="reservation_summary_space">Espacio Asignado</string>
@@ -101,21 +103,18 @@
     <string name="reservation_summary_duration">Duración Estimada</string>
     <string name="reservation_summary_cost">Costo Total</string>
     <string name="reservation_summary_payment">Método de Pago</string>
-
     <string name="history_status_ending_soon">Termina pronto</string>
     <string name="signin_or_separator">O</string>
     <string name="spaces_card_total_capacity">Capacidad total</string>
     <string name="spaces_card_occupied">Ocupados</string>
     <string name="spaces_card_available">Disponibles</string>
     <string name="spaces_list_section_title">Parking Spots</string>
-
     <!-- 7. FORMATOS DINÁMICOS -->
     <string name="format_duration_singular">%1$d Hora</string>
     <string name="format_duration_plural">%1$d Horas</string>
     <string name="format_reviews">reseñas</string>
     <string name="format_price_bob">%s Bs/hora</string>
     <string name="format_space_p">P %s</string>
-
     <!-- Navigation -->
     <string name="nav_home">Inicio</string>
     <string name="nav_my_bookings">Mis Reservas</string>
