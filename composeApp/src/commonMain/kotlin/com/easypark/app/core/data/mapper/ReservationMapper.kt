@@ -1,6 +1,7 @@
 package com.easypark.app.core.data.mapper
 
 import ReservationModel
+import com.easypark.app.core.data.dto.ReservationDTO
 import com.easypark.app.core.data.entity.ReservationEntity
 import com.easypark.app.core.domain.model.PriceModel
 
@@ -25,4 +26,17 @@ fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber:
     totalPrice = PriceModel(amount = this.totalPrice),
     status = this.state,
     paymentMethod = this.methodPay
+)
+
+fun ReservationDTO.toDomain() = ReservationModel(
+    id = id ?: 0,
+    parkingName = parkingName ?: "",
+    address = address ?: "",
+    spaceId = spaceId ?: 0,
+    spaceNumber = spaceNumber ?: 0,
+    startTime = startTime ?: 0L,
+    endTime = endTime ?: 0L,
+    totalPrice = totalPrice?.toDomain() ?: PriceModel(0.0),
+    paymentMethod = paymentMethod ?: "CASH",
+    status = status ?: "ACTIVE"
 )
