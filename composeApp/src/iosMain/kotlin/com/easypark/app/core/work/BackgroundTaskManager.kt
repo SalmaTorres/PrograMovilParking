@@ -11,6 +11,10 @@ actual class BackgroundTaskManager {
     actual fun schedulePeriodicDataSync() {
         // Stub para iOS. Tareas periódicas en iOS usan BGTaskScheduler.
     }
+    
+    actual fun scheduleDailyCleanup() {
+        // Stub para iOS.
+    }
 }
 
 @Composable

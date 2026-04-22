@@ -5,6 +5,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.delay
 
+import com.easypark.app.core.data.db.createDatabase
+import com.easypark.app.core.data.db.getDatabaseBuilder
+
 class DataSyncWorker(
     appContext: Context,
     workerParams: WorkerParameters
@@ -12,15 +15,23 @@ class DataSyncWorker(
 
     override suspend fun doWork(): Result {
         return try {
-            // Simulamos un proceso de limpieza de base de datos o sincronización
-            // de reservas que toma un par de segundos.
-            println("DataSyncWorker: Iniciando limpieza periódica de reservas antiguas...")
-            delay(2000)
-            println("DataSyncWorker: Limpieza finalizada con éxito.")
+            println("DataSyncWorker: Iniciando sincronización de datos de fondo...")
+            
+            // 1. Conectamos con la base de datos real que implementó Persona 1
+            val database = createDatabase(getDatabaseBuilder(applicationContext))
+            val spaceDao = database.spaceDao()
+            
+            // 2. Simulamos la tarea comprobando datos (por ejemplo, contar parqueos)
+            val allSpaces = spaceDao.getAllSpaces()
+            println("DataSyncWorker: ¡Conexión Exitosa a DB! Encontramos ${allSpaces.size} espacios guardados localmente.")
+            
+            // 3. Simular tiempo de subida a la nube
+            delay(1500)
+            println("DataSyncWorker: Sincronización finalizada con éxito.")
             
             Result.success()
         } catch (e: Exception) {
-            println("DataSyncWorker: Error durante la limpieza - ${e.message}")
+            println("DataSyncWorker: Error conectando a la DB - ${e.message}")
             Result.failure()
         }
     }

@@ -19,45 +19,7 @@ fun App() {
             modifier = Modifier.fillMaxSize(),
             color = ParkBackground
         ) {
-            val permissionManager = rememberPermissionManager()
-            val backgroundManager = rememberBackgroundTaskManager()
-            var statusText by remember { mutableStateOf("Panel de Pruebas Persona 4") }
-
-            Box(modifier = Modifier.fillMaxSize()) {
-                AppNavHost()
-
-                // PANEL DE PRUEBAS TEMPORAL
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 30.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(statusText, color = androidx.compose.ui.graphics.Color.Black, modifier = Modifier.padding(bottom = 8.dp))
-                    
-                    Button(onClick = {
-                        permissionManager.requestPermission(PermissionType.CAMERA) { granted ->
-                            statusText = if (granted) "Permiso Cámara: OK" else "Cámara: Denegado"
-                        }
-                    }) { Text("Probar Cámara") }
-
-                    Button(onClick = {
-                        permissionManager.requestPermission(PermissionType.NOTIFICATIONS) { granted ->
-                            if (granted) {
-                                statusText = "Espera 10 seg (Notificación)"
-                                backgroundManager.scheduleTestReminder()
-                            } else {
-                                statusText = "Notificaciones: Denegado"
-                            }
-                        }
-                    }) { Text("Probar Notificación (10s)") }
-
-                    Button(onClick = {
-                        backgroundManager.schedulePeriodicDataSync()
-                        statusText = "Sync Periódica (15min) Iniciada. ¡Revisa Logcat!"
-                    }) { Text("Probar Sync (PeriodicWork)") }
-                }
-            }
+            AppNavHost()
         }
     }
 }

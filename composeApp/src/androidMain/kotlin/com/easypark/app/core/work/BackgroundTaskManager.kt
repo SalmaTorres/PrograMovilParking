@@ -41,6 +41,27 @@ actual class BackgroundTaskManager(private val context: Context) {
             syncRequest
         )
     }
+
+    actual fun scheduleDailyCleanup() {
+        // Restricción: Solo con WiFi
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+
+        val cleanupRequest = PeriodicWorkRequest.Builder(
+            DailyCleanupWorker::class.java,
+            1, // 1 vez al día
+            TimeUnit.DAYS
+        )
+        .setConstraints(constraints)
+        .build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "DailyCleanupWork",
+            ExistingPeriodicWorkPolicy.KEEP,
+            cleanupRequest
+        )
+    }
 }
 
 @Composable
