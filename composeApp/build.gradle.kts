@@ -144,11 +144,17 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation("org.osmdroid:osmdroid-android:6.1.18")
             implementation("com.google.android.gms:play-services-location:21.0.1")
+            
             implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.messaging)
+            implementation(libs.androidx.sqlite.framework)
             implementation(libs.firebase.config)
             implementation(libs.firebase.database)
+            implementation(libs.firebase.inappmessaging.display)
+            implementation(libs.firebase.analytics)
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.androidx.work.runtime)
+            implementation(libs.firebase.config)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -170,6 +176,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.sentry.kmp)
+
         }
 
         commonTest.dependencies {
