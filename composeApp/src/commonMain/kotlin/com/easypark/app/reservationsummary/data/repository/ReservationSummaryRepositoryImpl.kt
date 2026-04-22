@@ -43,6 +43,7 @@ class ReservationSummaryRepositoryImpl(
                     .map { it.toDomain() }
                     .filter { it.status == "ACTIVE" }
             } catch (e: Exception) {
+                io.sentry.kotlin.multiplatform.Sentry.captureException(e)
                 emptyList()
             }
         }

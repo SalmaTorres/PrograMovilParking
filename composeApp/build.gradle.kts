@@ -50,6 +50,7 @@ kotlin {
             implementation(libs.firebase.analytics)
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.androidx.work.runtime)
+            implementation(libs.firebase.config)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -71,6 +72,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.sentry.kmp)
+
         }
 
         commonTest.dependencies {
