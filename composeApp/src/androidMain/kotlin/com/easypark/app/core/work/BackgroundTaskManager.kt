@@ -62,6 +62,12 @@ actual class BackgroundTaskManager(private val context: Context) {
             cleanupRequest
         )
     }
+
+    actual fun runImmediateCleanup() {
+        val immediateRequest = OneTimeWorkRequestBuilder<DailyCleanupWorker>()
+            .build()
+        WorkManager.getInstance(context).enqueue(immediateRequest)
+    }
 }
 
 @Composable

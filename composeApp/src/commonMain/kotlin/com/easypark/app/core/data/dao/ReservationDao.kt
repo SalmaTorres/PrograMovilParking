@@ -12,4 +12,13 @@ interface ReservationDao {
         WHERE s.parkingId = :parkingId
     """)
     suspend fun getReservationsByParking(parkingId: Int): List<ReservationEntity>
+
+    @Query("SELECT COUNT(*) FROM reservation")
+    suspend fun getReservationCount(): Int
+
+    @Query("DELETE FROM reservation WHERE id IN (SELECT id FROM reservation ORDER BY id ASC LIMIT :count)")
+    suspend fun deleteOldestReservations(count: Int)
+
+    @Query("SELECT id FROM reservation ORDER BY id ASC LIMIT :count")
+    suspend fun getOldestReservationIds(count: Int): List<Int>
 }

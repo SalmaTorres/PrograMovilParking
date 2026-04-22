@@ -47,7 +47,26 @@ fun App() {
             } else if (isMaintenanceMode) {
                 MaintenanceUI(maintenanceMessage)
             } else {
-                AppNavHost()
+                Box(Modifier.fillMaxSize()) {
+                    AppNavHost()
+                    
+                    // PANEL DE PRUEBAS EXAMEN (Persona 4)
+                    var statusText by remember { mutableStateOf("Simulador Ejercicio 13") }
+                    val backgroundManager = com.easypark.app.core.work.rememberBackgroundTaskManager()
+
+                    Column(
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 80.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Surface(color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.8f), shape = androidx.compose.foundation.shape.CircleShape) {
+                            Text(statusText, modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp), fontSize = 12.sp)
+                        }
+                        Button(onClick = {
+                            backgroundManager.runImmediateCleanup()
+                            statusText = "Ejercicio 13 Ejecutado (Al instante)"
+                        }) { Text("Probar Limpieza (Ex 13)") }
+                    }
+                }
             }
         }
     }
