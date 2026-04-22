@@ -17,4 +17,10 @@ interface AppEventDao {
 
     @Update
     suspend fun updateEvents(events: List<AppEventEntity>)
+
+    @Query("SELECT COUNT(*) FROM app_events")
+    suspend fun getEventCount(): Int
+
+    @Query("DELETE FROM app_events WHERE id IN (SELECT id FROM app_events ORDER BY timestamp ASC LIMIT :limit)")
+    suspend fun deleteOldestEvents(limit: Int)
 }

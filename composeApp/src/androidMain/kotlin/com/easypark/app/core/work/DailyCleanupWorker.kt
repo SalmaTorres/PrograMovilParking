@@ -5,6 +5,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.easypark.app.core.data.db.createDatabase
 import com.easypark.app.core.data.db.getDatabaseBuilder
+import com.easypark.app.core.data.remote.RemoteConfigManager
+import com.easypark.app.core.notifications.NotificationHelper
 import kotlinx.coroutines.delay
 
 class DailyCleanupWorker(
@@ -14,24 +16,35 @@ class DailyCleanupWorker(
 
     override suspend fun doWork(): Result {
         return try {
-            println("DailyCleanupWorker: 🧹 Iniciando tarea de mantenimiento (Requiere WiFi)...")
+            println("DailyCleanupWorker: 🧹 Iniciando tarea de limpieza automática...")
             
-            // 1. Conectar a la base de datos
+            // 1. Inicializar Remote Config para obtener el límite actual
+            val remoteConfigManager = RemoteConfigManager()
+            remoteConfigManager.initialize()
+            val maxRecordsStr = remoteConfigManager.getString("max_local_records")
+            val maxRecords = maxRecordsStr.toIntOrNull() ?: 50
+            
+            // 2. Conectar a la base de datos
             val database = createDatabase(getDatabaseBuilder(applicationContext))
+            val appEventDao = database.appEventDao()
             
-            // En un caso real de "Limpieza", usaríamos un DAO para borrar datos expirados.
-            // Por ahora, leemos el historial de reservas para verificar conexión sin dañar datos.
-            val historyDao = database.reservationHistoryDao()
-            // Simulamos buscar reservas de un parqueo (ejemplo: ID 1)
-            val reservations = historyDao.getReservationsByParking(1)
-            
-            println("DailyCleanupWorker: Se encontraron ${reservations.size} reservas en el parqueo 1.")
-            println("DailyCleanupWorker: Simulando limpieza de caché y optimización de base de datos...")
-            
-            // 2. Simular el proceso de limpieza
-            delay(2000)
-            
-            println("DailyCleanupWorker: ✨ Limpieza diaria completada exitosamente.")
+            // 3. Verificar y Limpiar
+            val currentCount = appEventDao.getEventCount()
+            if (currentCount > maxRecords) {
+                val toDelete = currentCount - maxRecords
+                appEventDao.deleteOldestEvents(toDelete)
+                
+                println("DailyCleanupWorker: Se eliminaron $toDelete registros antiguos.")
+                
+                // 4. Notificar al usuario
+                NotificationHelper.showNotification(
+                    context = applicationContext,
+                    title = "Limpieza de Caché",
+                    message = "Se ha liberado espacio eliminando $toDelete registros de eventos antiguos."
+                )
+            } else {
+                println("DailyCleanupWorker: No es necesario limpiar. Registros actuales: $currentCount, Límite: $maxRecords")
+            }
             
             Result.success()
         } catch (e: Exception) {
