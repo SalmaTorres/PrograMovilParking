@@ -1,12 +1,108 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- Loco xml export: Android strings
- Project: EasyPark
- Locale: en-GB, English (UK)
- Exported by: Jhessael Siancas
- Exported at: Wed, 22 Apr 2026 11:48:28 -0400
--->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="login_email">Email</string>
-    <string name="login_password">Password</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EasyPark</string>
+    <string name="loading">Charging...</string>
+    <string name="error_generic">An unexpected error occurred</string>
+    <string name="back">Back</string>
+    <string name="action_next">Following</string>
+    <string name="action_finish">Finish</string>
+    <string name="action_save">Keep</string>
+    <string name="action_reserve">Reserve</string>
+    <string name="action_see_more">See More</string>
+    <string name="action_rate">Qualify</string>
+    <string name="action_view_map">See map</string>
+    <string name="action_signin">Login</string>
+    <string name="action_create_account">Create an account</string>
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="label_name">Name</string>
+    <string name="label_phone">cell phone number</string>
+    <string name="label_plate">License plate number</string>
+    <string name="label_model">Model</string>
+    <string name="label_color">Color</string>
+    <string name="label_address">Address</string>
+    <string name="label_price_hour">Price/hour</string>
+    <string name="label_spaces">Spaces</string>
+    <string name="label_location">Location</string>
+    <string name="label_duration">Duration</string>
+    <string name="label_total_cost">Total Cost</string>
+    <string name="label_payment_method">Payment method</string>
+    <string name="hint_email">name@company.com</string>
+    <string name="hint_name">e.g. </string>
+    <string name="hint_phone">e.g. </string>
+    <string name="hint_password">******</string>
+    <string name="hint_search">Find your parking...</string>
+    <string name="parking_name_hint">e.g. </string>
+    <string name="parking_address_hint">America #123</string>
+    <string name="parking_price_hint">Bs 5.00</string>
+    <string name="vehicle_plate_hint">e.g. </string>
+    <string name="vehicle_model_hint">e.g. </string>
+    <string name="vehicle_color_hint">Red</string>
+    <string name="status_available">Available</string>
+    <string name="status_full">Full</string>
+    <string name="status_occupied">Busy</string>
+    <string name="status_free">Free</string>
+    <string name="status_active">Active</string>
+    <string name="status_finished">Finished</string>
+    <string name="role_driver">Driver</string>
+    <string name="role_owner">Owner</string>
+    <string name="register_title">REGISTER</string>
+    <string name="register_role_selection">I want to be...</string>
+    <string name="vehicle_registration_title">Register your vehicle</string>
+    <string name="vehicle_description">Please provide your vehicle information.</string>
+    <string name="parking_description">Please provide your parking information.</string>
+    <string name="parking_registration_title">Register your parking</string>
+    <string name="find_parking_title">Find your place</string>
+    <string name="booking_conf_title">Confirm your reservation</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_empty">There are no more recent notifications</string>
+    <string name="earnings_title">Income</string>
+    <string name="spaces_title">Space Management</string>
+    <string name="history_title">Reservations</string>
+    <string name="active_reservations">Active</string>
+    <string name="history_tab_finished">Finished</string>
+    <string name="earnings_occupied_spaces">Occupied spaces</string>
+    <string name="earnings_vs_last_week">↑</string>
+    <string name="earnings_recent_history">Recent income</string>
+    <string name="payment_cash">Cash</string>
+    <string name="payment_qr">QR</string>
+    <string name="earnings_limited_capacity">Limited capacity</string>
+    <string name="parking_details_title">Parking details</string>
+    <string name="reviews">reviews</string>
+    <string name="rate_button">Qualify</string>
+    <string name="view_map_button">See map</string>
+    <string name="available">Available</string>
+    <string name="not_available">Not available</string>
+    <string name="reserve_button">Reserve</string>
+    <string name="booking_confirmation_title">Confirm your reservation</string>
+    <string name="location_label">Location</string>
+    <string name="space_label">Space</string>
+    <string name="duration_label">Duration</string>
+    <string name="total_cost_label">Total Cost</string>
+    <string name="payment_method_title">Select your payment method</string>
+    <string name="cash_payment">Cash</string>
+    <string name="qr_payment">Pay with QR</string>
+    <string name="confirm_booking_button">Confirm reservation</string>
+    <string name="reservation_summary_title">Reservation Information</string>
+    <string name="reservation_summary_location">Location</string>
+    <string name="reservation_summary_space">Assigned Space</string>
+    <string name="reservation_summary_entry_time">Check-in time</string>
+    <string name="reservation_summary_duration">Estimated Duration</string>
+    <string name="reservation_summary_cost">Total Cost</string>
+    <string name="reservation_summary_payment">Payment Method</string>
+    <string name="history_status_ending_soon">End soon</string>
+    <string name="signin_or_separator">EITHER</string>
+    <string name="spaces_card_total_capacity">Total capacity</string>
+    <string name="spaces_card_occupied">Busy</string>
+    <string name="spaces_card_available">Available</string>
+    <string name="spaces_list_section_title">Parking Spots</string>
+    <string name="format_duration_singular">%1$d Time</string>
+    <string name="format_duration_plural">%1$d Hours</string>
+    <string name="format_reviews">reviews</string>
+    <string name="format_price_bob">%s Bs/hour</string>
+    <string name="format_space_p">P %s</string>
+    <string name="nav_home">Start</string>
+    <string name="nav_my_bookings">My Reservations</string>
+    <string name="nav_bookings">Reservations</string>
+    <string name="nav_spaces">Spaces</string>
 </resources>

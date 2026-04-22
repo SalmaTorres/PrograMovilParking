@@ -1,6 +1,99 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
+
 import java.net.URL
+import java.net.URLEncoder
+import java.io.File
+import java.util.Properties
+import java.util.regex.Pattern
+
+tasks.register("syncLoco") {
+    group = "localization"
+    val projectPath = project.projectDir
+    val rootDir = project.rootProject.projectDir
+    val resPath = "src/commonMain/composeResources"
+
+    doLast {
+        val properties = Properties()
+        val propertiesFile = File(rootDir, "local.properties")
+        if (propertiesFile.exists()) propertiesFile.inputStream().use { properties.load(it) }
+        val locoKey = properties.getProperty("loco.api.key") ?: ""
+
+        println("📡 Conectando con Loco...")
+
+        // Intentamos con la URL más simple posible
+        val baseUrlString = "https://localise.biz/api/export/locale/es.xml?key=$locoKey&format=android"
+
+        val baseXml = try {
+            val url = URL(baseUrlString)
+            val conn = url.openConnection() as java.net.HttpURLConnection
+            if (conn.responseCode != 200) {
+                // ESTO NOS DIRÁ EL ERROR REAL
+                val errorText = conn.errorStream?.bufferedReader()?.readText() ?: "Sin mensaje"
+                println("ERROR DE LOCO (${conn.responseCode}): $errorText")
+                return@doLast
+            }
+            conn.inputStream.bufferedReader().readText()
+        } catch (e: Exception) {
+            println("Error de conexión: ${e.message}")
+            return@doLast
+        }
+
+        val strings = mutableMapOf<String, String>()
+        val matcher = Pattern.compile("<string name=\"([^\"]+)\">([^<]*)</string>").matcher(baseXml)
+        while (matcher.find()) {
+            strings[matcher.group(1)] = matcher.group(2)
+        }
+
+        println("Se encontraron ${strings.size} llaves en español.")
+        if (strings.isEmpty()) return@doLast
+
+        val targetLanguages = listOf("en", "fr")
+        targetLanguages.forEach { lang ->
+            println("\nPROCESANDO IDIOMA: $lang")
+            val translatedXml = StringBuilder("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n")
+
+            strings.forEach { (key, value) ->
+                if (value.isBlank()) return@forEach
+                val translatedValue = translateText(value, lang)
+                translatedXml.append("    <string name=\"$key\">$translatedValue</string>\n")
+                uploadToLoco(locoKey, lang, key, translatedValue)
+                Thread.sleep(350)
+            }
+            translatedXml.append("</resources>")
+
+            val targetFile = File(projectPath, "$resPath/values-$lang/strings.xml")
+            if (!targetFile.parentFile.exists()) targetFile.parentFile.mkdirs()
+            targetFile.writeText(translatedXml.toString())
+            println("Archivo local '$lang' actualizado.")
+        }
+    }
+}
+
+fun uploadToLoco(apiKey: String, lang: String, assetId: String, translation: String) {
+    try {
+        val encodedTranslation = URLEncoder.encode(translation, "UTF-8")
+        val url = URL("https://localise.biz/api/translations/$assetId/$lang?key=$apiKey")
+        val connection = url.openConnection() as java.net.HttpURLConnection
+        connection.requestMethod = "POST"
+        connection.doOutput = true
+        connection.outputStream.use { it.write(encodedTranslation.toByteArray()) }
+
+        if (connection.responseCode in 200..204) {
+            println("Sincronizado: [$assetId] -> $translation")
+        }
+    } catch (e: Exception) { }
+}
+
+fun translateText(text: String, targetLang: String): String {
+    return try {
+        val encodedText = URLEncoder.encode(text, "UTF-8")
+        val urlString = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=$targetLang&dt=t&q=$encodedText"
+        val response = URL(urlString).readText()
+        val p = Pattern.compile("\"([^\"]+)\"")
+        val m = p.matcher(response)
+        if (m.find()) m.group(1) else text
+    } catch (e: Exception) { text }
+}
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)

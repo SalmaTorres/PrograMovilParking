@@ -4,9 +4,120 @@
  Project: EasyPark
  Locale: es-BO, Spanish (Bolivia)
  Exported by: Jhessael Siancas
- Exported at: Wed, 22 Apr 2026 11:48:27 -0400
+ Exported at: Wed, 22 Apr 2026 16:15:31 -0400
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="login_email">Correo electrónico</string>
-    <string name="login_password">Contraseña</string>
+    <!-- 1. IDENTIDAD Y GENERAL -->
+    <string name="app_name">EasyPark</string>
+    <string name="loading">Cargando...</string>
+    <string name="error_generic">Ocurrió un error inesperado</string>
+    <string name="back">Atrás</string>
+    <!-- 2. ACCIONES (Botones) -->
+    <string name="action_next">Siguiente</string>
+    <string name="action_finish">Finalizar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_reserve">Reservar</string>
+    <string name="action_see_more">Ver Más</string>
+    <string name="action_rate">Calificar</string>
+    <string name="action_view_map">Ver mapa</string>
+    <string name="action_signin">Iniciar sesión</string>
+    <string name="action_create_account">Crear una cuenta</string>
+    <!-- 3. ETIQUETAS DE FORMULARIO (Reutilizables en Login/Registro/Detalle) -->
+    <string name="label_email">Correo electrónico</string>
+    <string name="label_password">Contraseña</string>
+    <string name="label_name">Nombre</string>
+    <string name="label_phone">Número de celular</string>
+    <string name="label_plate">Número de Placa</string>
+    <string name="label_model">Modelo</string>
+    <string name="label_color">Color</string>
+    <string name="label_address">Dirección</string>
+    <string name="label_price_hour">Precio/hora</string>
+    <string name="label_spaces">Espacios</string>
+    <string name="label_location">Localización</string>
+    <string name="label_duration">Duración</string>
+    <string name="label_total_cost">Costo Total</string>
+    <string name="label_payment_method">Método de pago</string>
+    <!-- 4. HINTS / PLACEHOLDERS -->
+    <string name="hint_email">name@company.com</string>
+    <string name="hint_name">e.g. Juan Mamani</string>
+    <string name="hint_phone">e.g. 73000001</string>
+    <string name="hint_password">******</string>
+    <string name="hint_search">Busca tu parqueo...</string>
+    <string name="parking_name_hint">e.g. Downtown Central Garage</string>
+    <string name="parking_address_hint">Av. America #123</string>
+    <string name="parking_price_hint">Bs 5.00</string>
+    <string name="vehicle_plate_hint">e.g. ABC-1234</string>
+    <string name="vehicle_model_hint">e.g. Toyota Camry 2024</string>
+    <string name="vehicle_color_hint">Rojo</string>
+    <!-- 5. ESTADOS Y ROLES (Conceptos compartidos) -->
+    <string name="status_available">Disponible</string>
+    <string name="status_full">Lleno</string>
+    <string name="status_occupied">Ocupado</string>
+    <string name="status_free">Libre</string>
+    <string name="status_active">Activa</string>
+    <string name="status_finished">Finalizada</string>
+    <string name="role_driver">Conductor</string>
+    <string name="role_owner">Dueño</string>
+    <!-- 6. TEXTOS LARGOS O ESPECÍFICOS (Títulos de cabecera) -->
+    <string name="register_title">REGÍSTRATE</string>
+    <string name="register_role_selection">Quiero ser...</string>
+    <string name="vehicle_registration_title">Registra tu vehículo</string>
+    <string name="vehicle_description">Por favor, proporciona la información de tu vehículo.</string>
+    <string name="parking_description">Por favor, proporciona la información de tu parqueo.</string>
+    <string name="parking_registration_title">Registra tu parqueo</string>
+    <string name="find_parking_title">Encuentra tu Lugar</string>
+    <string name="booking_conf_title">Confirma tu Reserva</string>
+    <string name="notifications_title">Notificaciones</string>
+    <string name="notifications_empty">No hay más notificaciones recientes</string>
+    <string name="earnings_title">Ingresos</string>
+    <string name="spaces_title">Gestión de Espacios</string>
+    <string name="history_title">Reservas</string>
+    <string name="active_reservations">Activas</string>
+    <string name="history_tab_finished">Finalizadas</string>
+    <string name="earnings_occupied_spaces">Espacios ocupados</string>
+    <string name="earnings_vs_last_week">↑</string>
+    <string name="earnings_recent_history">Ingresos recientes</string>
+    <string name="payment_cash">Efectivo</string>
+    <string name="payment_qr">QR</string>
+    <string name="earnings_limited_capacity">Capacidad limitada</string>
+    <string name="parking_details_title">Detalles del parqueo</string>
+    <string name="reviews">reseñas</string>
+    <string name="rate_button">Calificar</string>
+    <string name="view_map_button">Ver mapa</string>
+    <string name="available">Disponible</string>
+    <string name="not_available">No disponible</string>
+    <string name="reserve_button">Reservar</string>
+    <string name="booking_confirmation_title">Confirma tu Reserva</string>
+    <string name="location_label">Ubicación</string>
+    <string name="space_label">Espacio</string>
+    <string name="duration_label">Duración</string>
+    <string name="total_cost_label">Costo Total</string>
+    <string name="payment_method_title">Selecciona tu método de pago</string>
+    <string name="cash_payment">Efectivo</string>
+    <string name="qr_payment">Pagar con QR</string>
+    <string name="confirm_booking_button">Confirmar reserva</string>
+    <string name="reservation_summary_title">Información de Reserva</string>
+    <string name="reservation_summary_location">Ubicación</string>
+    <string name="reservation_summary_space">Espacio Asignado</string>
+    <string name="reservation_summary_entry_time">Hora de Entrada</string>
+    <string name="reservation_summary_duration">Duración Estimada</string>
+    <string name="reservation_summary_cost">Costo Total</string>
+    <string name="reservation_summary_payment">Método de Pago</string>
+    <string name="history_status_ending_soon">Termina pronto</string>
+    <string name="signin_or_separator">O</string>
+    <string name="spaces_card_total_capacity">Capacidad total</string>
+    <string name="spaces_card_occupied">Ocupados</string>
+    <string name="spaces_card_available">Disponibles</string>
+    <string name="spaces_list_section_title">Parking Spots</string>
+    <!-- 7. FORMATOS DINÁMICOS -->
+    <string name="format_duration_singular">%1$d Hora</string>
+    <string name="format_duration_plural">%1$d Horas</string>
+    <string name="format_reviews">reseñas</string>
+    <string name="format_price_bob">%s Bs/hora</string>
+    <string name="format_space_p">P %s</string>
+    <!-- Navigation -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_my_bookings">Mis Reservas</string>
+    <string name="nav_bookings">Reservas</string>
+    <string name="nav_spaces">Espacios</string>
 </resources>
