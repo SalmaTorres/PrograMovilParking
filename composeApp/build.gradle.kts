@@ -45,6 +45,7 @@ kotlin {
             implementation(libs.firebase.database)
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.androidx.work.runtime)
+            implementation(libs.firebase.config)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

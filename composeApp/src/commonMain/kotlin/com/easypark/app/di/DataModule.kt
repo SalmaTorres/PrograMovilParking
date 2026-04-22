@@ -8,6 +8,7 @@ import com.easypark.app.core.data.datasource.ReservationLocalDataSource
 import com.easypark.app.core.data.datasource.SpaceLocalDataSource
 import com.easypark.app.core.data.db.AppDatabase
 import com.easypark.app.core.data.remote.FirebaseManager
+import com.easypark.app.core.data.remote.RemoteConfigManager
 import com.easypark.app.core.data.service.ReservationDbService
 import com.easypark.app.core.data.service.SpaceDbService
 import com.easypark.app.core.domain.session.SessionManager
@@ -95,4 +96,6 @@ val dataModule = module {
     single { get<AppDatabase>().registerVehicleDao() }
     single { get<AppDatabase>().reservationDao() }
     single { get<AppDatabase>().bookingConfirmationDao() }
+
+    singleOf(::RemoteConfigManager)
 }
