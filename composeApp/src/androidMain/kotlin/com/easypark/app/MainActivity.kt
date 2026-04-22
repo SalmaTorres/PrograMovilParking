@@ -8,6 +8,9 @@ import com.easypark.app.di.getModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import org.osmdroid.config.Configuration
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -36,6 +39,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        createNotificationChannel()
         askNotificationPermission()
         fetchFcmToken()
 
@@ -52,6 +56,20 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             App()
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Actualizaciones"
+            val descriptionText = "Notificaciones de cambios en la app"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("default_easypark_channel", name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 

@@ -12,6 +12,7 @@ import com.easypark.app.notifications.data.dao.NotificationDao
 import com.easypark.app.parkingdetails.data.dao.ParkingDetailDao
 import com.easypark.app.core.data.dao.SpaceDao
 import com.easypark.app.core.data.dao.UserDao
+import com.easypark.app.core.data.dao.RemoteConfigDao
 import com.easypark.app.core.data.entity.*
 import com.easypark.app.findparking.data.dao.FindParkingDao
 import com.easypark.app.registerparking.data.dao.RegisterParkingDao
