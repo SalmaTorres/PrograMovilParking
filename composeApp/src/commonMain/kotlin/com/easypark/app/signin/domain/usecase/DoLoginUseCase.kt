@@ -1,6 +1,5 @@
 package com.easypark.app.signin.domain.usecase
 
-import com.easypark.app.core.domain.model.status.UserType
 import com.easypark.app.core.domain.session.SessionManager
 import com.easypark.app.signin.domain.repository.AuthRepository
 
@@ -17,7 +16,6 @@ class DoLoginUseCase(
         }
 
         sessionManager.saveSession(user, parkingId)
-
         return user.type.name
     }
 }

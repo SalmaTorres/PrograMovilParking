@@ -19,20 +19,23 @@ class ReservationSummaryViewModel(
     val state = _state.asStateFlow()
 
     init {
-        loadActiveReservations()
+        startRealtimeObservation()
     }
 
-    private fun loadActiveReservations() {
+    private fun startRealtimeObservation() {
         val userId = sessionManager.getUserId()
-        if (userId != -1) {
+        if (userId == -1) return
+
+        viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            viewModelScope.launch {
-                try {
-                    val list = getReservationSummaryUseCase(userId)
-                    _state.update { it.copy(reservations = list, isLoading = false) }
-                } catch (e: Exception) {
-                    _state.update { it.copy(error = e.message, isLoading = false) }
-                }
+
+            getReservationSummaryUseCase.observe(userId).collect { liveList ->
+                _state.update { it.copy(
+                    reservations = liveList,
+                    isLoading = false,
+                    error = null
+                )}
+                println("LOG: Lista de reservas actualizada desde Firebase")
             }
         }
     }

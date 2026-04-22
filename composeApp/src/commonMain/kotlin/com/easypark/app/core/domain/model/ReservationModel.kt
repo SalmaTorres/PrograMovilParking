@@ -1,5 +1,4 @@
 import com.easypark.app.core.domain.model.PriceModel
-import kotlinx.serialization.Serializable
 
 data class ReservationModel(
     val id: Int = 0,
@@ -13,7 +12,6 @@ data class ReservationModel(
     val paymentMethod: String = "CASH",
     val status: String = "ACTIVE"
 ) {
-    // Función auxiliar para formatear milisegundos a HH:mm (Ej: 14:30)
     private fun formatMillisToTime(millis: Long): String {
         val totalSeconds = millis / 1000
         val totalMinutes = totalSeconds / 60
