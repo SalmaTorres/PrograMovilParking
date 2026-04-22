@@ -52,6 +52,7 @@ class SignInViewModel(
                     emit(SignInEffect.ShowError("Email o contraseña incorrectos"))
                 }
             } catch (e: Exception) {
+                io.sentry.kotlin.multiplatform.Sentry.captureException(e)
                 _state.update { it.copy(isLoading = false) }
                 emit(SignInEffect.ShowError("Ocurrió un error inesperado"))
             }
