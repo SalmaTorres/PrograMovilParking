@@ -23,4 +23,10 @@ interface BookingConfirmationDao {
 
     @Query("UPDATE space SET state = :newState WHERE id = :id")
     suspend fun updateSpaceStatus(id: Int, newState: String)
+
+    @Query("SELECT * FROM reservation WHERE isSynced = 0")
+    suspend fun getUnsyncedReservations(): List<ReservationEntity>
+
+    @Query("UPDATE reservation SET isSynced = 1 WHERE id = :id")
+    suspend fun markAsSynced(id: Int)
 }

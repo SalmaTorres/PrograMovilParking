@@ -218,6 +218,7 @@ android {
 
 dependencies {
     implementation(libs.firebase.database)
+    implementation(libs.junit.junit)
     debugImplementation(libs.compose.uiTooling)
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)

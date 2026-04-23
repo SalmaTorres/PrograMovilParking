@@ -7,6 +7,7 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.SQLiteDriver
 import com.easypark.app.bookingconfirmation.data.dao.BookingConfirmationDao
+import com.easypark.app.core.data.dao.AppEventDao
 import com.easypark.app.core.data.dao.ReservationDao
 import com.easypark.app.notifications.data.dao.NotificationDao
 import com.easypark.app.parkingdetails.data.dao.ParkingDetailDao
@@ -31,9 +32,10 @@ import kotlinx.coroutines.IO
         ReservationEntity::class,
         SpaceEntity::class,
         NotificationEntity::class,
-        ReviewEntity::class
+        ReviewEntity::class,
+        AppEventEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @ConstructedBy(AppDatabaseConstructor::class)
@@ -51,6 +53,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun registerVehicleDao(): RegisterVehicleDao
     abstract fun reservationDao(): ReservationDao
     abstract fun bookingConfirmationDao(): BookingConfirmationDao
+    abstract fun appEventDao(): AppEventDao
 }
 
 // The Room compiler generates the `actual` implementations.

@@ -27,6 +27,7 @@ androidx-work = "2.9.0"
 work = "2.9.0"
 sentry = "0.7.1"
 google-services = "4.4.1"
+junitVersion = "4.12"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -70,6 +71,7 @@ sentry-kmp = { group = "io.sentry", name = "sentry-kotlin-multiplatform", versio
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-inappmessaging-display = { module = "com.google.firebase:firebase-inappmessaging-display" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -29,5 +29,7 @@ data class ReservationEntity(
     val state: String,
 
     @ColumnInfo(name = "methodPay")
-    val methodPay: String
+    val methodPay: String,
+    @ColumnInfo(name = "isSynced")
+    val isSynced: Boolean = false
 )

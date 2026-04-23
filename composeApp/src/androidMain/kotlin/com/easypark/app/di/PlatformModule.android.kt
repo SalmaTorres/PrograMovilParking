@@ -7,6 +7,8 @@ import com.easypark.app.core.data.db.getDatabaseBuilder
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import androidx.sqlite.driver.AndroidSQLiteDriver
+import com.easypark.app.core.data.sync.AndroidSyncManager
+import com.easypark.app.core.data.sync.SyncManager
 
 actual val platformModule: Module = module {
     single<AppDatabase> {
@@ -15,4 +17,5 @@ actual val platformModule: Module = module {
             AndroidSQLiteDriver()
         )
     }
+    single<SyncManager> { AndroidSyncManager(get()) }
 }
