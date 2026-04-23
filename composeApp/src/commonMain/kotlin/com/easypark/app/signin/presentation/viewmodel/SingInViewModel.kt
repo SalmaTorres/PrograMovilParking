@@ -3,18 +3,30 @@ package com.easypark.app.signin.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.signin.domain.usecase.DoLoginUseCase
+import com.easypark.app.core.domain.repository.RemoteConfigRepository
 import com.easypark.app.signin.presentation.state.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val useCase: DoLoginUseCase
+    private val useCase: DoLoginUseCase,
+    private val remoteConfigRepository: RemoteConfigRepository
 ) : ViewModel(){
     private val _state = MutableStateFlow(SignInUIState())
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<SignInEffect>()
     val effect = _effect.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            remoteConfigRepository.observeConfig("precio_parqueo").collectLatest { value ->
+                if (value != null) {
+                    _state.update { it.copy(remoteConfigValue = "Precio de parqueo: $value") }
+                }
+            }
+        }
+    }
 
     fun onEvent(event: SignInEvent) {
         when (event) {

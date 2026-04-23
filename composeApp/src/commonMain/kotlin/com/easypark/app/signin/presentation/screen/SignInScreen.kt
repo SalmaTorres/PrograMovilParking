@@ -79,6 +79,21 @@ fun SignInScreen(
                 modifier = Modifier.size(155.dp)
             )
 
+            state.remoteConfigValue?.let { config ->
+                Spacer(modifier = Modifier.height(16.dp))
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = config,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(32.dp))
 
             ParkTextField(
