@@ -8,8 +8,8 @@ import androidx.core.app.NotificationCompat
 
 object NotificationHelper {
 
-    private const val CHANNEL_ID = "easypark_reservations"
-    private const val CHANNEL_NAME = "Recordatorios de Reserva"
+    private const val CHANNEL_ID = "easypark_alerts_high"
+    private const val CHANNEL_NAME = "Alertas de Configuración"
 
     fun showNotification(context: Context, title: String, message: String) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -19,22 +19,23 @@ object NotificationHelper {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Notificaciones sobre el estado de tus reservas de parqueo"
+                description = "Alertas importantes y actualizaciones del sistema"
             }
             notificationManager.createNotificationChannel(channel)
         }
 
         // Construir la notificación
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // Icono por defecto temporal
+            .setSmallIcon(android.R.drawable.ic_dialog_info) 
             .setContentTitle(title)
             .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_ALL) // Asegurar sonido y vibración
             .setAutoCancel(true)
 
-        // Enviar la notificación con un ID único o fijo
-        notificationManager.notify(1, builder.build())
+        // Enviar la notificación con un ID único basado en el tiempo para que no se sobrepongan
+        notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
     }
 }

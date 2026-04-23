@@ -96,6 +96,7 @@ val dataModule = module {
     single { get<AppDatabase>().registerVehicleDao() }
     single { get<AppDatabase>().reservationDao() }
     single { get<AppDatabase>().bookingConfirmationDao() }
+    single { get<AppDatabase>().remoteConfigDao() }
 
     singleOf(::RemoteConfigManager)
 }

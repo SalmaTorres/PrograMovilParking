@@ -147,6 +147,7 @@ kotlin {
             
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.firebase.messaging)
+            implementation(libs.firebase.installations)
             implementation(libs.androidx.sqlite.framework)
             implementation(libs.firebase.config)
             implementation(libs.firebase.database)
@@ -154,7 +155,6 @@ kotlin {
             implementation(libs.firebase.analytics)
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.androidx.work.runtime)
-            implementation(libs.firebase.config)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

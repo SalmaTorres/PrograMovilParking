@@ -62,6 +62,30 @@ actual class BackgroundTaskManager(private val context: Context) {
             cleanupRequest
         )
     }
+
+    actual fun scheduleConfigWatchSync() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+            
+        // 1. Ejecución INMEDIATA (Para no tener que esperar los 15 mins iniciales)
+        val immediateRequest = OneTimeWorkRequestBuilder<ConfigWatchWorker>()
+            .setConstraints(constraints)
+            .build()
+        WorkManager.getInstance(context).enqueue(immediateRequest)
+
+        // 2. Ejecutar periodicamente (15 min es el mínimo)
+        val periodicRequest = PeriodicWorkRequest.Builder(
+            ConfigWatchWorker::class.java,
+            15, TimeUnit.MINUTES
+        ).setConstraints(constraints).build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "ConfigWatchSync",
+            ExistingPeriodicWorkPolicy.KEEP,
+            periodicRequest
+        )
+    }
 }
 
 @Composable

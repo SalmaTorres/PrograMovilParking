@@ -20,6 +20,7 @@ import com.easypark.app.reservationsummary.data.dao.ReservationSummaryDao
 import com.easypark.app.signin.data.dao.SignInDao
 import com.easypark.app.register.data.dao.RegisterDao
 import com.easypark.app.registervehicle.data.dao.RegisterVehicleDao
+import com.easypark.app.core.data.dao.RemoteConfigDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
@@ -31,9 +32,10 @@ import kotlinx.coroutines.IO
         ReservationEntity::class,
         SpaceEntity::class,
         NotificationEntity::class,
-        ReviewEntity::class
+        ReviewEntity::class,
+        RemoteConfigEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @ConstructedBy(AppDatabaseConstructor::class)
@@ -51,6 +53,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun registerVehicleDao(): RegisterVehicleDao
     abstract fun reservationDao(): ReservationDao
     abstract fun bookingConfirmationDao(): BookingConfirmationDao
+    abstract fun remoteConfigDao(): RemoteConfigDao
 }
 
 // The Room compiler generates the `actual` implementations.
@@ -66,6 +69,7 @@ fun createDatabase(
     driver: SQLiteDriver = BundledSQLiteDriver()
 ): AppDatabase {
     return builder
+        .fallbackToDestructiveMigration(dropAllTables = true)
         .setDriver(driver)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()

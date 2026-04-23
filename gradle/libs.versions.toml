@@ -70,6 +70,7 @@ sentry-kmp = { group = "io.sentry", name = "sentry-kotlin-multiplatform", versio
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-inappmessaging-display = { module = "com.google.firebase:firebase-inappmessaging-display" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-installations = { module = "com.google.firebase:firebase-installations" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

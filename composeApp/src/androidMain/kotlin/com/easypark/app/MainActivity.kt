@@ -44,6 +44,10 @@ class MainActivity : ComponentActivity() {
                 modules(getModules())
             }
         }
+        
+        // Arrancar el observador de remote config
+        com.easypark.app.core.work.BackgroundTaskManager(this).scheduleConfigWatchSync()
+
         setContent {
             App()
         }

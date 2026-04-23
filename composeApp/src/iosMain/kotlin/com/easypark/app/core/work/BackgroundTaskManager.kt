@@ -15,6 +15,10 @@ actual class BackgroundTaskManager {
     actual fun scheduleDailyCleanup() {
         // Stub para iOS.
     }
+    
+    actual fun scheduleConfigWatchSync() {
+        // Stub para iOS
+    }
 }
 
 @Composable
