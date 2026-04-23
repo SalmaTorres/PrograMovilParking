@@ -138,8 +138,9 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
-            implementation( libs.androidx.activity.compose)
+            implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.work.runtime.ktx)
+            implementation(libs.androidx.lifecycle.process)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation("org.osmdroid:osmdroid-android:6.1.18")
@@ -168,6 +169,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)

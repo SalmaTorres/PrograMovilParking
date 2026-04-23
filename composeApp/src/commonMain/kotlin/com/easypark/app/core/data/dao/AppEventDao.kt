@@ -1,0 +1,19 @@
+package com.easypark.app.core.data.dao
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.easypark.app.core.data.entity.AppEventEntity
+
+@Dao
+interface AppEventDao {
+    @Insert
+    suspend fun insertEvent(event: AppEventEntity)
+
+    @Query("SELECT * FROM app_events WHERE isSynced = 0")
+    suspend fun getUnsyncedEvents(): List<AppEventEntity>
+
+    @Update
+    suspend fun updateEvents(events: List<AppEventEntity>)
+}

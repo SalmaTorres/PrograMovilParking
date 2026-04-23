@@ -22,6 +22,8 @@ import com.google.firebase.messaging.FirebaseMessaging
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.easypark.app.core.sync.ConfigSyncWorker
+import androidx.lifecycle.ProcessLifecycleOwner
+import com.easypark.app.core.lifecycle.AppLifecycleObserver
 
 class MainActivity : ComponentActivity() {
 
@@ -54,6 +56,9 @@ class MainActivity : ComponentActivity() {
                 modules(getModules())
             }
         }
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver(applicationContext))
+
         setContent {
             App()
         }
