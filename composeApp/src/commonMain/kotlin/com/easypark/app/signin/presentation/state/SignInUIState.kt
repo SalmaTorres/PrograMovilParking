@@ -6,4 +6,5 @@ data class SignInUIState(
     val isLoading: Boolean = false,
     val isEmailError: Boolean = false,
     val isPasswordError: Boolean = false,
+    val remoteConfigMessage: String = "",
 )

@@ -16,6 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.easypark.app.core.work.ConfigSyncWorker
 
 class MainActivity : ComponentActivity() {
 
@@ -45,8 +48,9 @@ class MainActivity : ComponentActivity() {
             }
         }
         
-        // Arrancar el observador de remote config
-        com.easypark.app.core.work.BackgroundTaskManager(this).scheduleConfigWatchSync()
+        // Disparador directo según la Guía 
+        val syncWorkRequest = OneTimeWorkRequestBuilder<ConfigSyncWorker>().build()
+        WorkManager.getInstance(applicationContext).enqueue(syncWorkRequest)
 
         setContent {
             App()

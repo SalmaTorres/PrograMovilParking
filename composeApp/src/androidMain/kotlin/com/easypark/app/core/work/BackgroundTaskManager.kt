@@ -86,6 +86,23 @@ actual class BackgroundTaskManager(private val context: Context) {
             periodicRequest
         )
     }
+
+    actual fun scheduleInitialConfigSync() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+            
+        val initialRequest = OneTimeWorkRequestBuilder<InitialConfigSyncWorker>()
+            .setConstraints(constraints)
+            .build()
+            
+        // Use KEEP so it only runs if not currently running.
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "InitialConfigSync",
+            androidx.work.ExistingWorkPolicy.KEEP,
+            initialRequest
+        )
+    }
 }
 
 @Composable

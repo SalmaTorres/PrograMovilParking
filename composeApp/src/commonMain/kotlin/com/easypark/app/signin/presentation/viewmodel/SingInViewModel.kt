@@ -3,15 +3,26 @@ package com.easypark.app.signin.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.signin.domain.usecase.DoLoginUseCase
+import com.easypark.app.core.domain.repository.RemoteConfigRepository
 import com.easypark.app.signin.presentation.state.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val useCase: DoLoginUseCase
+    private val useCase: DoLoginUseCase,
+    private val remoteConfigRepository: RemoteConfigRepository
 ) : ViewModel(){
     private val _state = MutableStateFlow(SignInUIState())
     val state = _state.asStateFlow()
+
+    init {
+        // Observador en ViewModel tal y como pide la guía (Paso 5)
+        viewModelScope.launch {
+            remoteConfigRepository.observeConfig("mensaje_alerta").collectLatest { valor ->
+                _state.update { it.copy(remoteConfigMessage = valor ?: "") }
+            }
+        }
+    }
 
     private val _effect = MutableSharedFlow<SignInEffect>()
     val effect = _effect.asSharedFlow()

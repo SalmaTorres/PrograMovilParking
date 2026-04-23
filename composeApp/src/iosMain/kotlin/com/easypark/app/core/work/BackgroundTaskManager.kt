@@ -19,6 +19,10 @@ actual class BackgroundTaskManager {
     actual fun scheduleConfigWatchSync() {
         // Stub para iOS
     }
+
+    actual fun scheduleInitialConfigSync() {
+        // Stub para iOS descarga primera vez
+    }
 }
 
 @Composable

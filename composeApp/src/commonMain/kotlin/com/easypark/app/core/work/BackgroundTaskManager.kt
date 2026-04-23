@@ -7,6 +7,7 @@ expect class BackgroundTaskManager {
     fun schedulePeriodicDataSync()
     fun scheduleDailyCleanup()
     fun scheduleConfigWatchSync()
+    fun scheduleInitialConfigSync()
 }
 
 @Composable

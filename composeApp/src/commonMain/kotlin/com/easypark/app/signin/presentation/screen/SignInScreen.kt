@@ -21,6 +21,9 @@ import kotlinproject.composeapp.generated.resources.easypark_logo
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
 
 @Composable
 fun SignInScreen(
@@ -78,6 +81,25 @@ fun SignInScreen(
                 contentDescription = null,
                 modifier = Modifier.size(155.dp)
             )
+
+            // Renderizar la configuración de Remote Config guardada en Room (Paso 5 de la Guía)
+            if (state.remoteConfigMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = Color(0xFFE8F5E9), // Un verde muy suave
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .padding(horizontal = 24.dp, vertical = 12.dp)
+                ) {
+                    Text(
+                        text = state.remoteConfigMessage,
+                        color = Color(0xFF1B5E20), // Un verde oscuro
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 

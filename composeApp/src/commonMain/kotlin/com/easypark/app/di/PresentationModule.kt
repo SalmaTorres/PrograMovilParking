@@ -15,8 +15,10 @@ import com.easypark.app.spacemanagement.presentation.viewmodel.SpaceManagementVi
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import org.koin.core.module.dsl.viewModel
+import com.easypark.app.AppViewModel
 
 val presentationModule = module {
+    viewModelOf(::AppViewModel)
     viewModelOf(::SignInViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::RegisterParkingViewModel)

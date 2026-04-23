@@ -16,39 +16,12 @@ import org.koin.compose.koinInject // Asegúrate de tener este import para inyec
 
 @Composable
 fun App() {
-    val remoteConfig = koinInject<RemoteConfigManager>()
-
-    var isLoading by remember { mutableStateOf(true) }
-    var isMaintenanceMode by remember { mutableStateOf(false) }
-    var maintenanceMessage by remember { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        try {
-            remoteConfig.initialize()
-            // Leemos los valores que la Persona 3 puso en la consola de Firebase
-            isMaintenanceMode = remoteConfig.getBoolean("app_mantenimiento")
-            maintenanceMessage = remoteConfig.getString("mensaje_mantenimiento")
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            isLoading = false
-        }
-    }
-
     MaterialTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = ParkBackground
         ) {
-            if (isLoading) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            } else if (isMaintenanceMode) {
-                MaintenanceUI(maintenanceMessage)
-            } else {
-                AppNavHost()
-            }
+            AppNavHost()
         }
     }
 }
