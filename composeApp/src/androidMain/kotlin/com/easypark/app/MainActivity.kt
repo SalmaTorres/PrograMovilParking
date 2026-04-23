@@ -52,6 +52,9 @@ class MainActivity : ComponentActivity() {
         val syncWorkRequest = OneTimeWorkRequestBuilder<ConfigSyncWorker>().build()
         WorkManager.getInstance(applicationContext).enqueue(syncWorkRequest)
 
+        // Arrancar el observador de notificaciones locales de Remote Config
+        com.easypark.app.core.work.BackgroundTaskManager(this).scheduleConfigWatchSync()
+
         setContent {
             App()
         }
