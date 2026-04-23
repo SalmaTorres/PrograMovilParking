@@ -29,9 +29,13 @@ class BookingConfirmationRepositoryImpl(
     override suspend fun observeBookingRealtime(bookingId: String): Flow<ReservationModel?> {
         return firebaseManager.observeData("reservations/$bookingId").map { json ->
             if (json == null) return@map null
-            val jsonConfig = Json { ignoreUnknownKeys = true; isLenient = true; coerceInputValues = true }
-            val dto = jsonConfig.decodeFromString<ReservationDTO>(json)
-            dto.toDomain()
+            try {
+                val jsonConfig = Json { ignoreUnknownKeys = true; isLenient = true; coerceInputValues = true }
+                val dto = jsonConfig.decodeFromString<ReservationDTO>(json)
+                dto.toDomain()
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 
@@ -85,21 +89,22 @@ class BookingConfirmationRepositoryImpl(
         if (resId != null) {
             syncManager.enqueueOfflineSync()
             try {
-                val firebaseData = """
-                {
-                    "id": $resId,
-                    "status": "ACTIVE",
-                    "parkingId": $parkingId,
-                    "parkingName": "${parking.name}",
-                    "address": "${parking.address}",
-                    "spaceId": $spaceId,
-                    "spaceNumber": ${spaceDTO.number},
-                    "driverId": $driverId,
-                    "clientName": "$clientName",
-                    "paymentMethod": "$paymentMethod",
-                    "totalPrice": { "amount": $reservationPrice, "currency": "BOB" }
-                }
-                """.trimIndent()
+                val reservationDTO = ReservationDTO(
+                    id = resId,
+                    status = "ACTIVE",
+                    parkingId = parkingId,
+                    parkingName = parking.name,
+                    address = parking.address,
+                    spaceId = spaceId,
+                    spaceNumber = spaceDTO.number ?: 0,
+                    driverId = driverId,
+                    clientName = clientName,
+                    paymentMethod = paymentMethod,
+                    startTime = startTime,
+                    endTime = startTime + durationMillis,
+                    totalPrice = com.easypark.app.core.data.dto.PriceDTO(amount = reservationPrice, currency = "BOB")
+                )
+                val firebaseData = jsonConfig.encodeToString(ReservationDTO.serializer(), reservationDTO)
 
                 firebaseManager.saveData("reservations/$resId", firebaseData)
                 firebaseManager.saveData("spaces/$parkingId/s$spaceId/state", "\"OCUPADO\"")
