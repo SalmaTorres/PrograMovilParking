@@ -2,6 +2,7 @@ package com.easypark.app.spacemanagement.presentation.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,21 +25,38 @@ import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ParkingSpotItem(spot: ParkingSpot) {
-    val borderColor = if (spot.isOccupied) Color(0xFFFCA5A5) else Color(0xFF86EFAC)
-    val bgColor = if (spot.isOccupied) Color(0xFFFEF2F2) else Color(0xFFF0FDF4)
-    val textColor = if (spot.isOccupied) ParkSuccess else ParkError
-
-    val statusText = if (spot.isOccupied)
-        stringResource(Res.string.status_occupied)
-    else
-        stringResource(Res.string.status_free)
+fun ParkingSpotItem(
+    spot: ParkingSpot,
+    onClick: () -> Unit
+) {
+    val state = spot.state
+    val borderColor = when (state) {
+        "OCUPADO" -> Color(0xFFEF4444)
+        "RESERVADO" -> Color(0xFFF97316)
+        else -> Color(0xFF22C55E)
+    }
+    val bgColor = when (state) {
+        "OCUPADO" -> Color(0xFFFEF2F2)
+        "RESERVADO" -> Color(0xFFFFF7ED)
+        else -> Color(0xFFF0FDF4)
+    }
+    val textColor = when (state) {
+        "OCUPADO" -> Color(0xFFDC2626)
+        "RESERVADO" -> Color(0xFFEA580C)
+        else -> Color(0xFF16A34A)
+    }
+    val statusText = when (state) {
+        "OCUPADO" -> "Ocupado"
+        "RESERVADO" -> "Reservado"
+        else -> "Disponible"
+    }
 
     Box(
         modifier = Modifier
             .aspectRatio(1f)
             .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp))
-            .background(color = bgColor, shape = RoundedCornerShape(16.dp)),
+            .background(color = bgColor, shape = RoundedCornerShape(16.dp))
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -47,14 +65,14 @@ fun ParkingSpotItem(spot: ParkingSpot) {
         ) {
             Text(
                 text = spot.number.toString(),
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = textColor
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = statusText,
-                fontSize = 10.sp,
+                fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 color = textColor
             )

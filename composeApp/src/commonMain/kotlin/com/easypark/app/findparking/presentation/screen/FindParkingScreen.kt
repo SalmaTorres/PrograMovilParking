@@ -59,7 +59,13 @@ fun FindParkingScreen(
         topBar = {
             ParkHeader(
                 title = stringResource(Res.string.find_parking_title),
-                onNotificationClick = { navController.navigate(NavRoute.Notifications) }
+                onNotificationClick = { navController.navigate(NavRoute.Notifications) },
+                onLogoutClick = {
+                    viewModel.sessionManager.clearSession()
+                    navController.navigate(com.easypark.app.navigation.NavRoute.SignIn) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         },
         bottomBar = {

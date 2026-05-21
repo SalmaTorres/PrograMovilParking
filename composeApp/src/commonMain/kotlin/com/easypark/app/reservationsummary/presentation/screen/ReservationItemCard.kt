@@ -43,7 +43,11 @@ import kotlinproject.composeapp.generated.resources.reservation_summary_space
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ReservationItemCard(reservation: ReservationModel) {
+fun ReservationItemCard(
+    reservation: ReservationModel,
+    onCheckInClick: () -> Unit,
+    onCheckOutClick: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         // Cabecera: Ubicación
         Card(
@@ -70,8 +74,19 @@ fun ReservationItemCard(reservation: ReservationModel) {
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 DetailRow(Icons.Default.Place, stringResource(Res.string.reservation_summary_space), "Nro ${reservation.spaceNumber}")
-                DetailRow(Icons.Default.Refresh, stringResource(Res.string.reservation_summary_entry_time), value = "${reservation.startTime}")
+                DetailRow(Icons.Default.Refresh, stringResource(Res.string.reservation_summary_entry_time), value = reservation.startTimeStr)
                 DetailRow(Icons.Default.Build, stringResource(Res.string.reservation_summary_duration), value = reservation.durationText)
+                
+                // Nuevos campos realistas
+                if (reservation.vehiclePlate.isNotEmpty()) {
+                    DetailRow(Icons.Default.AccountBox, "Placa Vehículo", reservation.vehiclePlate)
+                }
+                if (reservation.vehicleType.isNotEmpty()) {
+                    DetailRow(Icons.Default.Build, "Tipo Vehículo", reservation.vehicleType)
+                }
+                if (reservation.arrivalTime > 0L) {
+                    DetailRow(Icons.Default.Refresh, "Hora de Llegada", reservation.arrivalTimeStr)
+                }
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp)
 
@@ -103,6 +118,33 @@ fun ReservationItemCard(reservation: ReservationModel) {
                         Text(stringResource(Res.string.reservation_summary_payment), fontWeight = FontWeight.Medium)
                     }
                     Text(reservation.paymentMethod, color = ParkGray)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Botones interactivos de Check-in y Check-out
+                if (reservation.arrivalTime == 0L) {
+                    androidx.compose.material3.Button(
+                        onClick = onCheckInClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF22C55E)
+                        )
+                    ) {
+                        Text("Registrar Llegada (Check-in)", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    androidx.compose.material3.Button(
+                        onClick = onCheckOutClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFEF4444)
+                        )
+                    ) {
+                        Text("Finalizar Estancia (Check-out)", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }

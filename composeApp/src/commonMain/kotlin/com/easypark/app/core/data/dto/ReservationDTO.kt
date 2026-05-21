@@ -16,5 +16,9 @@ data class ReservationDTO (
     val status: String? = "ACTIVE",
     val driverId: Int? = 0,
     val clientName: String? = "",
-    val parkingId: Int? = 0
+    val parkingId: Int? = 0,
+    val vehiclePlate: String? = "",
+    val vehicleType: String? = "",
+    val arrivalTime: Long? = 0L,
+    val warned5Min: Boolean? = false
 )

@@ -26,12 +26,42 @@ import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.easypark.app.spacemanagement.domain.model.ParkingSpot
+
 @Composable
 fun SpaceManagementScreen(
     navController: NavHostController,
     viewModel: SpaceManagementViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    var spotToRelease by remember { mutableStateOf<ParkingSpot?>(null) }
+
+    if (spotToRelease != null) {
+        AlertDialog(
+            onDismissRequest = { spotToRelease = null },
+            title = { Text(text = "Liberar Espacio Manualmente", fontWeight = FontWeight.Bold) },
+            text = { Text(text = "¿Deseas liberar manualmente el espacio ${spotToRelease?.number}?\nEsto liberará el espacio y finalizará la reserva actual en Firebase.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        spotToRelease?.let { viewModel.releaseSpot(it.id) }
+                        spotToRelease = null
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDC2626))
+                ) {
+                    Text("Liberar", color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { spotToRelease = null }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -39,6 +69,12 @@ fun SpaceManagementScreen(
                 title = stringResource(Res.string.spaces_title),
                 onNotificationClick = {
                     navController.navigate(NavRoute.Notifications)
+                },
+                onLogoutClick = {
+                    viewModel.sessionManager.clearSession()
+                    navController.navigate(com.easypark.app.navigation.NavRoute.SignIn) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         },
@@ -93,7 +129,14 @@ fun SpaceManagementScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(state.parkingSpots) { spot ->
-                        ParkingSpotItem(spot = spot)
+                        ParkingSpotItem(
+                            spot = spot,
+                            onClick = {
+                                if (spot.state == "OCUPADO" || spot.state == "RESERVADO") {
+                                    spotToRelease = spot
+                                }
+                            }
+                        )
                     }
                 }
             }

@@ -9,4 +9,5 @@ interface SpaceManagementRepository {
     suspend fun getParkingSpots(parkingId: Int): List<ParkingSpot>
     fun observeSpaceSummary(parkingId: Int): Flow<SpaceSummary>
     fun observeParkingSpots(parkingId: Int): Flow<List<ParkingSpot>>
+    suspend fun releaseParkingSpot(parkingId: Int, spaceId: Int)
 }

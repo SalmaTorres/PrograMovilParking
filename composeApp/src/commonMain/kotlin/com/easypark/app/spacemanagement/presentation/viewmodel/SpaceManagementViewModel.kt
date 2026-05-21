@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class SpaceManagementViewModel(
     private val repository: SpaceManagementRepository,
-    private val sessionManager: SessionManager
+    val sessionManager: SessionManager,
+    private val evacuateUseCase: com.easypark.app.reservationsummary.domain.usecase.GetReservationSummaryUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SpaceManagementUiState())
@@ -27,6 +28,28 @@ class SpaceManagementViewModel(
 
     init {
         startRealtimeMonitoring()
+        runAutoEvacuation()
+    }
+
+    private fun runAutoEvacuation() {
+        viewModelScope.launch {
+            try {
+                evacuateUseCase.evacuate()
+            } catch (e: Exception) {
+                println("EVACUATION_ERROR: ${e.message}")
+            }
+        }
+    }
+
+    fun releaseSpot(spaceId: Int) {
+        val myParkingId = sessionManager.currentParkingId ?: return
+        viewModelScope.launch {
+            try {
+                repository.releaseParkingSpot(myParkingId, spaceId)
+            } catch (e: Exception) {
+                println("Error releasing spot: ${e.message}")
+            }
+        }
     }
 
     private fun startRealtimeMonitoring() {

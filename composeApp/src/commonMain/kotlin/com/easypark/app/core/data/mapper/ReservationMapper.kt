@@ -14,9 +14,12 @@ fun ReservationModel.toEntity(driverId: Int) = ReservationEntity(
     totalPrice = totalPrice.amount,
     state = status,
     methodPay = paymentMethod,
+    vehiclePlate = vehiclePlate,
+    vehicleType = vehicleType,
+    arrivalTime = arrivalTime
 )
 
-fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber: Int) = ReservationModel(
+fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber: Int, parkingId: Int) = ReservationModel(
     id = this.id,
     spaceId = this.spaceId,
     spaceNumber = spaceNumber,
@@ -26,7 +29,11 @@ fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber:
     endTime = this.finalHour,
     totalPrice = PriceModel(amount = this.totalPrice),
     status = this.state,
-    paymentMethod = this.methodPay
+    paymentMethod = this.methodPay,
+    vehiclePlate = this.vehiclePlate,
+    vehicleType = this.vehicleType,
+    arrivalTime = this.arrivalTime,
+    parkingId = parkingId
 )
 
 fun ReservationDTO.toDomain(): ReservationModel {
@@ -44,6 +51,10 @@ fun ReservationDTO.toDomain(): ReservationModel {
         endTime = finalEndTime,
         totalPrice = totalPrice?.toDomain() ?: PriceModel(0.0),
         paymentMethod = paymentMethod ?: "CASH",
-        status = finalStatus
+        status = finalStatus,
+        vehiclePlate = vehiclePlate ?: "",
+        vehicleType = vehicleType ?: "",
+        arrivalTime = arrivalTime ?: 0L,
+        parkingId = parkingId ?: 0
     )
 }

@@ -29,5 +29,14 @@ data class ReservationEntity(
     val state: String,
 
     @ColumnInfo(name = "methodPay")
-    val methodPay: String
+    val methodPay: String,
+
+    @ColumnInfo(name = "vehiclePlate")
+    val vehiclePlate: String = "",
+
+    @ColumnInfo(name = "vehicleType")
+    val vehicleType: String = "",
+
+    @ColumnInfo(name = "arrivalTime")
+    val arrivalTime: Long = 0L
 )

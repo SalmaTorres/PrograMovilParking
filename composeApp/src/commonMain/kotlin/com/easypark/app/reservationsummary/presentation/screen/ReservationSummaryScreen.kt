@@ -67,7 +67,15 @@ fun ReservationSummaryScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(state.reservations) { reservation ->
-                        ReservationItemCard(reservation = reservation)
+                        ReservationItemCard(
+                            reservation = reservation,
+                            onCheckInClick = {
+                                viewModel.checkIn(reservation.id, reservation.parkingId, reservation.spaceId)
+                            },
+                            onCheckOutClick = {
+                                viewModel.checkOut(reservation.id, reservation.parkingId, reservation.spaceId)
+                            }
+                        )
                     }
                 }
             } else {

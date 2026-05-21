@@ -9,6 +9,7 @@ import com.easypark.app.spacemanagement.domain.model.SpaceSummary
 import com.easypark.app.spacemanagement.domain.repository.SpaceManagementRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlin.collections.emptyList
@@ -77,8 +78,64 @@ class SpaceManagementRepositoryImpl(
             ParkingSpot(
                 id = entity.id,
                 number = entity.number,
-                isOccupied = entity.state == "OCUPADO"
+                isOccupied = entity.state == "OCUPADO" || entity.state == "RESERVADO",
+                state = entity.state
             )
+        }
+    }
+
+    override suspend fun releaseParkingSpot(parkingId: Int, spaceId: Int) {
+        firebaseManager.saveData("spaces/$parkingId/s$spaceId/state", "\"LIBRE\"")
+
+        val reservationsJson = firebaseManager.observeData("reservations").firstOrNull()
+        if (reservationsJson != null) {
+            try {
+                val element = jsonConfig.parseToJsonElement(reservationsJson as? String ?: "")
+                val reservationsMap = if (element is kotlinx.serialization.json.JsonObject) {
+                    jsonConfig.decodeFromJsonElement<Map<String, com.easypark.app.core.data.dto.ReservationDTO>>(element)
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    jsonConfig.decodeFromJsonElement<List<com.easypark.app.core.data.dto.ReservationDTO?>>(element)
+                        .filterNotNull()
+                        .mapIndexed { index, dto -> dto.id.toString() to dto }
+                        .toMap()
+                } else {
+                    emptyMap()
+                }
+
+                val activeRes = reservationsMap.entries.firstOrNull { (_, dto) ->
+                    dto.parkingId == parkingId && dto.spaceId == spaceId && (dto.status == "ACTIVE" || dto.status == "OCUPADO" || dto.status == "RESERVADO")
+                }
+
+                if (activeRes != null) {
+                    val resKey = activeRes.key
+                    firebaseManager.saveData("reservations/$resKey/status", "\"FINISHED\"")
+                    
+                    val summaryJson = firebaseManager.observeData("parkings/$parkingId/summary").firstOrNull()
+                    if (summaryJson != null) {
+                        val summaryElement = jsonConfig.parseToJsonElement(summaryJson as? String ?: "")
+                        if (summaryElement is kotlinx.serialization.json.JsonObject) {
+                            val currentReservations = summaryElement["activeReservations"]?.toString()?.toIntOrNull() ?: 0
+                            val currentOccupied = summaryElement["occupiedSpaces"]?.toString()?.toIntOrNull() ?: 0
+                            
+                            val newReservations = if (currentReservations > 0) currentReservations - 1 else 0
+                            val newOccupied = if (currentOccupied > 0) currentOccupied - 1 else 0
+                            
+                            val newSummaryJson = """
+                            {
+                                "totalEarnings": ${summaryElement["totalEarnings"]?.toString() ?: "0.0"},
+                                "activeReservations": $newReservations,
+                                "occupiedSpaces": $newOccupied,
+                                "totalSpaces": ${summaryElement["totalSpaces"]?.toString() ?: "0"},
+                                "pricePerHour": ${summaryElement["pricePerHour"]?.toString() ?: "{}"}
+                            }
+                            """.trimIndent()
+                            firebaseManager.saveData("parkings/$parkingId/summary", newSummaryJson)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                println("Error manual releasing reservation: ${e.message}")
+            }
         }
     }
 }

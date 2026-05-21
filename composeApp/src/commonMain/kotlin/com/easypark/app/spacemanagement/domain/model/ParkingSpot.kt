@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class ParkingSpot(
     val id: Int,
     val number: Int,
-    val isOccupied: Boolean
+    val isOccupied: Boolean,
+    val state: String = "LIBRE"
 )

@@ -10,7 +10,11 @@ data class ReservationModel(
     val endTime: Long,
     val totalPrice: PriceModel,
     val paymentMethod: String = "CASH",
-    val status: String = "ACTIVE"
+    val status: String = "ACTIVE",
+    val vehiclePlate: String = "",
+    val vehicleType: String = "",
+    val arrivalTime: Long = 0L,
+    val parkingId: Int = 0
 ) {
     private fun formatMillisToTime(millis: Long): String {
         val totalSeconds = millis / 1000
@@ -22,6 +26,7 @@ data class ReservationModel(
 
     val startTimeStr: String get() = formatMillisToTime(startTime)
     val endTimeStr: String get() = formatMillisToTime(endTime)
+    val arrivalTimeStr: String get() = if (arrivalTime > 0L) formatMillisToTime(arrivalTime) else "--:--"
 
     val durationText: String get() {
         val diff = endTime - startTime

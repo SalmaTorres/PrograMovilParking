@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReservationSummaryViewModel(
-    private val sessionManager: SessionManager,
+    val sessionManager: SessionManager,
     private val getReservationSummaryUseCase: GetReservationSummaryUseCase
 ) : ViewModel() {
 
@@ -20,6 +20,37 @@ class ReservationSummaryViewModel(
 
     init {
         startRealtimeObservation()
+        runAutoEvacuation()
+    }
+
+    private fun runAutoEvacuation() {
+        viewModelScope.launch {
+            try {
+                getReservationSummaryUseCase.evacuate()
+            } catch (e: Exception) {
+                println("EVACUATION_ERROR: ${e.message}")
+            }
+        }
+    }
+
+    fun checkIn(reservationId: Int, parkingId: Int, spaceId: Int) {
+        viewModelScope.launch {
+            try {
+                getReservationSummaryUseCase.checkIn(reservationId, parkingId, spaceId)
+            } catch (e: Exception) {
+                println("CheckIn Error: ${e.message}")
+            }
+        }
+    }
+
+    fun checkOut(reservationId: Int, parkingId: Int, spaceId: Int) {
+        viewModelScope.launch {
+            try {
+                getReservationSummaryUseCase.checkOut(reservationId, parkingId, spaceId)
+            } catch (e: Exception) {
+                println("CheckOut Error: ${e.message}")
+            }
+        }
     }
 
     private fun startRealtimeObservation() {
