@@ -82,7 +82,7 @@ class BookingConfirmationRepositoryImpl(
             startHour = startTime,
             finalHour = startTime + durationMillis,
             totalPrice = reservationPrice,
-            state = "ACTIVE",
+            state = "PENDIENTE",
             methodPay = paymentMethod,
             vehiclePlate = vehiclePlate,
             vehicleType = vehicleType,
@@ -95,7 +95,7 @@ class BookingConfirmationRepositoryImpl(
             val firebaseData = """
             {
                 "id": $resId,
-                "status": "ACTIVE",
+                "status": "PENDIENTE",
                 "parkingId": $parkingId,
                 "parkingName": "${parking.name}",
                 "address": "${parking.address}",

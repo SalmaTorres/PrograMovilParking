@@ -87,6 +87,38 @@ class EarningsRepositoryImpl(
             emptyList()
         }
     }
+
+    override fun observeTransactionsRealtime(parkingId: Int): Flow<List<EarningTransactionModel>> {
+        return firebaseManager.observeData("reservations").map { json ->
+            if (json == null) return@map emptyList()
+
+            try {
+                val element = jsonConfig.parseToJsonElement(json)
+                val reservationsDTOs = if (element is kotlinx.serialization.json.JsonObject) {
+                    jsonConfig.decodeFromJsonElement<Map<String, com.easypark.app.core.data.dto.ReservationDTO>>(element).values.toList()
+                } else if (element is kotlinx.serialization.json.JsonArray) {
+                    jsonConfig.decodeFromJsonElement<List<com.easypark.app.core.data.dto.ReservationDTO?>>(element).filterNotNull()
+                } else {
+                    emptyList()
+                }
+
+                reservationsDTOs
+                    .filter { it.parkingId == parkingId && it.status == "FINISHED" }
+                    .sortedByDescending { it.endTime ?: 0L }
+                    .map { res ->
+                        EarningTransactionModel(
+                            id = res.id ?: 0,
+                            date = com.easypark.app.core.util.RelativeTimeHelper.format(res.endTime ?: 0L),
+                            label = "Espacio ${res.spaceNumber ?: "?"}",
+                            amount = res.totalPrice?.amount ?: 0.0
+                        )
+                    }
+            } catch (e: Exception) {
+                println("ERROR_TRANSACTIONS: ${e.message}")
+                emptyList()
+            }
+        }
+    }
     override suspend fun getTotalEarnings(parkingId: Int): Double {
         val reservations = reservationDS.readByParking(parkingId)
         return reservations

@@ -22,8 +22,13 @@ class RegisterRepositoryImpl(
             name = user.name,
             email = user.email,
             cellphone = user.cellphone,
-            type = user.type.name
+            type = user.type.name,
+            placaVehiculo = user.placaVehiculo,
+            tipoVehiculo = user.tipoVehiculo
         )
-        firebaseManager.saveData("users/${user.id}", Json.encodeToString(userDto))
+        val json = Json.encodeToString(userDto)
+        firebaseManager.saveData("users/${user.id}", json)
+        val sanitizedEmail = user.email.replace(".", "_")
+        firebaseManager.saveData("users/$sanitizedEmail", json)
     }
 }

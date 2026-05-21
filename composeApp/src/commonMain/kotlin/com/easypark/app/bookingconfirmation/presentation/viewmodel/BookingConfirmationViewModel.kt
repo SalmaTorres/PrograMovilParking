@@ -56,13 +56,7 @@ class BookingConfirmationViewModel(
                     s.copy(bookingConfirmation = newBooking)
                 }
             }
-            is BookingConfirmationEvent.OnVehiclePlateChange -> {
-                val cleaned = event.plate.filter { it.isLetterOrDigit() || it == '-' }.uppercase()
-                _state.update { it.copy(vehiclePlate = cleaned, isPlateError = false) }
-            }
-            is BookingConfirmationEvent.OnVehicleTypeChange -> {
-                _state.update { it.copy(vehicleType = event.type) }
-            }
+
             BookingConfirmationEvent.OnBackClick -> emit(BookingConfirmationEffect.NavigateBack)
             is BookingConfirmationEvent.OnConfirmClick -> confirm()
         }
@@ -83,14 +77,13 @@ class BookingConfirmationViewModel(
     }
 
     private fun confirm() {
-        val plate = _state.value.vehiclePlate.trim()
-        val type = _state.value.vehicleType.trim()
+        val user = sessionManager.currentUser.value ?: return
 
-        val isPlateValid = plate.length in 5..10 && plate.all { it.isLetterOrDigit() || it == '-' }
+        val plate = user.placaVehiculo
+        val type = user.tipoVehiculo
 
-        if (!isPlateValid) {
-            _state.update { it.copy(isPlateError = true) }
-            emit(BookingConfirmationEffect.ShowError("Ingresa una placa de vehículo válida (de 5 a 10 caracteres alfanuméricos)"))
+        if (plate.isEmpty() || type.isEmpty()) {
+            emit(BookingConfirmationEffect.ShowError("Completa los datos de tu vehículo en tu perfil antes de reservar"))
             return
         }
 

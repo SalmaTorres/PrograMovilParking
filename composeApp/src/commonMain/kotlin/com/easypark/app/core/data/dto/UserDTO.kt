@@ -9,5 +9,8 @@ data class UserDTO (
     val name: String? = "",
     val email: String? = "",
     val cellphone: Int? = 0,
-    val type: String? = UserType.DRIVER.name
+    val type: String? = UserType.DRIVER.name,
+    val placaVehiculo: String? = null,
+    val tipoVehiculo: String? = null,
+    val password: String? = ""
 )

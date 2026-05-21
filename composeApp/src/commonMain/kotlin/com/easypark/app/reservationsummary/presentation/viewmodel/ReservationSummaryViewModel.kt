@@ -70,4 +70,16 @@ class ReservationSummaryViewModel(
             }
         }
     }
+
+    fun autoCancelReservation(reservationId: Int, parkingId: Int, spaceId: Int) {
+        viewModelScope.launch {
+            try {
+                // Aquí llamamos a una función que marque como CANCELADO y libere el espacio
+                getReservationSummaryUseCase.cancelExpiredReservation(reservationId, parkingId, spaceId)
+                println("LOG: Reserva $reservationId cancelada por tiempo expirado")
+            } catch (e: Exception) {
+                println("Error al cancelar: ${e.message}")
+            }
+        }
+    }
 }

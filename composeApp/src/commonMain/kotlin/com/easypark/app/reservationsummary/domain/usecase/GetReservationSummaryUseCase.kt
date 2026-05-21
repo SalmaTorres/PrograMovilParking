@@ -21,4 +21,8 @@ class GetReservationSummaryUseCase(
     suspend fun evacuate() {
         repository.checkAndEvacuateExpiredReservations()
     }
+
+    suspend fun cancelExpiredReservation(reservationId: Int, parkingId: Int, spaceId: Int) {
+        repository.checkAndCancelReservation(reservationId, parkingId, spaceId)
+    }
 }

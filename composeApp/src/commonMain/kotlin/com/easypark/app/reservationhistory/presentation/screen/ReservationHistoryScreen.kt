@@ -91,7 +91,12 @@ fun ReservationHistoryScreen(
                 item { Spacer(modifier = Modifier.height(8.dp)) }
 
                 items(normallyActive) { reservation ->
-                    ReservationCard(reservation = reservation)
+                    ReservationCard(
+                        reservation = reservation,
+                        onCheckInClick = {
+                            viewModel.onEvent(com.easypark.app.reservationhistory.presentation.state.ReservationHistoryEvent.OnCheckInClick(reservation.id))
+                        }
+                    )
                 }
 
                 if (endingSoon.isNotEmpty()) {
@@ -105,7 +110,12 @@ fun ReservationHistoryScreen(
                         )
                     }
                     items(endingSoon) { reservation ->
-                        ReservationCard(reservation = reservation)
+                        ReservationCard(
+                            reservation = reservation,
+                            onCheckInClick = {
+                                viewModel.onEvent(com.easypark.app.reservationhistory.presentation.state.ReservationHistoryEvent.OnCheckInClick(reservation.id))
+                            }
+                        )
                     }
                 }
 

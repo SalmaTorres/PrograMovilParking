@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlin.collections.emptyList
 import kotlin.collections.sortedBy
+import kotlin.time.Clock
 
 class SpaceManagementRepositoryImpl(
     private val spaceDS: SpaceLocalDataSource,
@@ -137,5 +138,13 @@ class SpaceManagementRepositoryImpl(
                 println("Error manual releasing reservation: ${e.message}")
             }
         }
+    }
+
+    override suspend fun occupyParkingSpot(parkingId: Int, spaceId: Int) {
+        val now = Clock.System.now().toEpochMilliseconds()
+        // Marcamos el espacio como ocupado manualmente
+        firebaseManager.saveData("spaces/$parkingId/s$spaceId/state", "\"OCUPADO\"")
+        // Opcional: guardar que fue manual para que el checkout sepa cobrar
+        firebaseManager.saveData("spaces/$parkingId/s$spaceId/arrivalTime", now.toString())
     }
 }

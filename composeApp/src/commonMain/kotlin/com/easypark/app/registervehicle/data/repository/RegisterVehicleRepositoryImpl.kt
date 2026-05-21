@@ -11,10 +11,9 @@ class RegisterVehicleRepositoryImpl(
     private val localDS: RegisterVehicleLocalDataSource,
     private val firebaseManager: FirebaseManager
 ) : RegisterVehicleRepository {
-    override suspend fun completeDriverRegistration(user: UserModel, vehicle: VehicleModel): Int? {
+    override suspend fun completeDriverRegistration(user: UserModel): Int? {
         return try {
             val userId = localDS.saveUser(user.toEntity()).toInt()
-            localDS.saveVehicle(vehicle.toEntity(driverId = userId))
 
             val userJson = """
             {
@@ -22,22 +21,15 @@ class RegisterVehicleRepositoryImpl(
                 "name": "${user.name}",
                 "email": "${user.email}",
                 "cellphone": "${user.cellphone}",
-                "type": "DRIVER"
+                "type": "DRIVER",
+                "placaVehiculo": "${user.placaVehiculo}",
+                "tipoVehiculo": "${user.tipoVehiculo}"
             }
             """.trimIndent()
 
             firebaseManager.saveData("users/$userId", userJson)
-
-            val vehicleJson = """
-            {
-                "driverId": $userId,
-                "plate": "${vehicle.plate}",
-                "model": "${vehicle.model}",
-                "color": "${vehicle.color}"
-            }
-            """.trimIndent()
-
-            firebaseManager.saveData("vehicles/$userId", vehicleJson)
+            val sanitizedEmail = user.email.replace(".", "_")
+            firebaseManager.saveData("users/$sanitizedEmail", userJson)
 
             userId
         } catch (e: Exception) {

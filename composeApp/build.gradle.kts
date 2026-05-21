@@ -178,6 +178,7 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.sentry.kmp)
 
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
         }
 
         commonTest.dependencies {

@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface ReservationHistoryRepository {
     suspend fun getReservations(userId: Int): List<ReservationItemModel>
     fun observeReservationsRealtime(parkingId: Int): Flow<List<ReservationItemModel>>
+    suspend fun markArrival(reservationId: Int)
 }

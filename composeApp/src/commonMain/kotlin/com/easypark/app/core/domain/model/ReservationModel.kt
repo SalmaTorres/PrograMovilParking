@@ -1,4 +1,5 @@
 import com.easypark.app.core.domain.model.PriceModel
+import kotlinx.datetime.Clock
 
 data class ReservationModel(
     val id: Int = 0,
@@ -32,5 +33,22 @@ data class ReservationModel(
         val diff = endTime - startTime
         val hours = diff / 3600000
         return if (hours <= 1) "1 hora" else "$hours horas"
+    }
+
+    fun getRemainingGracePeriodMillis(): Long {
+        val tenMinutesInMillis = 10 * 60 * 1000L
+        val expirationTime = startTime + tenMinutesInMillis
+        // Cambia la línea roja por esta:
+        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val remaining = expirationTime - now
+        return if (remaining >= 0) remaining else 0L
+    }
+
+    fun isGracePeriodExpired(): Boolean = getRemainingGracePeriodMillis() <= 0L
+
+    fun formatRemainingTime(millis: Long): String {
+        val seconds = (millis / 1000) % 60
+        val minutes = (millis / (1000 * 60)) % 60
+        return "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
     }
 }

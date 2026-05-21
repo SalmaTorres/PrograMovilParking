@@ -9,4 +9,5 @@ interface ReservationSummaryRepository {
     suspend fun checkInReservation(reservationId: Int, parkingId: Int, spaceId: Int)
     suspend fun checkOutReservation(reservationId: Int, parkingId: Int, spaceId: Int)
     suspend fun checkAndEvacuateExpiredReservations()
+    suspend fun checkAndCancelReservation(reservationId: Int, parkingId: Int, spaceId: Int)
 }

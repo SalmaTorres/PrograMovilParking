@@ -23,6 +23,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,14 +45,28 @@ import kotlinproject.composeapp.generated.resources.reservation_summary_entry_ti
 import kotlinproject.composeapp.generated.resources.reservation_summary_location
 import kotlinproject.composeapp.generated.resources.reservation_summary_payment
 import kotlinproject.composeapp.generated.resources.reservation_summary_space
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReservationItemCard(
     reservation: ReservationModel,
-    onCheckInClick: () -> Unit,
-    onCheckOutClick: () -> Unit
+    onCheckOutClick: () -> Unit,
+    onCancelReservation: () -> Unit
 ) {
+    var timeLeft by remember { mutableStateOf(reservation.getRemainingGracePeriodMillis()) }
+
+    if (reservation.status == "PENDIENTE") {
+        LaunchedEffect(key1 = timeLeft) {
+            if (timeLeft > 0) {
+                delay(1000L)
+                timeLeft = reservation.getRemainingGracePeriodMillis()
+            } else {
+                onCancelReservation()
+            }
+        }
+    }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         // Cabecera: Ubicación
         Card(
@@ -60,6 +79,29 @@ fun ReservationItemCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(reservation.parkingName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Text(reservation.address, color = ParkGray, fontSize = 14.sp)
+            }
+        }
+
+        // Sección de banner PENDIENTE con cronómetro
+        if (reservation.status == "PENDIENTE") {
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFEF3C7)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Reserva PENDIENTE",
+                        color = Color(0xFF92400E),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Tienes ${reservation.formatRemainingTime(timeLeft)} para llegar al parqueo o se cancelará automáticamente.",
+                        color = Color(0xFFB45309),
+                        fontSize = 14.sp
+                    )
+                }
             }
         }
 
@@ -123,27 +165,13 @@ fun ReservationItemCard(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Botones interactivos de Check-in y Check-out
-                if (reservation.arrivalTime == 0L) {
-                    androidx.compose.material3.Button(
-                        onClick = onCheckInClick,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF22C55E)
-                        )
-                    ) {
-                        Text("Registrar Llegada (Check-in)", color = Color.White, fontWeight = FontWeight.Bold)
-                    }
-                } else {
+                if (reservation.status == "OCUPADO") {
                     androidx.compose.material3.Button(
                         onClick = onCheckOutClick,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFEF4444)
-                        )
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color(0xFFEF4444))
                     ) {
-                        Text("Finalizar Estancia (Check-out)", color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("Finalizar Estancia (Check-out)", fontWeight = FontWeight.Bold)
                     }
                 }
             }

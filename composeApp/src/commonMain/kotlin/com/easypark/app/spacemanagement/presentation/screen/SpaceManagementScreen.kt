@@ -38,6 +38,7 @@ fun SpaceManagementScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var spotToRelease by remember { mutableStateOf<ParkingSpot?>(null) }
+    var spotToOccupy by remember { mutableStateOf<ParkingSpot?>(null) }
 
     if (spotToRelease != null) {
         AlertDialog(
@@ -60,6 +61,21 @@ fun SpaceManagementScreen(
                     Text("Cancelar")
                 }
             }
+        )
+    }
+
+    if (spotToOccupy != null) {
+        AlertDialog(
+            onDismissRequest = { spotToOccupy = null },
+            title = { Text("Ocupación Manual", fontWeight = FontWeight.Bold) },
+            text = { Text("¿Deseas marcar el espacio ${spotToOccupy?.number} como OCUPADO? (Cliente sin app)") },
+            confirmButton = {
+                Button(onClick = {
+                    spotToOccupy?.let { viewModel.occupySpot(it.id) }
+                    spotToOccupy = null
+                }) { Text("Confirmar") }
+            },
+            dismissButton = { TextButton(onClick = { spotToOccupy = null }) { Text("Cancelar") } }
         )
     }
 
@@ -132,8 +148,9 @@ fun SpaceManagementScreen(
                         ParkingSpotItem(
                             spot = spot,
                             onClick = {
-                                if (spot.state == "OCUPADO" || spot.state == "RESERVADO") {
-                                    spotToRelease = spot
+                                when (spot.state) {
+                                    "LIBRE" -> spotToOccupy = spot // Si está libre, lo ocupa
+                                    "OCUPADO", "RESERVADO" -> spotToRelease = spot // Si no, lo libera
                                 }
                             }
                         )

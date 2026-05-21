@@ -5,10 +5,7 @@ import com.easypark.app.bookingconfirmation.domain.model.BookingConfirmationMode
 data class BookingConfirmationUIState(
     val isLoading: Boolean = false,
     val bookingConfirmation: BookingConfirmationModel? = null,
-    val selectedPaymentMethod: PaymentMethod = PaymentMethod.CASH,
-    val vehiclePlate: String = "",
-    val vehicleType: String = "Automóvil",
-    val isPlateError: Boolean = false
+    val selectedPaymentMethod: PaymentMethod = PaymentMethod.CASH
 )
 
 enum class PaymentMethod {

@@ -29,16 +29,16 @@ class RegisterVehicleViewModel(
     fun onEvent(event: RegisterVehicleEvent) {
         when (event) {
 
-            is RegisterVehicleEvent.OnPlateChange -> _state.update {
-                it.copy(plate = event.plate, isPlateError = false)
+            is RegisterVehicleEvent.OnPlateChange -> {
+                if (event.plate.length <= 7) {
+                    _state.update {
+                        it.copy(plate = event.plate.uppercase(), isPlateError = false)
+                    }
+                }
             }
 
-            is RegisterVehicleEvent.OnModelChange -> _state.update {
-                it.copy(model = event.model, isModelError = false)
-            }
-
-            is RegisterVehicleEvent.OnColorChange -> _state.update {
-                it.copy(color = event.color, isColorError = false)
+            is RegisterVehicleEvent.OnTypeChange -> _state.update {
+                it.copy(type = event.type)
             }
 
             RegisterVehicleEvent.OnSubmitClick -> submit()
@@ -50,14 +50,12 @@ class RegisterVehicleViewModel(
         val s = _state.value
         val user = userFromStep1 ?: return
 
-        val hasError = s.plate.isEmpty() || s.model.isEmpty() || s.color.isEmpty()
+        val hasError = s.plate.isEmpty() || s.plate.length > 7
 
         if (hasError) {
             _state.update {
                 it.copy(
-                    isPlateError = it.plate.isEmpty(),
-                    isModelError = it.model.isEmpty(),
-                    isColorError = it.color.isEmpty()
+                    isPlateError = hasError
                 )
             }
             return
@@ -66,24 +64,20 @@ class RegisterVehicleViewModel(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            val vehicleModel = VehicleModel(
-                id = 0,
-                driverId = 0,
-                plate = s.plate,
-                model = s.model,
-                color = s.color
+            val user = userFromStep1 ?: return@launch
+            val finalUser = user.copy(
+                placaVehiculo = s.plate,
+                tipoVehiculo = s.type.displayName
             )
 
-            val user = userFromStep1 ?: return@launch
-
-            val registeredUserId = useCase(user, vehicleModel)
+            val registeredUserId = useCase(finalUser)
 
             _state.update { it.copy(isLoading = false) }
 
             if (registeredUserId != null) {
-                val finalUser = user.copy(id = registeredUserId)
+                val userToSave = finalUser.copy(id = registeredUserId)
 
-                sessionManager.saveSession(finalUser, null)
+                sessionManager.saveSession(userToSave, null)
 
                 emit(RegisterVehicleEffect.NavigateNext)
             } else {

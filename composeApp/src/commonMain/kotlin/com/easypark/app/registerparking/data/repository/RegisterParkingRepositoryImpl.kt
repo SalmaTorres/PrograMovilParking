@@ -77,10 +77,14 @@ class RegisterParkingRepositoryImpl (
             "name": "${user.name}",
             "email": "${user.email}",
             "cellphone": "${user.cellphone}",
-            "type": "OWNER"
+            "type": "OWNER",
+            "placaVehiculo": "",
+            "tipoVehiculo": ""
         }
     """.trimIndent()
         firebaseManager.saveData("users/$userId", userJson)
+        val sanitizedEmail = user.email.replace(".", "_")
+        firebaseManager.saveData("users/$sanitizedEmail", userJson)
 
         return userId to parkingId
     }

@@ -71,4 +71,16 @@ class SpaceManagementViewModel(
             }
         }
     }
+
+    fun occupySpot(spaceId: Int) {
+        val myParkingId = sessionManager.currentParkingId ?: return
+        viewModelScope.launch {
+            try {
+                // Llama al repositorio para marcar como ocupado manualmente
+                repository.occupyParkingSpot(myParkingId, spaceId)
+            } catch (e: Exception) {
+                println("Error al ocupar espacio: ${e.message}")
+            }
+        }
+    }
 }

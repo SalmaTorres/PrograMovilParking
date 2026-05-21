@@ -4,6 +4,7 @@ class VehicleModel (
     val id: Int,
     val driverId: Int,
     val plate: String,
+    val type: String,
     val model: String,
     val color: String,
 )

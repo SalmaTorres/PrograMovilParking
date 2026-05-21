@@ -30,7 +30,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ReservationCard(
     reservation: ReservationItemModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCheckInClick: () -> Unit = {}
 ) {
     val statusColor = when (reservation.status) {
         ReservationStatus.ACTIVE -> ParkSuccess
@@ -87,6 +88,20 @@ fun ReservationCard(
                     color = ParkGray,
                     fontSize = 14.sp
                 )
+            }
+
+            if (reservation.status == ReservationStatus.ACTIVE && reservation.timeLeftText == "Pendiente") {
+                Spacer(modifier = Modifier.height(12.dp))
+                androidx.compose.material3.Button(
+                    onClick = onCheckInClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                        containerColor = ParkSuccess
+                    )
+                ) {
+                    Text("Marcar Llegada", color = Color.White, fontWeight = FontWeight.Bold)
+                }
             }
         }
     }

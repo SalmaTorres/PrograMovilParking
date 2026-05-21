@@ -48,6 +48,18 @@ class ReservationHistoryViewModel(
         applyFilters()
     }
 
+    fun onEvent(event: ReservationHistoryEvent) {
+        when (event) {
+            is ReservationHistoryEvent.OnCheckInClick -> markArrival(event.reservationId)
+        }
+    }
+
+    private fun markArrival(reservationId: Int) {
+        viewModelScope.launch {
+            repository.markArrival(reservationId)
+        }
+    }
+
     fun onTabSelected(index: Int) {
         _state.update { it.copy(selectedTab = index) }
         applyFilters()

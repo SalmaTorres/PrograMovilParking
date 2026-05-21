@@ -33,7 +33,7 @@ import kotlinx.coroutines.IO
         NotificationEntity::class,
         ReviewEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @ConstructedBy(AppDatabaseConstructor::class)
