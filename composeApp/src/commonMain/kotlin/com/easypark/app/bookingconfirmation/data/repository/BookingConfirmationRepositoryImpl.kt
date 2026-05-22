@@ -11,9 +11,9 @@ import com.easypark.app.core.data.remote.FirebaseManager
 import com.easypark.app.notifications.data.datasource.NotificationLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.json.Json
-import kotlin.time.Clock
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.Clock
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 
 class BookingConfirmationRepositoryImpl(

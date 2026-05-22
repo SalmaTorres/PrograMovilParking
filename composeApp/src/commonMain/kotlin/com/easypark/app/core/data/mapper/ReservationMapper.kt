@@ -4,7 +4,7 @@ import ReservationModel
 import com.easypark.app.core.data.dto.ReservationDTO
 import com.easypark.app.core.data.entity.ReservationEntity
 import com.easypark.app.core.domain.model.PriceModel
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 
 fun ReservationModel.toEntity(driverId: Int) = ReservationEntity(
     driverId = driverId,

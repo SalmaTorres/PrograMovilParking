@@ -96,7 +96,7 @@ class ReservationHistoryRepositoryImpl(
     }
 
     override suspend fun markArrival(reservationId: Int) {
-        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val now = Clock.System.now().toEpochMilliseconds()
 
         // 1. Obtener la reserva actual para conocer el parkingId y spaceId
         val resJson = firebaseManager.observeData("reservations/$reservationId").firstOrNull()

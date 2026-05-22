@@ -49,7 +49,7 @@ data class ReservationModel(
         val tenMinutesInMillis = 10 * 60 * 1000L
         val expirationTime = startTime + tenMinutesInMillis
         // Cambia la línea roja por esta:
-        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val now = Clock.System.now().toEpochMilliseconds()
         val remaining = expirationTime - now
         return if (remaining >= 0) remaining else 0L
     }
