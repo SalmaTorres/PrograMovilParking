@@ -6,6 +6,7 @@ import com.easypark.app.core.domain.model.status.ReservationStatus
 import com.easypark.app.core.domain.session.SessionManager
 import com.easypark.app.reservationhistory.domain.repository.ReservationHistoryRepository
 import com.easypark.app.reservationhistory.domain.usecase.GetReservationHistoryUseCase
+import com.easypark.app.reservationhistory.presentation.state.ReservationHistoryEvent
 import com.easypark.app.reservationhistory.presentation.state.ReservationHistoryUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,21 +66,24 @@ class ReservationHistoryViewModel(
         applyFilters()
     }
 
+    // Busca la función applyFilters y cámbiala así:
     private fun applyFilters() {
         _state.update { currentState ->
             val filtered = currentState.reservations.filter { reservation ->
                 val matchesTab = if (currentState.selectedTab == 0) {
-                    reservation.status == ReservationStatus.ACTIVE ||
-                    reservation.status == ReservationStatus.ENDING_SOON
+                    // AQUÍ: Debe incluir OCUPADO y ACTIVE
+                    reservation.status == ReservationStatus.PENDIENTE ||
+                            reservation.status == ReservationStatus.OCUPADO ||
+                            reservation.status == ReservationStatus.ACTIVE ||
+                            reservation.status == ReservationStatus.ENDING_SOON
                 } else {
-                    reservation.status == ReservationStatus.FINISHED
+                    reservation.status == ReservationStatus.FINISHED ||
+                            reservation.status == ReservationStatus.CANCELADO
                 }
-                val matchesSearch = if (currentState.searchQuery.isBlank()) {
-                    true
-                } else {
-                    reservation.clientName.contains(currentState.searchQuery, ignoreCase = true)
-                }
-                
+
+                val matchesSearch = currentState.searchQuery.isBlank() ||
+                        reservation.clientName.contains(currentState.searchQuery, ignoreCase = true)
+
                 matchesTab && matchesSearch
             }
             currentState.copy(filteredReservations = filtered)

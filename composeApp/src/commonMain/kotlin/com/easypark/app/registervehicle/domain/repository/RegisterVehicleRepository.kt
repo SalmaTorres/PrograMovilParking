@@ -4,5 +4,6 @@ import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.registervehicle.domain.model.VehicleModel
 
 interface RegisterVehicleRepository {
-    suspend fun completeDriverRegistration(user: UserModel): Int?
+    suspend fun completeDriverRegistration(user: UserModel, vehicle: VehicleModel): Int?
+    suspend fun getVehicleByDriverId(driverId: Int): VehicleModel?
 }

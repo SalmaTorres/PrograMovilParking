@@ -48,9 +48,14 @@ class ReservationSummaryRepositoryImpl(
                 dtoList
                     .filter { it.driverId == userId }
                     .map { it.toDomain() }
-                    .filter { it.status == "ACTIVE" }
+                    .filter { res ->
+                        // CAMBIO AQUÍ: Aceptar todos los estados de una reserva "viva"
+                        res.status == "PENDIENTE" ||
+                                res.status == "OCUPADO" ||
+                                res.status == "ACTIVE" ||
+                                res.status == "RESERVADO"
+                    }
             } catch (e: Exception) {
-                io.sentry.kotlin.multiplatform.Sentry.captureException(e)
                 emptyList()
             }
         }

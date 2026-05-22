@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.core.domain.session.SessionManager
-import com.easypark.app.registervehicle.domain.model.VehicleModel
+import com.easypark.app.registervehicle.domain.model.VehicleModel // Importamos el nuevo modelo
 import com.easypark.app.registervehicle.domain.usecase.RegisterVehicleUseCase
 import com.easypark.app.registervehicle.presentation.state.*
 import kotlinx.coroutines.flow.*
@@ -28,7 +28,6 @@ class RegisterVehicleViewModel(
 
     fun onEvent(event: RegisterVehicleEvent) {
         when (event) {
-
             is RegisterVehicleEvent.OnPlateChange -> {
                 if (event.plate.length <= 7) {
                     _state.update {
@@ -36,11 +35,9 @@ class RegisterVehicleViewModel(
                     }
                 }
             }
-
             is RegisterVehicleEvent.OnTypeChange -> _state.update {
                 it.copy(type = event.type)
             }
-
             RegisterVehicleEvent.OnSubmitClick -> submit()
             RegisterVehicleEvent.OnBackClick -> emit(RegisterVehicleEffect.NavigateBack)
         }
@@ -50,33 +47,38 @@ class RegisterVehicleViewModel(
         val s = _state.value
         val user = userFromStep1 ?: return
 
+        // Validación básica
         val hasError = s.plate.isEmpty() || s.plate.length > 7
-
         if (hasError) {
-            _state.update {
-                it.copy(
-                    isPlateError = hasError
-                )
-            }
+            _state.update { it.copy(isPlateError = hasError) }
             return
         }
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            val user = userFromStep1 ?: return@launch
-            val finalUser = user.copy(
-                placaVehiculo = s.plate,
-                tipoVehiculo = s.type.displayName
+            // 1. CREAMOS EL MODELO DEL VEHÍCULO
+            // Nota: driverId es 0 porque el Repositorio lo asignará
+            // cuando genere el ID del usuario en Room/Firebase.
+            val finalVehicle = VehicleModel(
+                id = 0,
+                driverId = 0,
+                plate = s.plate,
+                type = s.type.displayName,
+                model = "", // Puedes añadir estos campos al UIState luego si quieres
+                color = ""
             )
 
-            val registeredUserId = useCase(finalUser)
+            // 2. ENVIAMOS AMBOS AL USE CASE (Soluciona tu error de la imagen)
+            val registeredUserId = useCase(user, finalVehicle)
 
             _state.update { it.copy(isLoading = false) }
 
             if (registeredUserId != null) {
-                val userToSave = finalUser.copy(id = registeredUserId)
+                // Actualizamos el ID del usuario localmente para la sesión
+                val userToSave = user.copy(id = registeredUserId)
 
+                // Guardamos la sesión y el vehículo en el SessionManager
                 sessionManager.saveSession(userToSave, null)
 
                 emit(RegisterVehicleEffect.NavigateNext)

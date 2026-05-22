@@ -29,6 +29,7 @@ class EarningsViewModel(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
+            // Esta es la fuente de verdad: el nodo summary en Firebase
             repository.observeEarningsRealtime(parkingId).collect { liveSummary ->
                 _state.update { it.copy(
                     isLoading = false,
@@ -40,26 +41,7 @@ class EarningsViewModel(
 
         viewModelScope.launch {
             repository.observeTransactionsRealtime(parkingId).collect { liveTransactions ->
-                _state.update { currentState ->
-                    val totalToday = liveTransactions
-                        .filter { it.date.contains("Hace") || it.date.contains("segundos") || it.date.contains("min") || it.date.contains("h") } // Simplistic today filter
-                        .sumOf { it.amount }
-
-                    val updatedSummary = currentState.summary?.copy(totalEarnings = totalToday) ?: com.easypark.app.earnings.domain.model.EarningsSummaryModel(
-                        totalEarnings = totalToday,
-                        percentageChange = 0.0,
-                        activeReservations = 0,
-                        reservationChange = 0,
-                        occupiedSpaces = 0,
-                        totalSpaces = 0,
-                        isCapacityLimited = false
-                    )
-
-                    currentState.copy(
-                        transactions = liveTransactions,
-                        summary = updatedSummary
-                    )
-                }
+                _state.update { it.copy(transactions = liveTransactions) }
             }
         }
     }

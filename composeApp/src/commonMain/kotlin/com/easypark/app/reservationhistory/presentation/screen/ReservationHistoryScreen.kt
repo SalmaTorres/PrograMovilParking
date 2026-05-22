@@ -77,6 +77,7 @@ fun ReservationHistoryScreen(
         if (state.isLoading) {
             ParkLoading()
         } else {
+            Text("Total reservas en estado: ${state.filteredReservations.size}", color = Color.Red)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -85,11 +86,20 @@ fun ReservationHistoryScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Sección Activas: Si hay reservas que terminan pronto, mostrar el separador
-                val endingSoon = state.filteredReservations.filter { it.status == ReservationStatus.ENDING_SOON }
-                val normallyActive = state.filteredReservations.filter { it.status == ReservationStatus.ACTIVE }
-                
+                val normallyActive = state.filteredReservations.filter {
+                    it.status == ReservationStatus.ACTIVE ||
+                            it.status == ReservationStatus.PENDIENTE ||
+                            it.status == ReservationStatus.OCUPADO || // <--- ESTA ES LA CLAVE
+                            it.status == ReservationStatus.ENDING_SOON
+                }
+
+                val endingSoon = state.filteredReservations.filter {
+                    it.status == ReservationStatus.ENDING_SOON
+                }
+
                 item { Spacer(modifier = Modifier.height(8.dp)) }
 
+                // Ahora esta lista incluirá las PENDIENTE y las ACTIVE
                 items(normallyActive) { reservation ->
                     ReservationCard(
                         reservation = reservation,

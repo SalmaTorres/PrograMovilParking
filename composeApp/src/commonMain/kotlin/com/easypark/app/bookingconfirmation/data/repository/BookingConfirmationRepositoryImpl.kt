@@ -128,13 +128,11 @@ class BookingConfirmationRepositoryImpl(
                         
                         val newEarnings = currentEarnings + reservationPrice
                         val newReservations = currentReservations + 1
-                        val newOccupied = currentOccupied + 1
                         
                         val newSummaryJson = """
                         {
                             "totalEarnings": $newEarnings,
                             "activeReservations": $newReservations,
-                            "occupiedSpaces": $newOccupied,
                             "totalSpaces": ${element["totalSpaces"]?.toString() ?: "0"},
                             "pricePerHour": ${element["pricePerHour"]?.toString() ?: "{}"}
                         }

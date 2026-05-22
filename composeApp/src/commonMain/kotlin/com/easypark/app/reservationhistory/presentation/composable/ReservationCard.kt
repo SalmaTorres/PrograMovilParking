@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,17 +34,22 @@ fun ReservationCard(
     modifier: Modifier = Modifier,
     onCheckInClick: () -> Unit = {}
 ) {
+    // 1. Definición de colores por estado
     val statusColor = when (reservation.status) {
-        ReservationStatus.ACTIVE -> ParkSuccess
-        ReservationStatus.ENDING_SOON -> Color(0xFFF57C00) // Orange
+        ReservationStatus.OCUPADO, ReservationStatus.ACTIVE -> ParkSuccess
+        ReservationStatus.PENDIENTE -> Color(0xFFFBC02D) // Amarillo/Naranja para espera
+        ReservationStatus.ENDING_SOON -> Color(0xFFF57C00) // Naranja fuerte
         ReservationStatus.FINISHED -> ParkGray
+        ReservationStatus.CANCELADO -> Color(0xFFD32F2F) // Rojo
     }
 
+    // 2. Definición de texto por estado
     val statusText = when (reservation.status) {
-        ReservationStatus.ACTIVE -> stringResource(Res.string.status_active)
-        ReservationStatus.ENDING_SOON -> reservation.timeLeftText?.uppercase()
-            ?: stringResource(Res.string.history_status_ending_soon)
+        ReservationStatus.OCUPADO, ReservationStatus.ACTIVE -> stringResource(Res.string.status_active)
+        ReservationStatus.PENDIENTE -> "PENDIENTE"
+        ReservationStatus.ENDING_SOON -> reservation.timeLeftText?.uppercase() ?: "TERMINA PRONTO"
         ReservationStatus.FINISHED -> stringResource(Res.string.status_finished)
+        ReservationStatus.CANCELADO -> "CANCELADO"
     }
 
     Surface(
@@ -53,6 +59,7 @@ fun ReservationCard(
         shadowElevation = 0.5.dp
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
+            // Fila de Estado
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
@@ -68,6 +75,7 @@ fun ReservationCard(
                 )
             }
 
+            // Nombre del Cliente
             Text(
                 text = reservation.clientName,
                 fontSize = 20.sp,
@@ -76,21 +84,32 @@ fun ReservationCard(
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
+            // DATOS DEL VEHÍCULO (Realismo para el Dueño)
+            if (!reservation.vehiclePlate.isNullOrEmpty()) {
+                Text(
+                    text = "${reservation.vehiclePlate} • ${reservation.vehicleType}",
+                    color = ParkBlue,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
+
+            // Espacio y Horario
             Text(
                 text = stringResource(Res.string.label_spaces, reservation.spaceLabel),
                 color = ParkGray,
                 fontSize = 14.sp
             )
-            
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "🕒 ${reservation.startTime} - ${reservation.endTime}",
-                    color = ParkGray,
-                    fontSize = 14.sp
-                )
-            }
 
-            if (reservation.status == ReservationStatus.ACTIVE && reservation.timeLeftText == "Pendiente") {
+            Text(
+                text = "${reservation.startTime} - ${reservation.endTime}",
+                color = ParkGray,
+                fontSize = 14.sp
+            )
+
+            // LÓGICA DEL BOTÓN: Solo aparece si está PENDIENTE
+            if (reservation.status == ReservationStatus.PENDIENTE) {
                 Spacer(modifier = Modifier.height(12.dp))
                 androidx.compose.material3.Button(
                     onClick = onCheckInClick,
@@ -100,7 +119,7 @@ fun ReservationCard(
                         containerColor = ParkSuccess
                     )
                 ) {
-                    Text("Marcar Llegada", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Marcar Llegada (Check-in)", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
         }

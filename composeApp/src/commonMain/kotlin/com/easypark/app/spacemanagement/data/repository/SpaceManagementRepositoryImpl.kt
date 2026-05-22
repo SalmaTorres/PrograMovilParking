@@ -15,6 +15,9 @@ import kotlinx.serialization.json.decodeFromJsonElement
 import kotlin.collections.emptyList
 import kotlin.collections.sortedBy
 import kotlin.time.Clock
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.intOrNull
 
 class SpaceManagementRepositoryImpl(
     private val spaceDS: SpaceLocalDataSource,
@@ -142,9 +145,20 @@ class SpaceManagementRepositoryImpl(
 
     override suspend fun occupyParkingSpot(parkingId: Int, spaceId: Int) {
         val now = Clock.System.now().toEpochMilliseconds()
-        // Marcamos el espacio como ocupado manualmente
+        // 1. Ocupar el espacio
         firebaseManager.saveData("spaces/$parkingId/s$spaceId/state", "\"OCUPADO\"")
-        // Opcional: guardar que fue manual para que el checkout sepa cobrar
-        firebaseManager.saveData("spaces/$parkingId/s$spaceId/arrivalTime", now.toString())
+
+        // 2. ACTUALIZAR EL SUMMARY (Para que Earnings cambie)
+        val summaryJson = firebaseManager.observeData("parkings/$parkingId/summary").firstOrNull()
+        if (summaryJson != null) {
+            // 1. Convertimos a JsonObject primero
+            val element = jsonConfig.parseToJsonElement(summaryJson as String).jsonObject
+
+            // 2. Ahora sí podemos usar jsonPrimitive e intOrNull
+            val currentOccupied = element["occupiedSpaces"]?.jsonPrimitive?.intOrNull ?: 0
+
+            // 3. Guardamos el nuevo valor (+1)
+            firebaseManager.saveData("parkings/$parkingId/summary/occupiedSpaces", (currentOccupied + 1).toString())
+        }
     }
 }

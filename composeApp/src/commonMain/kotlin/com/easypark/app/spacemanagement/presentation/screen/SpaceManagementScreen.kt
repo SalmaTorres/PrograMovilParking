@@ -88,7 +88,7 @@ fun SpaceManagementScreen(
                 },
                 onLogoutClick = {
                     viewModel.sessionManager.clearSession()
-                    navController.navigate(com.easypark.app.navigation.NavRoute.SignIn) {
+                    navController.navigate(NavRoute.SignIn) {
                         popUpTo(0) { inclusive = true }
                     }
                 }

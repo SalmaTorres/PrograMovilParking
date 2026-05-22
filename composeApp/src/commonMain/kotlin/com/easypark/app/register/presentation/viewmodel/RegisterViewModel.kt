@@ -46,7 +46,7 @@ class RegisterViewModel(
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         val isEmailValid = s.email.matches(emailPattern.toRegex())
         val isPasswordValid = s.password.length >= 6
-        val isPhoneValid = s.phone.length == 9 && s.phone.all { it.isDigit() }
+        val isPhoneValid = s.phone.length == 8 && s.phone.all { it.isDigit() }
 
         val hasError = s.name.isEmpty() || !isEmailValid || !isPhoneValid || !isPasswordValid
 
@@ -58,7 +58,7 @@ class RegisterViewModel(
                 isPasswordError = !isPasswordValid
             )}
 
-            val errorMsg = if(!isEmailValid) "Email inválido" else if(!isPhoneValid) "El teléfono debe tener 9 dígitos" else "La contraseña debe tener 6+ caracteres"
+            val errorMsg = if(!isEmailValid) "Email inválido" else if(!isPhoneValid) "El teléfono debe tener 8 dígitos" else "La contraseña debe tener 6+ caracteres"
             emit(RegisterEffect.ShowError(errorMsg))
             return
         }

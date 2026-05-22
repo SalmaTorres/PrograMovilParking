@@ -22,9 +22,7 @@ class RegisterRepositoryImpl(
             name = user.name,
             email = user.email,
             cellphone = user.cellphone,
-            type = user.type.name,
-            placaVehiculo = user.placaVehiculo,
-            tipoVehiculo = user.tipoVehiculo
+            type = user.type.name
         )
         val json = Json.encodeToString(userDto)
         firebaseManager.saveData("users/${user.id}", json)

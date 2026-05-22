@@ -37,9 +37,20 @@ fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber:
 )
 
 fun ReservationDTO.toDomain(): ReservationModel {
-    val currentTime = Clock.System.now().toEpochMilliseconds()
+    // Usar la zona horaria del sistema para comparar correctamente
+    val now = Clock.System.now()
+    val currentTime = now.toEpochMilliseconds()
     val finalEndTime = endTime ?: 0L
-    val finalStatus = if (finalEndTime > 0L && currentTime > finalEndTime) "FINISHED" else (status ?: "ACTIVE")
+
+    val rawStatus = status ?: "PENDIENTE"
+
+    // Solo finalizar automáticamente si NO es PENDIENTE.
+    // Una reserva pendiente no puede "terminar" si ni siquiera ha empezado (Check-in).
+    val finalStatus = if (rawStatus != "PENDIENTE" && finalEndTime > 0L && currentTime > finalEndTime) {
+        "FINISHED"
+    } else {
+        rawStatus
+    }
 
     return ReservationModel(
         id = id ?: 0,

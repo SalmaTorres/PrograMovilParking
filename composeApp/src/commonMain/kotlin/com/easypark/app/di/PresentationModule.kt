@@ -40,6 +40,7 @@ val presentationModule = module {
             getBookingInfoUseCase = get(),
             confirmReservationUseCase = get(),
             repository = get(),
+            vehicleRepository = get(),
             sessionManager = get()
         )
     }
