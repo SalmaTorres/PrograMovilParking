@@ -66,8 +66,17 @@ fun ReservationSummaryScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(state.reservations) { reservation ->
-                        ReservationItemCard(reservation = reservation)
+                    items(items = state.reservations) { reservation ->
+                        ReservationItemCard(
+                            reservation = reservation,
+                            onCheckOutClick = {
+                                viewModel.checkOut(reservation.id, reservation.parkingId, reservation.spaceId)
+                            },
+                            // AGREGAMOS ESTA LÍNEA PARA EL CRONÓMETRO:
+                            onCancelReservation = {
+                                viewModel.autoCancelReservation(reservation.id, reservation.parkingId, reservation.spaceId)
+                            }
+                        )
                     }
                 }
             } else {

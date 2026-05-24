@@ -1,4 +1,5 @@
 package com.easypark.app.reservationhistory.presentation.state
 
-interface ReservationHistoryEvent {
+sealed interface ReservationHistoryEvent {
+    data class OnCheckInClick(val reservationId: Int) : ReservationHistoryEvent
 }

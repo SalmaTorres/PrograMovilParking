@@ -29,12 +29,19 @@ class EarningsViewModel(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
+            // Esta es la fuente de verdad: el nodo summary en Firebase
             repository.observeEarningsRealtime(parkingId).collect { liveSummary ->
                 _state.update { it.copy(
                     isLoading = false,
                     summary = liveSummary ?: it.summary,
                     parkingName = sessionManager.currentUser.value?.name ?: "Mi Parqueo"
                 )}
+            }
+        }
+
+        viewModelScope.launch {
+            repository.observeTransactionsRealtime(parkingId).collect { liveTransactions ->
+                _state.update { it.copy(transactions = liveTransactions) }
             }
         }
     }

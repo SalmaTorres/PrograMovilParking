@@ -6,4 +6,5 @@ import com.easypark.app.core.data.entity.VehicleEntity
 interface RegisterVehicleLocalDataSource {
     suspend fun saveUser(entity: UserEntity): Int
     suspend fun saveVehicle(entity: VehicleEntity)
+    suspend fun getVehicleByDriver(driverId: Int): VehicleEntity?
 }

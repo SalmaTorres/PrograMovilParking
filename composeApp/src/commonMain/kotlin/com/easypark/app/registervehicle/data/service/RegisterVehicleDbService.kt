@@ -8,4 +8,5 @@ import com.easypark.app.registervehicle.data.datasource.RegisterVehicleLocalData
 class RegisterVehicleDbService(private val dao: RegisterVehicleDao) : RegisterVehicleLocalDataSource {
     override suspend fun saveUser(entity: UserEntity): Int = dao.insertUser(entity).toInt()
     override suspend fun saveVehicle(entity: VehicleEntity) = dao.insertVehicle(entity)
+    override suspend fun getVehicleByDriver(driverId: Int): VehicleEntity? = dao.getVehicleByDriver(driverId)
 }

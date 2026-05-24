@@ -19,7 +19,7 @@ fun UserEntity.toModel() =  UserModel(
     email = email,
     cellphone = cellphone.toIntOrNull() ?: 0,
     password = password,
-    type = UserType.valueOf(type)
+    type = try { UserType.valueOf(type) } catch (e: Exception) { UserType.DRIVER }
 )
 
 fun UserDTO.toDomain() = UserModel(

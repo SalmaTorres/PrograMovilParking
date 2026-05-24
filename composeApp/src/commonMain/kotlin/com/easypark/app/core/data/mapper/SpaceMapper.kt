@@ -28,5 +28,6 @@ fun SpaceDTO.toDomain() = SpaceModel(
 fun SpaceDTO.toParkingSpot() = ParkingSpot(
     id = this.id ?: 0,
     number = this.number ?: 0,
-    isOccupied = this.state == "OCUPADO"
+    isOccupied = this.state == "OCUPADO" || this.state == "RESERVADO",
+    state = this.state ?: "LIBRE"
 )

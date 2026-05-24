@@ -33,7 +33,7 @@ import kotlinx.coroutines.IO
         NotificationEntity::class,
         ReviewEntity::class
     ],
-    version = 1,
+    version = 3,
     exportSchema = true
 )
 @ConstructedBy(AppDatabaseConstructor::class)
@@ -66,6 +66,7 @@ fun createDatabase(
     driver: SQLiteDriver = BundledSQLiteDriver()
 ): AppDatabase {
     return builder
+        .fallbackToDestructiveMigration(true)
         .setDriver(driver)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()

@@ -4,7 +4,7 @@ import ReservationModel
 import com.easypark.app.core.data.dto.ReservationDTO
 import com.easypark.app.core.data.entity.ReservationEntity
 import com.easypark.app.core.domain.model.PriceModel
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 
 fun ReservationModel.toEntity(driverId: Int) = ReservationEntity(
     driverId = driverId,
@@ -14,9 +14,12 @@ fun ReservationModel.toEntity(driverId: Int) = ReservationEntity(
     totalPrice = totalPrice.amount,
     state = status,
     methodPay = paymentMethod,
+    vehiclePlate = vehiclePlate,
+    vehicleType = vehicleType,
+    arrivalTime = arrivalTime
 )
 
-fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber: Int) = ReservationModel(
+fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber: Int, parkingId: Int) = ReservationModel(
     id = this.id,
     spaceId = this.spaceId,
     spaceNumber = spaceNumber,
@@ -26,13 +29,28 @@ fun ReservationEntity.toModel(parkingName: String, address: String, spaceNumber:
     endTime = this.finalHour,
     totalPrice = PriceModel(amount = this.totalPrice),
     status = this.state,
-    paymentMethod = this.methodPay
+    paymentMethod = this.methodPay,
+    vehiclePlate = this.vehiclePlate,
+    vehicleType = this.vehicleType,
+    arrivalTime = this.arrivalTime,
+    parkingId = parkingId
 )
 
 fun ReservationDTO.toDomain(): ReservationModel {
-    val currentTime = Clock.System.now().toEpochMilliseconds()
+    // Usar la zona horaria del sistema para comparar correctamente
+    val now = Clock.System.now()
+    val currentTime = now.toEpochMilliseconds()
     val finalEndTime = endTime ?: 0L
-    val finalStatus = if (finalEndTime > 0L && currentTime > finalEndTime) "FINISHED" else (status ?: "ACTIVE")
+
+    val rawStatus = status ?: "PENDIENTE"
+
+    // Solo finalizar automáticamente si NO es PENDIENTE.
+    // Una reserva pendiente no puede "terminar" si ni siquiera ha empezado (Check-in).
+    val finalStatus = if (rawStatus != "PENDIENTE" && finalEndTime > 0L && currentTime > finalEndTime) {
+        "FINISHED"
+    } else {
+        rawStatus
+    }
 
     return ReservationModel(
         id = id ?: 0,
@@ -44,6 +62,10 @@ fun ReservationDTO.toDomain(): ReservationModel {
         endTime = finalEndTime,
         totalPrice = totalPrice?.toDomain() ?: PriceModel(0.0),
         paymentMethod = paymentMethod ?: "CASH",
-        status = finalStatus
+        status = finalStatus,
+        vehiclePlate = vehiclePlate ?: "",
+        vehicleType = vehicleType ?: "",
+        arrivalTime = arrivalTime ?: 0L,
+        parkingId = parkingId ?: 0
     )
 }

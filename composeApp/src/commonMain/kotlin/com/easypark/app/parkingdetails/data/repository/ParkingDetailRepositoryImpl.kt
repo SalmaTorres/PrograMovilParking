@@ -11,8 +11,8 @@ import com.easypark.app.parkingdetails.domain.repository.ParkingDetailsRepositor
 import com.easypark.app.registerparking.data.dto.ParkingDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
-import kotlin.time.Clock
 
 class ParkingDetailRepositoryImpl(
     private val localDS: ParkingDetailsLocalDataSource,

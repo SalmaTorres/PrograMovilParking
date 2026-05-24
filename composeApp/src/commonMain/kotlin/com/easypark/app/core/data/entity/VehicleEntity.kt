@@ -12,6 +12,9 @@ data class VehicleEntity(
     @ColumnInfo(name = "plate")
     val plate: String,
 
+    @ColumnInfo(name = "type")
+    val type: String,
+
     @ColumnInfo(name = "model")
     val model: String,
 

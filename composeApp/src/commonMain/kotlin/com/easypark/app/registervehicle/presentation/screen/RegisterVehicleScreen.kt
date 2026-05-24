@@ -23,6 +23,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlinproject.composeapp.generated.resources.*
 import org.koin.compose.viewmodel.koinViewModel
+import com.easypark.app.core.domain.model.status.VehicleType
 
 @Composable
 fun RegisterVehicleScreen(
@@ -119,21 +120,32 @@ fun RegisterVehicleScreen(
                 isError = state.isPlateError
             )
 
-            ParkTextField(
-                value = state.model,
-                onValueChange = { viewModel.onEvent(RegisterVehicleEvent.OnModelChange(it)) },
-                label = stringResource(Res.string.label_model),
-                placeholder = stringResource(Res.string.vehicle_model_hint),
-                isError = state.isModelError
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Tipo de Vehículo",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                color = ParkTextDark
             )
+            Spacer(modifier = Modifier.height(8.dp))
 
-            ParkTextField(
-                value = state.color,
-                onValueChange = { viewModel.onEvent(RegisterVehicleEvent.OnColorChange(it)) },
-                label = stringResource(Res.string.label_color),
-                placeholder = stringResource(Res.string.vehicle_color_hint),
-                isError = state.isColorError
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                VehicleType.entries.filter { it != VehicleType.NINGUNO }.forEach { type ->
+                    FilterChip(
+                        selected = state.type == type,
+                        onClick = { viewModel.onEvent(RegisterVehicleEvent.OnTypeChange(type)) },
+                        label = { Text(type.displayName) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

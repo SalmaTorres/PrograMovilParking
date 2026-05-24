@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,12 +31,20 @@ import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import com.easypark.app.notifications.domain.model.NotificationModel
+
 @Composable
 fun NotificationsScreen(
     navController: NavHostController,
     viewModel: NotificationsViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    var selectedNotification by remember { mutableStateOf<NotificationModel?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -43,6 +52,25 @@ fun NotificationsScreen(
                 NotificationsEffect.NavigateBack -> navController.popBackStack()
             }
         }
+    }
+
+    if (selectedNotification != null) {
+        AlertDialog(
+            onDismissRequest = { selectedNotification = null },
+            title = { Text(text = selectedNotification?.title ?: "", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+            text = {
+                Column {
+                    Text(text = selectedNotification?.description ?: "", fontSize = 14.sp)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(text = "Recibido: ${selectedNotification?.time}", color = ParkGray, fontSize = 12.sp)
+                }
+            },
+            confirmButton = {
+                Button(onClick = { selectedNotification = null }) {
+                    Text("Cerrar")
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -75,7 +103,7 @@ fun NotificationsScreen(
                         val notification = state.list[index]
                         NotificationItem(
                             notification = notification,
-                            onClick = { /* Acción al hacer click */ }
+                            onClick = { selectedNotification = notification }
                         )
                         HorizontalDivider(
                             modifier = Modifier.padding(horizontal = 16.dp),

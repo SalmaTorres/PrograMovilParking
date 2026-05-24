@@ -9,5 +9,7 @@ data class ReservationItemModel(
     val startTime: String,
     val endTime: String,
     val status: ReservationStatus,
-    val timeLeftText: String? = null
+    val timeLeftText: String? = null,
+    val vehiclePlate: String? = null,
+    val vehicleType: String? = null
 )

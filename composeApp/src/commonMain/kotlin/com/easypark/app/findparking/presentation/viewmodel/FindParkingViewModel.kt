@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FindParkingViewModel(
-    private val repository: FindParkingRepository
+    private val repository: FindParkingRepository,
+    private val evacuateUseCase: com.easypark.app.reservationsummary.domain.usecase.GetReservationSummaryUseCase,
+    val sessionManager: com.easypark.app.core.domain.session.SessionManager
 ) : ViewModel() {
     private val _state = MutableStateFlow(FindParkingUIState())
     val state = _state.asStateFlow()
@@ -25,6 +27,17 @@ class FindParkingViewModel(
 
     init {
         startRealtimeTracking()
+        runAutoEvacuation()
+    }
+
+    private fun runAutoEvacuation() {
+        viewModelScope.launch {
+            try {
+                evacuateUseCase.evacuate()
+            } catch (e: Exception) {
+                println("EVACUATION_ERROR: ${e.message}")
+            }
+        }
     }
 
     fun onEvent(event: FindParkingEvent) {

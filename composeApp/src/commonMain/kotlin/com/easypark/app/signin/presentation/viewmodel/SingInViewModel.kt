@@ -31,11 +31,20 @@ class SignInViewModel(
 
     private fun login() {
         val currentState = _state.value
-        if (currentState.email.isEmpty() || currentState.password.isEmpty()) {
+        val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+        val isEmailValid = emailRegex.matches(currentState.email)
+        val isPasswordValid = currentState.password.length >= 6
+
+        if (!isEmailValid || !isPasswordValid) {
             _state.update { it.copy(
-                isEmailError = it.email.isEmpty(),
-                isPasswordError = it.password.isEmpty()
+                isEmailError = !isEmailValid,
+                isPasswordError = !isPasswordValid
             )}
+            val errorMsg = when {
+                !isEmailValid -> "Por favor ingresa un correo electrónico válido."
+                else -> "La contraseña debe tener al menos 6 caracteres."
+            }
+            emit(SignInEffect.ShowError(errorMsg))
             return
         }
 

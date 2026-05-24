@@ -9,4 +9,5 @@ interface EarningsRepository {
     suspend fun getEarningsHistory(id: Int): List<EarningTransactionModel>
     suspend fun getTotalEarnings(parkingId: Int): Double
     suspend fun observeEarningsRealtime(parkingId: Int): Flow<EarningsSummaryModel?>
+    fun observeTransactionsRealtime(parkingId: Int): Flow<List<EarningTransactionModel>>
 }

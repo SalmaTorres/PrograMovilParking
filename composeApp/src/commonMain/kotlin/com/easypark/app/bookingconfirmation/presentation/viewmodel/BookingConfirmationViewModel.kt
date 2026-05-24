@@ -9,6 +9,7 @@ import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmati
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationEvent
 import com.easypark.app.bookingconfirmation.presentation.state.BookingConfirmationUIState
 import com.easypark.app.core.domain.session.SessionManager
+import com.easypark.app.registervehicle.domain.repository.RegisterVehicleRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,6 +22,7 @@ class BookingConfirmationViewModel(
     private val getBookingInfoUseCase: GetBookingInfoUseCase,
     private val confirmReservationUseCase: ConfirmReservationUseCase,
     private val repository: BookingConfirmationRepository,
+    private val vehicleRepository: RegisterVehicleRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -56,6 +58,7 @@ class BookingConfirmationViewModel(
                     s.copy(bookingConfirmation = newBooking)
                 }
             }
+
             BookingConfirmationEvent.OnBackClick -> emit(BookingConfirmationEffect.NavigateBack)
             is BookingConfirmationEvent.OnConfirmClick -> confirm()
         }
@@ -80,32 +83,48 @@ class BookingConfirmationViewModel(
             _state.update { it.copy(isLoading = true) }
 
             val currentUserId = sessionManager.getUserId()
+
+            // 1. OBTENER EL VEHÍCULO DESDE EL NUEVO REPOSITORIO
+            val vehicle = vehicleRepository.getVehicleByDriverId(currentUserId)
+
+            if (vehicle == null) {
+                _state.update { it.copy(isLoading = false) }
+                emit(BookingConfirmationEffect.ShowError("No tienes un vehículo registrado. Por favor, regístralo antes de reservar."))
+                return@launch
+            }
+
+            // 2. USAR LOS DATOS DEL VEHÍCULO (usando los nuevos nombres: plate y type)
+            val plate = vehicle.plate
+            val type = vehicle.type
+
             val duration = _state.value.bookingConfirmation?.durationHours ?: 1
             val paymentMethod = _state.value.selectedPaymentMethod
             val clientName = sessionManager.currentUser.value?.name ?: "Unknown"
 
-            println("DEBUG: Iniciando reserva para usuario $currentUserId en parking $parkingId")
-
             if (currentUserId != -1) {
                 try {
-                    val reservationId = confirmReservationUseCase(parkingId, currentUserId, duration, paymentMethod.name , clientName)
+                    val reservationId = confirmReservationUseCase(
+                        parkingId = parkingId,
+                        driverId = currentUserId,
+                        duration = duration,
+                        paymentMethod = paymentMethod.name,
+                        clientName = clientName,
+                        vehiclePlate = plate, // Ahora viene de vehicle.plate
+                        vehicleType = type    // Ahora viene de vehicle.type
+                    )
 
                     if (reservationId != null) {
                         observeLiveStatus(reservationId)
-
                         emit(BookingConfirmationEffect.NavigateToSuccess(reservationId))
                     } else {
-                        println("DEBUG: El UseCase devolvió NULL (Probablemente no hay espacios libres)")
                         _state.update { it.copy(isLoading = false) }
                         emit(BookingConfirmationEffect.ShowError("No hay espacios disponibles en este parqueo"))
                     }
                 } catch (e: Exception) {
-                    println("DEBUG: Error en DB: ${e.message}")
                     _state.update { it.copy(isLoading = false) }
                     emit(BookingConfirmationEffect.ShowError("Error de base de datos: ${e.message}"))
                 }
             } else {
-                println("DEBUG: Usuario no logueado")
                 _state.update { it.copy(isLoading = false) }
                 emit(BookingConfirmationEffect.ShowError("Sesión expirada"))
             }

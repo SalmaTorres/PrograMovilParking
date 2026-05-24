@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import com.easypark.app.core.ui.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -30,7 +32,8 @@ import org.jetbrains.compose.resources.stringResource
 fun ParkHeader(
     title: String,
     onBackClick: (() -> Unit)? = null,
-    onNotificationClick: (() -> Unit)? = null
+    onNotificationClick: (() -> Unit)? = null,
+    onLogoutClick: (() -> Unit)? = null
 ) {
     Surface(color = Color.White) {
         Row(
@@ -40,12 +43,21 @@ fun ParkHeader(
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.size(40.dp)) {
+            Box(modifier = Modifier.size(40.dp), contentAlignment = Alignment.Center) {
                 if (onBackClick != null) {
                     IconButton(onClick = onBackClick) {
                         Image(
                             painter = painterResource(Res.drawable.ic_back),
                             contentDescription = stringResource(Res.string.back),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                } else if (onLogoutClick != null) {
+                    IconButton(onClick = onLogoutClick) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Cerrar Sesión",
+                            tint = Color(0xFFE57373),
                             modifier = Modifier.size(24.dp)
                         )
                     }

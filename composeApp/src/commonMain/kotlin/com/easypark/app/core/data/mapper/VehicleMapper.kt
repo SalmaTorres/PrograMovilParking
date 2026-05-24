@@ -5,24 +5,27 @@ import com.easypark.app.registervehicle.data.dto.VehicleDTO
 import com.easypark.app.registervehicle.domain.model.VehicleModel
 
 fun VehicleModel.toEntity(driverId: Int) = VehicleEntity(
-    driverId,
-    plate,
-    model,
-    color
+    driverId = driverId,
+    plate = plate,
+    type = type,
+    model = model,
+    color = color
 )
 
-fun VehicleEntity.toModel() =  VehicleModel(
-    id,
-    driverId,
-    plate,
-    model,
-    color
+fun VehicleEntity.toModel() = VehicleModel(
+    id = id,
+    driverId = driverId,
+    plate = plate,
+    type = type,
+    model = model,
+    color = color
 )
 
 fun VehicleDTO.toDomain() = VehicleModel(
     id = id ?: 0,
     driverId = driverId ?: 0,
     plate = plate ?: "",
+    type = type ?: "Automóvil",
     model = model ?: "",
     color = color ?: ""
 )

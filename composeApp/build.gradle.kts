@@ -2,9 +2,126 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 import java.net.URL
 import java.net.URLEncoder
-import java.io.File
 import java.util.Properties
 import java.util.regex.Pattern
+
+import java.net.URI
+import java.net.HttpURLConnection
+
+plugins {
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.mockative)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+kotlin {
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
+    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+            linkerOpts.add("-lsqlite3")
+        }
+    }
+
+    sourceSets {
+        androidMain.dependencies {
+            implementation(libs.compose.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.work.runtime)
+            implementation(libs.koin.android)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.osmdroid)
+            implementation(libs.play.services.location)
+            implementation(libs.sqlite.framework)
+        }
+        commonMain.dependencies {
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui.lib)
+            implementation(libs.compose.resources)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.sentry.kmp)
+            implementation(compose.materialIconsExtended)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.mockative)
+            implementation(libs.turbine)
+        }
+    }
+}
+
+android {
+    namespace = "com.easypark.app"
+    compileSdk = 35
+    defaultConfig {
+        applicationId = "com.easypark.app"
+        minSdk = 24
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    // Firebase con plataforma correcta
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.analytics)
+    implementation(libs.kotlinx.coroutines.play.services)
+
+    // Room Compiler
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+
+    // Testing
+    add("kspAndroidTest", libs.mockative.processor)
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.test.manifest)
+    debugImplementation(libs.compose.tooling.base)
+}
+
+val locoKey: String by lazy {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(localPropertiesFile.inputStream())
+    }
+    properties.getProperty("locoKey") ?: ""
+}
 
 tasks.register("syncLoco") {
     group = "localization"
@@ -95,139 +212,6 @@ fun translateText(text: String, targetLang: String): String {
     } catch (e: Exception) { text }
 }
 
-plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlinxSerialization)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.androidx.room)
-    alias(libs.plugins.google.gms.google.services)
-}
-
-val locoKey: String by lazy {
-    val properties = Properties()
-    val localPropertiesFile = rootProject.file("local.properties")
-    if (localPropertiesFile.exists()) {
-        properties.load(localPropertiesFile.inputStream())
-    }
-    properties.getProperty("locoKey") ?: ""
-}
-
-kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-            // Required when using NativeSQLiteDriver
-            linkerOpts.add("-lsqlite3")
-        }
-    }
-
-    sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation( libs.androidx.activity.compose)
-            implementation(libs.androidx.work.runtime.ktx)
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-            implementation("org.osmdroid:osmdroid-android:6.1.18")
-            implementation("com.google.android.gms:play-services-location:21.0.1")
-            
-            implementation(project.dependencies.platform(libs.firebase.bom))
-            implementation(libs.firebase.messaging)
-            implementation(libs.androidx.sqlite.framework)
-            implementation(libs.firebase.config)
-            implementation(libs.firebase.database)
-            implementation(libs.firebase.inappmessaging.display)
-            implementation(libs.firebase.analytics)
-            implementation(libs.kotlinx.coroutines.play.services)
-            implementation(libs.androidx.work.runtime)
-            implementation(libs.firebase.config)
-        }
-        commonMain.dependencies {
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(libs.compose.ui)
-            implementation(libs.compose.components.resources)
-            implementation(libs.compose.uiToolingPreview)
-            implementation(compose.materialIconsExtended)
-
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
-
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.androidx.navigation.compose)
-            implementation(libs.sentry.kmp)
-
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-    }
-}
-
-android {
-    namespace = "com.easypark.app"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        applicationId = "com.easypark.app"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
-dependencies {
-    implementation(libs.firebase.database)
-    debugImplementation(libs.compose.uiTooling)
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-}
-
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
 tasks.register("downloadLocoTranslations") {
     group = "localization"
     description = "Downloads translations from Loco (localise.biz)"
@@ -246,12 +230,12 @@ tasks.register("downloadLocoTranslations") {
         locales.forEach { (locoLocale, folderName) ->
             println("Downloading translations for $locoLocale...")
             val url = "https://localise.biz/api/export/locale/$locoLocale.xml?key=$locoKey"
-            
+
             val destinationDir = file("src/commonMain/composeResources/$folderName")
             if (!destinationDir.exists()) destinationDir.mkdirs()
-            
+
             val destinationFile = file("${destinationDir.path}/strings.xml")
-            
+
             try {
                 val connection = URL(url).openConnection()
                 connection.connect()

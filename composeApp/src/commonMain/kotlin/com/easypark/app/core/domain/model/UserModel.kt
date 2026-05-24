@@ -10,5 +10,5 @@ data class UserModel(
     val type: UserType,
     val email: String,
     val password: String,
-    val cellphone: Int,
+    val cellphone: Int
 )

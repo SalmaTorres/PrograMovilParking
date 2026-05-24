@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "d089cf37db05267c1221f97ed2017078",
+    "version": 3,
+    "identityHash": "ef12fa6584cf503c4d81e1dd3717a739",
     "entities": [
       {
         "tableName": "user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `type` TEXT NOT NULL, `email` TEXT NOT NULL, `cellphone` TEXT NOT NULL, `password` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `type` TEXT NOT NULL, `email` TEXT NOT NULL, `cellphone` TEXT NOT NULL, `password` TEXT NOT NULL, `placaVehiculo` TEXT, `tipoVehiculo` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -39,6 +39,16 @@
             "notNull": true
           },
           {
+            "fieldPath": "placaVehiculo",
+            "columnName": "placaVehiculo",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "tipoVehiculo",
+            "columnName": "tipoVehiculo",
+            "affinity": "TEXT"
+          },
+          {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
@@ -54,7 +64,7 @@
       },
       {
         "tableName": "vehicle",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`driverId` INTEGER NOT NULL, `plate` TEXT NOT NULL, `model` TEXT NOT NULL, `color` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`driverId` INTEGER NOT NULL, `plate` TEXT NOT NULL, `type` TEXT NOT NULL, `model` TEXT NOT NULL, `color` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "driverId",
@@ -65,6 +75,12 @@
           {
             "fieldPath": "plate",
             "columnName": "plate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -166,7 +182,7 @@
       },
       {
         "tableName": "reservation",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `spaceId` INTEGER NOT NULL, `driverId` INTEGER NOT NULL, `startHour` INTEGER NOT NULL, `finalHour` INTEGER NOT NULL, `totalPrice` REAL NOT NULL, `state` TEXT NOT NULL, `methodPay` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `spaceId` INTEGER NOT NULL, `driverId` INTEGER NOT NULL, `startHour` INTEGER NOT NULL, `finalHour` INTEGER NOT NULL, `totalPrice` REAL NOT NULL, `state` TEXT NOT NULL, `methodPay` TEXT NOT NULL, `vehiclePlate` TEXT NOT NULL, `vehicleType` TEXT NOT NULL, `arrivalTime` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -214,6 +230,24 @@
             "fieldPath": "methodPay",
             "columnName": "methodPay",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vehiclePlate",
+            "columnName": "vehiclePlate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vehicleType",
+            "columnName": "vehicleType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "arrivalTime",
+            "columnName": "arrivalTime",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -341,7 +375,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd089cf37db05267c1221f97ed2017078')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ef12fa6584cf503c4d81e1dd3717a739')"
     ]
   }
 }

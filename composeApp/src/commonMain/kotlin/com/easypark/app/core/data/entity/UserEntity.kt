@@ -19,7 +19,13 @@ data class UserEntity(
     val cellphone: String,
 
     @ColumnInfo(name = "password")
-    val password: String
+    val password: String,
+
+    @ColumnInfo(name = "placaVehiculo")
+    val placaVehiculo: String? = null,
+
+    @ColumnInfo(name = "tipoVehiculo")
+    val tipoVehiculo: String? = null
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
