@@ -16,6 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import android.content.Context
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class MainActivity : ComponentActivity() {
 
@@ -35,6 +37,7 @@ class MainActivity : ComponentActivity() {
 
         askNotificationPermission()
         fetchFcmToken()
+        checkAndTriggerWelcomeCampaign()
 
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = packageName
@@ -70,5 +73,28 @@ class MainActivity : ComponentActivity() {
             val token = task.result
             Log.d("MainActivity", "FCM Token actual: $token")
         })
+    }
+
+    private fun checkAndTriggerWelcomeCampaign() {
+        val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val isFirstLaunch = sharedPreferences.getBoolean("is_first_launch", true)
+
+        if (isFirstLaunch) {
+            try {
+                // 1. Obtener instancia de Firebase Analytics
+                val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+                // 2. Disparar el evento personalizado configurado en la consola
+                firebaseAnalytics.logEvent("primer_inicio", null)
+                Log.d("MainActivity", "Evento 'primer_inicio' disparado para In-App Messaging")
+
+                // 3. Cambiar la bandera para que no se vuelva a ejecutar en el futuro
+                sharedPreferences.edit().putBoolean("is_first_launch", false).apply()
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error al disparar evento 'primer_inicio': ${e.message}")
+            }
+        } else {
+            Log.d("MainActivity", "No es el primer inicio. Ignorando evento de bienvenida.")
+        }
     }
 }
