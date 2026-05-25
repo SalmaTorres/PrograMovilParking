@@ -11,7 +11,9 @@ fun UserModel.toEntity() = UserEntity(
     cellphone = cellphone.toString(),
     password = password,
     type = type.name
-)
+).apply {
+    id = this@toEntity.id
+}
 
 fun UserEntity.toModel() =  UserModel(
     id = id,

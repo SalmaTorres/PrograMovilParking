@@ -84,8 +84,8 @@ class RegisterParkingViewModel(
             _state.update { it.copy(isLoading = true) }
 
             val parkingModel = ParkingModel(
-                id = 0,
-                ownerId = 0,
+                id = (user.email + "_parking").hashCode() and 0x7FFFFFFF,
+                ownerId = user.id,
                 name = s.name,
                 address = s.address,
                 latitude = s.latitude,

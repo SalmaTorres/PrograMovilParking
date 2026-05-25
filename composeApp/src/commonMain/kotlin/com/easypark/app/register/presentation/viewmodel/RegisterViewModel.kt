@@ -73,7 +73,7 @@ class RegisterViewModel(
 
             if (isAvailable) {
                 val userData = UserModel(
-                    id = (100..999).random(),
+                    id = s.email.replace(".", "_").hashCode() and 0x7FFFFFFF,
                     name = s.name,
                     email = s.email,
                     cellphone = s.phone.toIntOrNull() ?: 0,

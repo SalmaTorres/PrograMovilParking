@@ -17,7 +17,9 @@ fun ParkingModel.toEntity(ownerId: Int) = ParkingEntity(
     rating = rating,
     totalSpaces = totalSpaces,
     schedule = schedule
-)
+).apply {
+    id = this@toEntity.id
+}
 
 fun ParkingEntity.toModel(availableSpaces: Int = 0, reviewCount: Int = 0) = ParkingModel(
     id = id,

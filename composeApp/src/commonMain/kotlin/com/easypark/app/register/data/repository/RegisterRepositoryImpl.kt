@@ -25,7 +25,6 @@ class RegisterRepositoryImpl(
             type = user.type.name
         )
         val json = Json.encodeToString(userDto)
-        firebaseManager.saveData("users/${user.id}", json)
         val sanitizedEmail = user.email.replace(".", "_")
         firebaseManager.saveData("users/$sanitizedEmail", json)
     }

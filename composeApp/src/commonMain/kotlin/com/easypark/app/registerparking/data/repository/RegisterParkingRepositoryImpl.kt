@@ -90,8 +90,7 @@ class RegisterParkingRepositoryImpl (
             }
             """.trimIndent()
             val sanitizedEmail = user.email.replace(".", "_")
-            println("RegisterParkingRepositoryImpl: [completeOwnerRegistration] Firebase -> saving users/$userId and users/$sanitizedEmail")
-            firebaseManager.saveData("users/$userId", userJson)
+            println("RegisterParkingRepositoryImpl: [completeOwnerRegistration] Firebase -> saving users/$sanitizedEmail")
             firebaseManager.saveData("users/$sanitizedEmail", userJson)
 
             println("RegisterParkingRepositoryImpl: [completeOwnerRegistration] Success. Returning userId: $userId, parkingId: $parkingId")

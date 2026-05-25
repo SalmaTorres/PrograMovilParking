@@ -50,11 +50,10 @@ class RegisterVehicleRepositoryImpl(
             """.trimIndent()
 
             // Guardar en Firebase en nodos separados
-            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Firebase -> saving users/$userId and vehicles/$userId")
-            firebaseManager.saveData("users/$userId", userJson)
+            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Firebase -> saving vehicles/$userId")
             firebaseManager.saveData("vehicles/$userId", vehicleJson)
             
-            // También guardamos por email sanitizado para facilitar la búsqueda
+            // Guardamos por email sanitizado como nodo principal
             val sanitizedEmail = user.email.replace(".", "_")
             println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Firebase -> saving users/$sanitizedEmail")
             firebaseManager.saveData("users/$sanitizedEmail", userJson)
