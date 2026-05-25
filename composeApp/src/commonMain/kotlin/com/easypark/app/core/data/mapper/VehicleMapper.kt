@@ -34,6 +34,7 @@ fun VehicleModel.toRemote(driverId: Int) = VehicleDTO(
     id = id,
     driverId = driverId,
     plate = plate,
+    type = type,
     model = model,
     color = color
 )
