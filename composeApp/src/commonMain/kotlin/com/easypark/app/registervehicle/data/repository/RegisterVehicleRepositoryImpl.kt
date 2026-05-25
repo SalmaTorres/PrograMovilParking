@@ -16,20 +16,24 @@ class RegisterVehicleRepositoryImpl(
 
     // 1. Guardar Usuario y Vehículo por separado
     override suspend fun completeDriverRegistration(user: UserModel, vehicle: VehicleModel): Int? {
+        println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Starting driver registration for user: ${user.email}")
         return try {
             // Guardar Usuario local y obtener ID
             val userId = localDS.saveUser(user.toEntity()).toInt()
+            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] User saved locally with ID: $userId")
 
             // Guardar Vehículo localmente vinculado al userId
             localDS.saveVehicle(vehicle.toEntity(userId))
+            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Vehicle saved locally for userId: $userId")
 
-            // JSON del Usuario (Ya no tiene campos de vehículo)
+            // JSON del Usuario
             val userJson = """
             {
                 "id": $userId,
                 "name": "${user.name}",
                 "email": "${user.email}",
                 "cellphone": "${user.cellphone}",
+                "password": "${user.password}",
                 "type": "DRIVER"
             }
             """.trimIndent()
@@ -46,11 +50,19 @@ class RegisterVehicleRepositoryImpl(
             """.trimIndent()
 
             // Guardar en Firebase en nodos separados
+            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Firebase -> saving users/$userId and vehicles/$userId")
             firebaseManager.saveData("users/$userId", userJson)
             firebaseManager.saveData("vehicles/$userId", vehicleJson)
+            
+            // También guardamos por email sanitizado para facilitar la búsqueda
+            val sanitizedEmail = user.email.replace(".", "_")
+            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Firebase -> saving users/$sanitizedEmail")
+            firebaseManager.saveData("users/$sanitizedEmail", userJson)
 
+            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] Success. Returning userId: $userId")
             userId
         } catch (e: Exception) {
+            println("RegisterVehicleRepositoryImpl: [completeDriverRegistration] ERROR during registration: ${e.message}")
             e.printStackTrace()
             null
         }

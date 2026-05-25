@@ -57,12 +57,19 @@ class RegisterParkingViewModel(
 
     private fun sendRegistration() {
         val s = _state.value
-        val user = userFromStep1 ?: return
+        val user = userFromStep1
+        if (user == null) {
+            println("RegisterParkingViewModel: [sendRegistration] ABORTED: userFromStep1 is null!")
+            return
+        }
+
+        println("RegisterParkingViewModel: [sendRegistration] Initiating parking registration. User: ${user.email}, Parking Name: ${s.name}, Total Spaces: ${s.totalSpaces}")
 
         val hasError = s.name.isEmpty() || s.address.isEmpty() ||
                 s.pricePerHour.isEmpty() || s.totalSpaces.isEmpty()
 
         if (hasError) {
+            println("RegisterParkingViewModel: [sendRegistration] Validation FAILED. nameEmpty: ${s.name.isEmpty()}, addressEmpty: ${s.address.isEmpty()}, priceEmpty: ${s.pricePerHour.isEmpty()}, spacesEmpty: ${s.totalSpaces.isEmpty()}")
             _state.update { it.copy(
                 isNameError = it.name.isEmpty(),
                 isAddressError = it.address.isEmpty(),
@@ -91,17 +98,20 @@ class RegisterParkingViewModel(
                 totalSpaces = s.totalSpaces.toIntOrNull() ?: 0
             )
 
+            println("RegisterParkingViewModel: [sendRegistration] Calling registerUseCase...")
             val resultIds = registerUseCase(user, parkingModel)
+            println("RegisterParkingViewModel: [sendRegistration] registerUseCase returned: resultIds = $resultIds")
 
             _state.update { it.copy(isLoading = false) }
 
             if (resultIds != null) {
                 val registeredUser = user.copy(id = resultIds.first)
-
+                println("RegisterParkingViewModel: [sendRegistration] Saving session for user ID: ${registeredUser.id}, Parking ID: ${resultIds.second}")
                 sessionManager.saveSession(registeredUser, resultIds.second)
-
+                println("RegisterParkingViewModel: [sendRegistration] Session saved. Directing to success screen.")
                 emit(RegisterParkingEffect.NavigateToSuccess)
             } else {
+                println("RegisterParkingViewModel: [sendRegistration] Registration failed in repository/datasource.")
                 emit(RegisterParkingEffect.ShowError("Error al registrar el parqueo"))
             }
         }

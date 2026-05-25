@@ -42,6 +42,7 @@ class RegisterViewModel(
 
     private fun register() {
         val s = _state.value
+        println("RegisterViewModel: [register] Starting registration. Name: ${s.name}, Email: ${s.email}, Role: ${s.role}")
 
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         val isEmailValid = s.email.matches(emailPattern.toRegex())
@@ -51,6 +52,7 @@ class RegisterViewModel(
         val hasError = s.name.isEmpty() || !isEmailValid || !isPhoneValid || !isPasswordValid
 
         if (hasError) {
+            println("RegisterViewModel: [register] Validation FAILED. nameEmpty: ${s.name.isEmpty()}, isEmailValid: $isEmailValid, isPhoneValid: $isPhoneValid, isPasswordValid: $isPasswordValid")
             _state.update { it.copy(
                 isNameError = it.name.isEmpty(),
                 isEmailError = !isEmailValid,
@@ -65,7 +67,9 @@ class RegisterViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
+            println("RegisterViewModel: [register] Checking email availability on Firebase/Local: ${s.email}")
             val isAvailable = useCase.checkEmail(s.email)
+            println("RegisterViewModel: [register] Email check response: isAvailable = $isAvailable")
 
             if (isAvailable) {
                 val userData = UserModel(
@@ -80,12 +84,15 @@ class RegisterViewModel(
                 _state.update { it.copy(isLoading = false) }
 
                 if (s.role == UserType.DRIVER) {
+                    println("RegisterViewModel: [register] Directing to Register Vehicle: $userData")
                     emit(RegisterEffect.NavigateToRegisterVehicle(userData))
                 } else {
+                    println("RegisterViewModel: [register] Directing to Register Parking: $userData")
                     emit(RegisterEffect.NavigateToRegisterParking(userData))
                 }
             } else {
                 _state.update { it.copy(isLoading = false) }
+                println("RegisterViewModel: [register] Registration stopped: email already exists")
                 emit(RegisterEffect.ShowError("Email ya registrado"))
             }
         }

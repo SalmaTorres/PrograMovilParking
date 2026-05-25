@@ -45,11 +45,18 @@ class RegisterVehicleViewModel(
 
     private fun submit() {
         val s = _state.value
-        val user = userFromStep1 ?: return
+        val user = userFromStep1
+        if (user == null) {
+            println("RegisterVehicleViewModel: [submit] ABORTED: userFromStep1 is null!")
+            return
+        }
+
+        println("RegisterVehicleViewModel: [submit] Initiating vehicle registration. User: ${user.email}, Plate: ${s.plate}, Type: ${s.type}")
 
         // Validación básica
         val hasError = s.plate.isEmpty() || s.plate.length > 7
         if (hasError) {
+            println("RegisterVehicleViewModel: [submit] Validation FAILED. plateEmpty: ${s.plate.isEmpty()}, plateLength: ${s.plate.length}")
             _state.update { it.copy(isPlateError = hasError) }
             return
         }
@@ -58,19 +65,18 @@ class RegisterVehicleViewModel(
             _state.update { it.copy(isLoading = true) }
 
             // 1. CREAMOS EL MODELO DEL VEHÍCULO
-            // Nota: driverId es 0 porque el Repositorio lo asignará
-            // cuando genere el ID del usuario en Room/Firebase.
             val finalVehicle = VehicleModel(
                 id = 0,
                 driverId = 0,
                 plate = s.plate,
                 type = s.type.displayName,
-                model = "", // Puedes añadir estos campos al UIState luego si quieres
+                model = "",
                 color = ""
             )
 
-            // 2. ENVIAMOS AMBOS AL USE CASE (Soluciona tu error de la imagen)
+            println("RegisterVehicleViewModel: [submit] Calling RegisterVehicleUseCase...")
             val registeredUserId = useCase(user, finalVehicle)
+            println("RegisterVehicleViewModel: [submit] RegisterVehicleUseCase returned: registeredUserId = $registeredUserId")
 
             _state.update { it.copy(isLoading = false) }
 
@@ -78,11 +84,13 @@ class RegisterVehicleViewModel(
                 // Actualizamos el ID del usuario localmente para la sesión
                 val userToSave = user.copy(id = registeredUserId)
 
-                // Guardamos la sesión y el vehículo en el SessionManager
+                println("RegisterVehicleViewModel: [submit] Saving session for driver ID: $registeredUserId")
                 sessionManager.saveSession(userToSave, null)
+                println("RegisterVehicleViewModel: [submit] Session saved. Directing to next screen.")
 
                 emit(RegisterVehicleEffect.NavigateNext)
             } else {
+                println("RegisterVehicleViewModel: [submit] Vehicle registration failed in repository/datasource.")
                 emit(RegisterVehicleEffect.ShowError("Error al registrar el vehículo"))
             }
         }
