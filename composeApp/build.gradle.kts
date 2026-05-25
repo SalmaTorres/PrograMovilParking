@@ -17,7 +17,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.mockative)
 }
 
 room {
@@ -68,11 +67,13 @@ kotlin {
             implementation(libs.sentry.kmp)
             implementation(compose.materialIconsExtended)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.mockative)
-            implementation(libs.turbine)
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.mockative)
+                implementation(libs.turbine)
+            }
         }
     }
 }
@@ -107,8 +108,6 @@ dependencies {
     add("kspIosSimulatorArm64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
 
-    // Testing
-    add("kspAndroidTest", libs.mockative.processor)
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.test.manifest)
     debugImplementation(libs.compose.tooling.base)
@@ -246,5 +245,11 @@ tasks.register("downloadLocoTranslations") {
                 println("Error downloading $locoLocale: ${e.message}")
             }
         }
+    }
+}
+
+tasks.register("printConfigs") {
+    doLast {
+        configurations.forEach { println("CONFIG_NAME: ${it.name}") }
     }
 }
