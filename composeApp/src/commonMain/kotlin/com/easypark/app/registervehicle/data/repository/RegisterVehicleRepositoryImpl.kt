@@ -8,6 +8,9 @@ import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.registervehicle.domain.model.VehicleModel
 import com.easypark.app.registervehicle.domain.repository.RegisterVehicleRepository
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.serialization.json.Json
+import com.easypark.app.core.data.mapper.toDomain
+import com.easypark.app.registervehicle.data.dto.VehicleDTO
 
 class RegisterVehicleRepositoryImpl(
     private val localDS: RegisterVehicleLocalDataSource,
@@ -69,19 +72,35 @@ class RegisterVehicleRepositoryImpl(
 
     // 2. NUEVA FUNCIÓN: Obtener vehículo para la reserva
     override suspend fun getVehicleByDriverId(driverId: Int): VehicleModel? {
+        println("RegisterVehicleRepositoryImpl: [getVehicleByDriverId] Checking vehicle for driverId: $driverId")
         return try {
             // Primero intentamos localmente (más rápido)
             val localVehicle = localDS.getVehicleByDriver(driverId)?.toModel()
-            if (localVehicle != null) return localVehicle
+            if (localVehicle != null) {
+                println("RegisterVehicleRepositoryImpl: [getVehicleByDriverId] Found vehicle locally: ${localVehicle.plate}")
+                return localVehicle
+            }
 
             // Si no está local, buscamos en Firebase
+            println("RegisterVehicleRepositoryImpl: [getVehicleByDriverId] Vehicle not found locally. Querying Firebase: vehicles/$driverId")
             val vehicleJson = firebaseManager.observeData("vehicles/$driverId").firstOrNull()
-            if (vehicleJson != null) {
-                // Aquí deberías usar tu jsonParser para convertir el String a VehicleModel
-                // (Omito el parseo detallado para brevedad, pero la lógica es esta)
+            if (vehicleJson != null && vehicleJson != "null" && vehicleJson.isNotBlank()) {
+                println("RegisterVehicleRepositoryImpl: [getVehicleByDriverId] Found vehicle in Firebase: $vehicleJson")
+                val jsonConfig = Json { ignoreUnknownKeys = true; isLenient = true; coerceInputValues = true }
+                val dto = jsonConfig.decodeFromString<VehicleDTO>(vehicleJson)
+                val vehicleModel = dto.toDomain()
+                
+                // Guardar localmente para futuras consultas rápidas
+                println("RegisterVehicleRepositoryImpl: [getVehicleByDriverId] Caching vehicle locally: ${vehicleModel.plate}")
+                localDS.saveVehicle(vehicleModel.toEntity(driverId))
+                
+                return vehicleModel
             }
+            println("RegisterVehicleRepositoryImpl: [getVehicleByDriverId] No vehicle found in Firebase for driverId: $driverId")
             null
         } catch (e: Exception) {
+            println("RegisterVehicleRepositoryImpl: [getVehicleByDriverId] ERROR: ${e.message}")
+            e.printStackTrace()
             null
         }
     }

@@ -76,7 +76,9 @@ class BookingConfirmationRepositoryImpl(
         val startTime = Clock.System.now().toEpochMilliseconds()
         val durationMillis = duration * 3600000L
         val reservationPrice = parking.pricePerHour * duration
+        val generatedResId = (driverId.toString() + "_" + parkingId.toString() + "_" + startTime.toString()).hashCode() and 0x7FFFFFFF
         val entity = ReservationEntity(
+            id = generatedResId,
             spaceId = spaceId,
             driverId = driverId,
             startHour = startTime,

@@ -5,6 +5,7 @@ import com.easypark.app.core.data.remote.FirebaseManager
 import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.register.data.datasource.RegisterLocalDataSource
 import com.easypark.app.register.domain.repository.RegisterRepository
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -13,7 +14,14 @@ class RegisterRepositoryImpl(
     private val firebaseManager: FirebaseManager
 ) : RegisterRepository {
     override suspend fun isEmailAvailable(email: String): Boolean {
-        return !localDataSource.isEmailTaken(email)
+        if (localDataSource.isEmailTaken(email)) return false
+        return try {
+            val sanitizedEmail = email.replace(".", "_")
+            val jsonUser = firebaseManager.observeData("users/$sanitizedEmail").firstOrNull()
+            jsonUser == null || jsonUser == "null"
+        } catch (e: Exception) {
+            true
+        }
     }
 
     override suspend fun saveUserToCloud(user: UserModel) {
