@@ -155,15 +155,27 @@ fun ParkingDetailsScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        DetailItem(icon = Icons.Default.LocationOn, text = detail.address, label = "Dirección")
+                        DetailItem(
+                            icon = Icons.Default.LocationOn,
+                            text = detail.address,
+                            label = stringResource(Res.string.label_address)
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        DetailItem(icon = Icons.Default.Payments, text = detail.pricePerHour.format(), label = "Precio por hora")
+                        DetailItem(
+                            icon = Icons.Default.Payments,
+                            text = detail.pricePerHour.format(),
+                            label = stringResource(Res.string.label_price_hour)
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        DetailItem(icon = Icons.Default.AccessTime, text = detail.schedule ?: "24 Horas", label = "Horario")
+                        DetailItem(
+                            icon = Icons.Default.AccessTime,
+                            text = detail.schedule ?: stringResource(Res.string.parking_schedule_all_day),
+                            label = stringResource(Res.string.label_schedule)
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 

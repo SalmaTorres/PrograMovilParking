@@ -32,6 +32,7 @@
     <string name="label_color">Color</string>
     <string name="label_address">Dirección</string>
     <string name="label_price_hour">Precio/hora</string>
+    <string name="label_schedule">Horario</string>
     <string name="label_spaces">Espacios</string>
     <string name="label_location">Localización</string>
     <string name="label_duration">Duración</string>
@@ -81,6 +82,7 @@
     <string name="payment_qr">QR</string>
     <string name="earnings_limited_capacity">Capacidad limitada</string>
     <string name="parking_details_title">Detalles del parqueo</string>
+    <string name="parking_schedule_all_day">24 Horas</string>
     <string name="reviews">reseñas</string>
     <string name="rate_button">Calificar</string>
     <string name="view_map_button">Ver mapa</string>

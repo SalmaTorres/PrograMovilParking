@@ -34,7 +34,8 @@ import kotlinx.coroutines.IO
         ReviewEntity::class
     ],
     version = 4,
-    exportSchema = true
+    // Avoid Room/KSP schema path arguments that fail when the Windows project path contains spaces.
+    exportSchema = false
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {

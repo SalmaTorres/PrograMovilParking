@@ -75,7 +75,9 @@ val dataModule = module {
     singleOf(::RegisterParkingRepositoryImpl).bind<RegisterParkingRepository>()
     singleOf(::RegisterVehicleRepositoryImpl).bind<RegisterVehicleRepository>()
     singleOf(::FindParkingRepositoryImpl).bind<FindParkingRepository>()
-    singleOf(::ParkingDetailRepositoryImpl).bind<ParkingDetailsRepository>()
+    single<ParkingDetailsRepository> {
+        ParkingDetailRepositoryImpl(get(), get(), get<FirebaseManager>())
+    }
     singleOf(::BookingConfirmationRepositoryImpl).bind<BookingConfirmationRepository>()
     singleOf(::ReservationSummaryRepositoryImpl).bind<ReservationSummaryRepository>()
     singleOf(::SpaceManagementRepositoryImpl).bind<SpaceManagementRepository>()
