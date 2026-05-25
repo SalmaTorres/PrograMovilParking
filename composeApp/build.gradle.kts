@@ -15,13 +15,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.androidx.room)
     alias(libs.plugins.google.services)
     alias(libs.plugins.mockative)
-}
-
-room {
-    schemaDirectory("$projectDir/schemas")
 }
 
 kotlin {

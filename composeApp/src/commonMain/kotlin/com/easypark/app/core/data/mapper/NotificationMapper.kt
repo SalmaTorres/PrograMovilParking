@@ -12,7 +12,7 @@ fun NotificationModel.toEntity(userId: Int) = NotificationEntity(
     content = this.description,
     state = if (this.isUnread) "UNREAD" else "READ"
 ).apply {
-    this.id = id
+    this.id = this@toEntity.id
 }
 
 fun NotificationEntity.toModel() = NotificationModel(

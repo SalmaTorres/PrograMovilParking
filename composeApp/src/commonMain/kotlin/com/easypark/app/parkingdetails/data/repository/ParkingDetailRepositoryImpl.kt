@@ -17,11 +17,18 @@ import kotlinx.serialization.json.Json
 class ParkingDetailRepositoryImpl(
     private val localDS: ParkingDetailsLocalDataSource,
     private val spaceDS: SpaceLocalDataSource,
-    private val firebaseManager: FirebaseManager
+    private val observeRemoteData: (String) -> Flow<String?>,
+    private val saveRemoteData: suspend (String, String) -> Unit
 ) : ParkingDetailsRepository {
 
+    constructor(
+        localDS: ParkingDetailsLocalDataSource,
+        spaceDS: SpaceLocalDataSource,
+        firebaseManager: FirebaseManager
+    ) : this(localDS, spaceDS, firebaseManager::observeData, firebaseManager::saveData)
+
     override fun observeParkingDetail(id: Int): Flow<ParkingModel?> {
-        return firebaseManager.observeData("parkings/$id").map { json ->
+        return observeRemoteData("parkings/$id").map { json ->
             if (json == null) return@map null
 
             val jsonConfig = Json { ignoreUnknownKeys = true; isLenient = true; coerceInputValues = true }
@@ -48,8 +55,8 @@ class ParkingDetailRepositoryImpl(
         val newAverage = if (allReviews.isEmpty()) 0f else allReviews.map { it.rating }.average().toFloat()
         localDS.updateAverageRating(parkingId, newAverage)
 
-        firebaseManager.saveData("parkings/$parkingId/rating", newAverage.toString())
-        firebaseManager.saveData("parkings/$parkingId/reviewCount", allReviews.size.toString())
+        saveRemoteData("parkings/$parkingId/rating", newAverage.toString())
+        saveRemoteData("parkings/$parkingId/reviewCount", allReviews.size.toString())
 
         val reviewId = Clock.System.now().toEpochMilliseconds()
         val reviewJson = """
@@ -60,6 +67,6 @@ class ParkingDetailRepositoryImpl(
             "timestamp": $reviewId
         }
         """.trimIndent()
-        firebaseManager.saveData("reviews/$parkingId/$reviewId", reviewJson)
+        saveRemoteData("reviews/$parkingId/$reviewId", reviewJson)
     }
 }

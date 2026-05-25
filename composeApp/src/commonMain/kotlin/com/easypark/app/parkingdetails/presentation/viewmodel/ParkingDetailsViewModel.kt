@@ -66,7 +66,6 @@ class ParkingDetailsViewModel(
 
             if (userId != -1) {
                 rateParkingUseCase(parkingId, userId, stars.toFloat())
-                observeParkingLiveChanges()
             } else {
                 emit(ParkingDetailsEffect.ShowError("Debes iniciar sesión para calificar"))
             }
