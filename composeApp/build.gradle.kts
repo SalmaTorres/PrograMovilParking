@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.inappmessaging)
     implementation(libs.kotlinx.coroutines.play.services)
 
     // Room Compiler
