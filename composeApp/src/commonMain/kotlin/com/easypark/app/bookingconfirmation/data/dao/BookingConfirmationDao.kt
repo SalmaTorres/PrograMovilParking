@@ -13,6 +13,9 @@ interface BookingConfirmationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(reservation: ReservationEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertParking(parking: ParkingEntity): Long
+
     @Query("SELECT * FROM space WHERE parkingId = :parkingId AND state = 'LIBRE' ORDER BY number ASC LIMIT 1")
     suspend fun getFirstAvailableSpace(parkingId: Int): SpaceEntity?
 
