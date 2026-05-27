@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "title": {
+      "es": "Bienvenido a EasyPark",
+      "en": "Welcome to EasyPark",
+      "fr": "Bienvenue sur EasyPark"
+    },
+    "description": {
+      "es": "Encuentra el parqueo más cercano a ti en segundos y llega sin estrés.",
+      "en": "Find the nearest parking spot in seconds and arrive stress-free.",
+      "fr": "Trouvez le parking le plus proche en quelques secondes et arrivez sans stress."
+    },
+    "image_url": ""
+  },
+  {
+    "id": 2,
+    "title": {
+      "es": "Crea tu cuenta",
+      "en": "Create your account",
+      "fr": "Créez votre compte"
+    },
+    "description": {
+      "es": "Regístrate fácilmente con tu correo y comienza a disfrutar EasyPark.",
+      "en": "Sign up easily with your email and start enjoying EasyPark.",
+      "fr": "Inscrivez-vous facilement avec votre email et commencez à profiter d'EasyPark."
+    },
+    "image_url": ""
+  },
+  {
+    "id": 3,
+    "title": {
+      "es": "Registra tu vehículo",
+      "en": "Register your vehicle",
+      "fr": "Enregistrez votre véhicule"
+    },
+    "description": {
+      "es": "Agrega tu vehículo para evitar contratiempos al momento de reservar.",
+      "en": "Add your vehicle to avoid issues when making a reservation.",
+      "fr": "Ajoutez votre véhicule pour éviter des problèmes lors de votre réservation."
+    },
+    "image_url": ""
+  },
+  {
+    "id": 4,
+    "title": {
+      "es": "Elige tu lugar",
+      "en": "Choose your spot",
+      "fr": "Choisissez votre place"
+    },
+    "description": {
+      "es": "Reserva un espacio de parqueo disponible y llega con tranquilidad a tu destino.",
+      "en": "Reserve an available parking space and arrive calmly at your destination.",
+      "fr": "Réservez une place de parking disponible et arrivez sereinement à destination."
+    },
+    "image_url": ""
+  }
+]

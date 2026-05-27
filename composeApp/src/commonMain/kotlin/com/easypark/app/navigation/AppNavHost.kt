@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.easypark.app.bookingconfirmation.presentation.screen.BookingConfirmationScreen
+import com.easypark.app.onboarding.presentation.screen.OnboardingScreen
 import com.easypark.app.bookingconfirmation.presentation.viewmodel.BookingConfirmationViewModel
 import com.easypark.app.core.domain.model.UserModel
 import com.easypark.app.earnings.presentation.screen.EarningsScreen
@@ -25,13 +26,17 @@ import org.koin.core.parameter.parametersOf
 import kotlin.reflect.typeOf
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(startDestination: Any = NavRoute.SignIn) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = NavRoute.SignIn
+        startDestination = startDestination
     ) {
+        composable<NavRoute.Onboarding> {
+            OnboardingScreen(navController)
+        }
+
         composable<NavRoute.SignIn> {
             SignInScreen(navController)
         }

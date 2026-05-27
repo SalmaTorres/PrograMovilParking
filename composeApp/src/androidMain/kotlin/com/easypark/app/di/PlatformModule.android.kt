@@ -4,6 +4,7 @@ import android.content.Context
 import com.easypark.app.core.data.db.AppDatabase
 import com.easypark.app.core.data.db.createDatabase
 import com.easypark.app.core.data.db.getDatabaseBuilder
+import com.easypark.app.onboarding.data.OnboardingPreferences
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import androidx.sqlite.driver.AndroidSQLiteDriver
@@ -15,4 +16,6 @@ actual val platformModule: Module = module {
             AndroidSQLiteDriver()
         )
     }
+    single { OnboardingPreferences() }
 }
+

@@ -4,6 +4,7 @@ import com.easypark.app.core.domain.model.UserModel
 import kotlinx.serialization.Serializable
 
 sealed class NavRoute {
+    @Serializable object Onboarding: NavRoute()
     @Serializable object SignIn: NavRoute()
     @Serializable object  Register: NavRoute()
     @Serializable data class RegisterParking(val userFromStep1: UserModel) : NavRoute()

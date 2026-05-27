@@ -9,6 +9,7 @@ import com.easypark.app.register.presentation.viewmodel.RegisterViewModel
 import com.easypark.app.registerparking.presentation.viewmodel.RegisterParkingViewModel
 import com.easypark.app.registervehicle.presentation.viewmodel.RegisterVehicleViewModel
 import com.easypark.app.reservationhistory.presentation.viewmodel.ReservationHistoryViewModel
+import com.easypark.app.onboarding.presentation.viewmodel.OnboardingViewModel
 import com.easypark.app.reservationsummary.presentation.viewmodel.ReservationSummaryViewModel
 import com.easypark.app.signin.presentation.viewmodel.SignInViewModel
 import com.easypark.app.spacemanagement.presentation.viewmodel.SpaceManagementViewModel
@@ -17,6 +18,7 @@ import org.koin.dsl.module
 import org.koin.core.module.dsl.viewModel
 
 val presentationModule = module {
+    viewModelOf(::OnboardingViewModel)
     viewModelOf(::SignInViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::RegisterParkingViewModel)
