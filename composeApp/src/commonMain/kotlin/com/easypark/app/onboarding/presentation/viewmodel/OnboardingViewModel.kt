@@ -43,7 +43,7 @@ class OnboardingViewModel(
         viewModelScope.launch {
             try {
                 remoteConfigManager.initialize()
-                val raw = remoteConfigManager.getString("onboarding_driver")
+                val raw = remoteConfigManager.getString("onboarding_driver_config")
                 if (raw.isNotBlank()) {
                     _slides.value = json.decodeFromString(raw)
                 } else {
@@ -98,9 +98,9 @@ class OnboardingViewModel(
                     fr = "Créez votre compte"
                 ),
                 description = com.easypark.app.onboarding.domain.model.LocalizedText(
-                    es = "Regístrate fácilmente para comenzar a usar EasyPark.",
-                    en = "Sign up easily to start using EasyPark.",
-                    fr = "Inscrivez-vous facilement pour commencer à utiliser EasyPark."
+                    es = "Regístrate de manera rápida y segura para comenzar.",
+                    en = "Sign up quickly and securely to get started.",
+                    fr = "Inscrivez-vous rapidement et en toute sécurité pour commencer."
                 ),
                 image_url = ""
             ),
@@ -112,23 +112,51 @@ class OnboardingViewModel(
                     fr = "Enregistrez votre véhicule"
                 ),
                 description = com.easypark.app.onboarding.domain.model.LocalizedText(
-                    es = "Agrega tu vehículo para evitar contratiempos al reservar.",
-                    en = "Add your vehicle to avoid issues when booking.",
-                    fr = "Ajoutez votre véhicule pour éviter des problèmes lors de la réservation."
+                    es = "Agrega los datos de tu auto para facilitar tus reservas.",
+                    en = "Add your car details to make booking easier.",
+                    fr = "Ajoutez les détails de votre voiture pour faciliter la réservation."
                 ),
                 image_url = ""
             ),
             OnboardingConfig(
                 id = 4,
                 title = com.easypark.app.onboarding.domain.model.LocalizedText(
-                    es = "Elige tu lugar",
-                    en = "Choose your spot",
-                    fr = "Choisissez votre place"
+                    es = "Reserva en un toque",
+                    en = "Book in a tap",
+                    fr = "Réservez en un clic"
                 ),
                 description = com.easypark.app.onboarding.domain.model.LocalizedText(
-                    es = "Reserva un espacio de parqueo y llega sin estrés.",
-                    en = "Reserve a parking space and arrive stress-free.",
-                    fr = "Réservez une place de parking et arrivez sans stress."
+                    es = "Selecciona tu lugar de estacionamiento y resérvalo al instante.",
+                    en = "Select your parking spot and book it instantly.",
+                    fr = "Sélectionnez votre place de parking et réservez-la instantanément."
+                ),
+                image_url = ""
+            ),
+            OnboardingConfig(
+                id = 5,
+                title = com.easypark.app.onboarding.domain.model.LocalizedText(
+                    es = "Navega sin estrés",
+                    en = "Navigate stress-free",
+                    fr = "Naviguez sans stress"
+                ),
+                description = com.easypark.app.onboarding.domain.model.LocalizedText(
+                    es = "Obtén indicaciones en tiempo real para llegar a tu parqueo reservado.",
+                    en = "Get real-time directions to your reserved parking spot.",
+                    fr = "Obtenez des itinéraires en temps réel vers votre place de parking réservée."
+                ),
+                image_url = ""
+            ),
+            OnboardingConfig(
+                id = 6,
+                title = com.easypark.app.onboarding.domain.model.LocalizedText(
+                    es = "¡Listo para arrancar!",
+                    en = "Ready to go!",
+                    fr = "Prêt à partir !"
+                ),
+                description = com.easypark.app.onboarding.domain.model.LocalizedText(
+                    es = "Explora el mapa y disfruta de una experiencia de estacionamiento premium.",
+                    en = "Explore the map and enjoy a premium parking experience.",
+                    fr = "Explorez la carte et profitez d'une expérience de stationnement premium."
                 ),
                 image_url = ""
             )

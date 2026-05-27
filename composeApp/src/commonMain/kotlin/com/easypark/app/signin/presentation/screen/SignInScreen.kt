@@ -21,6 +21,8 @@ import kotlinproject.composeapp.generated.resources.easypark_logo
 import kotlinproject.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
+import com.easypark.app.onboarding.data.OnboardingPreferences
 
 @Composable
 fun SignInScreen(
@@ -30,6 +32,7 @@ fun SignInScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val state by viewModel.state.collectAsState()
+    val onboardingPrefs = koinInject<OnboardingPreferences>()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -40,7 +43,12 @@ fun SignInScreen(
                             popUpTo(0)
                         }
                     } else if (effect.userType == "DRIVER") {
-                        navController.navigate(NavRoute.FindParking) {
+                        val destination = if (onboardingPrefs.isOnboardingCompleted()) {
+                            NavRoute.FindParking
+                        } else {
+                            NavRoute.Onboarding
+                        }
+                        navController.navigate(destination) {
                             popUpTo(0)
                         }
                     }
