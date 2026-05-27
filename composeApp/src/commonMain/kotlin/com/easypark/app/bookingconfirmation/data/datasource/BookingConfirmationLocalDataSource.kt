@@ -6,6 +6,7 @@ import com.easypark.app.core.data.entity.SpaceEntity
 
 interface BookingConfirmationLocalDataSource {
     suspend fun save(entity: ReservationEntity): Int
+    suspend fun saveParking(entity: ParkingEntity): Int
     suspend fun getReservationById(id: Int): ReservationEntity?
     suspend fun getParkingById(id: Int): ParkingEntity?
     suspend fun getFirstAvailableSpace(parkingId: Int): SpaceEntity?

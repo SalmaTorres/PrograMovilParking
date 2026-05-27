@@ -10,6 +10,7 @@ class BookingConfirmationDbService(
     private val dao: BookingConfirmationDao
 ) : BookingConfirmationLocalDataSource {
     override suspend fun save(entity: ReservationEntity): Int = dao.insert(entity).toInt()
+    override suspend fun saveParking(entity: ParkingEntity): Int = dao.insertParking(entity).toInt()
     override suspend fun getReservationById(id: Int): ReservationEntity? = dao.getReservationById(id)
     override suspend fun getParkingById(id: Int): ParkingEntity? = dao.getParkingById(id)
     override suspend fun getFirstAvailableSpace(parkingId: Int): SpaceEntity? {

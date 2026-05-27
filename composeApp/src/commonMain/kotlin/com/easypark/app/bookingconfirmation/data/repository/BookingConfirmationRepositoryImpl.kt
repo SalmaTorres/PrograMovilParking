@@ -6,7 +6,10 @@ import com.easypark.app.bookingconfirmation.domain.model.BookingConfirmationMode
 import com.easypark.app.bookingconfirmation.domain.repository.BookingConfirmationRepository
 import com.easypark.app.core.data.dto.ReservationDTO
 import com.easypark.app.core.data.entity.ReservationEntity
+import com.easypark.app.core.data.entity.ParkingEntity
 import com.easypark.app.core.data.mapper.toDomain
+import com.easypark.app.core.data.mapper.toEntity
+import com.easypark.app.registerparking.data.dto.ParkingDTO
 import com.easypark.app.core.data.remote.FirebaseManager
 import com.easypark.app.notifications.data.datasource.NotificationLocalDataSource
 import kotlinx.coroutines.flow.Flow
@@ -32,13 +35,25 @@ class BookingConfirmationRepositoryImpl(
     }
 
     override suspend fun getBookingInfo(parkingId: Int): BookingConfirmationModel {
-        val parking = bookingDS.getParkingById(parkingId) ?: throw Exception("No encontrado")
+        var parking = bookingDS.getParkingById(parkingId)
+        if (parking == null) {
+            val parkingJson = firebaseManager.observeData("parkings/$parkingId").firstOrNull()
+            if (parkingJson != null && parkingJson != "null" && parkingJson.isNotBlank()) {
+                val jsonConfig = Json { ignoreUnknownKeys = true; isLenient = true; coerceInputValues = true }
+                val dto = jsonConfig.decodeFromString<ParkingDTO>(parkingJson)
+                val parkingModel = dto.toDomain()
+                bookingDS.saveParking(parkingModel.toEntity(ownerId = parkingModel.ownerId))
+                parking = bookingDS.getParkingById(parkingId)
+            }
+        }
+
+        val finalParking = parking ?: throw Exception("No encontrado")
         return BookingConfirmationModel(
-            parkingId = parking.id,
-            locationName = parking.name,
-            address = parking.address,
-            pricePerHour = parking.pricePerHour,
-            totalCost = parking.pricePerHour,
+            parkingId = finalParking.id,
+            locationName = finalParking.name,
+            address = finalParking.address,
+            pricePerHour = finalParking.pricePerHour,
+            totalCost = finalParking.pricePerHour,
             spaceIdentifier = "Asignación automática"
         )
     }
@@ -71,11 +86,21 @@ class BookingConfirmationRepositoryImpl(
         val spaceDTO = spacesMap.values.firstOrNull { it.state == "LIBRE" } ?: return null
         val spaceId = spaceDTO.id ?: return null
         
-        val parking = bookingDS.getParkingById(parkingId) ?: return null
+        var parking = bookingDS.getParkingById(parkingId)
+        if (parking == null) {
+            val parkingJson = firebaseManager.observeData("parkings/$parkingId").firstOrNull()
+            if (parkingJson != null && parkingJson != "null" && parkingJson.isNotBlank()) {
+                val dto = jsonConfig.decodeFromString<ParkingDTO>(parkingJson)
+                val parkingModel = dto.toDomain()
+                bookingDS.saveParking(parkingModel.toEntity(ownerId = parkingModel.ownerId))
+                parking = bookingDS.getParkingById(parkingId)
+            }
+        }
+        val finalParking = parking ?: return null
 
         val startTime = Clock.System.now().toEpochMilliseconds()
         val durationMillis = duration * 3600000L
-        val reservationPrice = parking.pricePerHour * duration
+        val reservationPrice = finalParking.pricePerHour * duration
         val generatedResId = (driverId.toString() + "_" + parkingId.toString() + "_" + startTime.toString()).hashCode() and 0x7FFFFFFF
         val entity = ReservationEntity(
             id = generatedResId,
@@ -99,8 +124,8 @@ class BookingConfirmationRepositoryImpl(
                 "id": $resId,
                 "status": "PENDIENTE",
                 "parkingId": $parkingId,
-                "parkingName": "${parking.name}",
-                "address": "${parking.address}",
+                "parkingName": "${finalParking.name}",
+                "address": "${finalParking.address}",
                 "spaceId": $spaceId,
                 "spaceNumber": ${spaceDTO.number},
                 "driverId": $driverId,
@@ -155,13 +180,13 @@ class BookingConfirmationRepositoryImpl(
                 "isUnread": true
             }
             """.trimIndent()
-            firebaseManager.saveData("notifications/${parking.ownerId}/res_$startTime", ownerNotification)
+            firebaseManager.saveData("notifications/${finalParking.ownerId}/res_$startTime", ownerNotification)
 
             val driverNotification = """
             {
                 "id": $resId,
                 "title": "Reserva Confirmada",
-                "message": "Reserva confirmada en ${parking.name}",
+                "message": "Reserva confirmada en ${finalParking.name}",
                 "time": "Ahora",
                 "isUnread": true
             }

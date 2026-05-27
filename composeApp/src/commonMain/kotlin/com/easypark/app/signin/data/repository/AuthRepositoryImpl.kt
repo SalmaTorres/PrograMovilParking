@@ -31,7 +31,8 @@ class AuthRepositoryImpl(
         val jsonUser = firebaseManager.observeData("users/$sanitizedEmail").firstOrNull()
             ?: return null
 
-        val dto = Json.decodeFromString<UserDTO>(jsonUser)
+        val jsonConfig = Json { ignoreUnknownKeys = true; isLenient = true; coerceInputValues = true }
+        val dto = jsonConfig.decodeFromString<UserDTO>(jsonUser)
 
         return if (dto.email == email) {
             dto.toDomain()
