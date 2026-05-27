@@ -33,14 +33,28 @@ class ReservationSummaryRepositoryImpl(
 
     override fun observeActiveReservations(userId: Int): Flow<List<ReservationModel>> {
         return firebaseManager.observeData("reservations").map { json ->
-            if (json == null) return@map emptyList<ReservationModel>()
+            if (json == null || json == "null" || (json as? String)?.isBlank() == true) return@map emptyList<ReservationModel>()
 
             try {
-                val element = jsonParser.parseToJsonElement(json)
+                val element = jsonParser.parseToJsonElement(json as String)
                 val dtoList = if (element is kotlinx.serialization.json.JsonObject) {
-                    jsonParser.decodeFromJsonElement<Map<String, ReservationDTO>>(element).values.toList()
+                    element.values.mapNotNull { value ->
+                        try {
+                            jsonParser.decodeFromJsonElement<ReservationDTO>(value)
+                        } catch (e: Exception) {
+                            println("FAIL DECODING RESERVATION OBJECT VALUE: ${e.message} - JSON: $value")
+                            null
+                        }
+                    }
                 } else if (element is kotlinx.serialization.json.JsonArray) {
-                    jsonParser.decodeFromJsonElement<List<ReservationDTO?>>(element).filterNotNull()
+                    element.mapNotNull { value ->
+                        try {
+                            jsonParser.decodeFromJsonElement<ReservationDTO>(value)
+                        } catch (e: Exception) {
+                            println("FAIL DECODING RESERVATION ARRAY VALUE: ${e.message} - JSON: $value")
+                            null
+                        }
+                    }
                 } else {
                     emptyList()
                 }
@@ -56,6 +70,7 @@ class ReservationSummaryRepositoryImpl(
                                 res.status == "RESERVADO"
                     }
             } catch (e: Exception) {
+                println("FAIL PARSING RESERVATIONS ROOT ELEMENT: ${e.message}")
                 emptyList()
             }
         }
@@ -112,8 +127,8 @@ class ReservationSummaryRepositoryImpl(
                 val resElement = jsonParser.parseToJsonElement(reservationJson as String)
                 val sumElement = jsonParser.parseToJsonElement(summaryJson as String)
 
-                val arrivalTime = resElement.jsonObject["arrivalTime"]?.jsonPrimitive?.longOrNull ?: currentTime
-                val pricePerHour = sumElement.jsonObject["pricePerHour"]?.jsonObject?.get("amount")?.jsonPrimitive?.doubleOrNull ?: 10.0
+                val arrivalTime = resElement.jsonObject["arrivalTime"]?.jsonPrimitive?.let { it.longOrNull ?: it.content.toLongOrNull() } ?: currentTime
+                val pricePerHour = sumElement.jsonObject["pricePerHour"]?.jsonObject?.get("amount")?.jsonPrimitive?.let { it.doubleOrNull ?: it.content.toDoubleOrNull() } ?: 10.0
 
                 // CÁLCULO REALISTA: Horas transcurridas (mínimo 1)
                 val diffMillis = currentTime - arrivalTime
@@ -164,12 +179,24 @@ class ReservationSummaryRepositoryImpl(
         try {
             val element = jsonParser.parseToJsonElement(reservationsJson as? String ?: "")
             val reservationsMap = if (element is kotlinx.serialization.json.JsonObject) {
-                jsonParser.decodeFromJsonElement<Map<String, ReservationDTO>>(element)
+                element.entries.associate { (key, value) ->
+                    try {
+                        key to jsonParser.decodeFromJsonElement<ReservationDTO>(value)
+                    } catch (e: Exception) {
+                        println("FAIL DECODING EVACUATION RESERVATION OBJECT VALUE: ${e.message} - JSON: $value")
+                        key to null
+                    }
+                }.filterValues { it != null }.mapValues { it.value!! }
             } else if (element is kotlinx.serialization.json.JsonArray) {
-                jsonParser.decodeFromJsonElement<List<ReservationDTO?>>(element)
-                    .filterNotNull()
-                    .mapIndexed { index, dto -> dto.id.toString() to dto }
-                    .toMap()
+                element.mapIndexedNotNull { index, value ->
+                    try {
+                        val dto = jsonParser.decodeFromJsonElement<ReservationDTO>(value)
+                        dto.id.toString() to dto
+                    } catch (e: Exception) {
+                        println("FAIL DECODING EVACUATION RESERVATION ARRAY VALUE: ${e.message} - JSON: $value")
+                        null
+                    }
+                }.toMap()
             } else {
                 emptyMap()
             }

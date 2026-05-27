@@ -27,14 +27,28 @@ class ReservationHistoryRepositoryImpl(
 
     override fun observeReservationsRealtime(parkingId: Int): Flow<List<ReservationItemModel>> {
         return firebaseManager.observeData("reservations").map { json ->
-            if (json == null || json == "null") return@map emptyList<ReservationItemModel>()
+            if (json == null || json == "null" || (json as? String)?.isBlank() == true) return@map emptyList<ReservationItemModel>()
 
             try {
                 val element = jsonParser.parseToJsonElement(json as String)
                 val dtoList = if (element is JsonObject) {
-                    jsonParser.decodeFromJsonElement<Map<String, ReservationDTO>>(element).values.toList()
+                    element.values.mapNotNull { value ->
+                        try {
+                            jsonParser.decodeFromJsonElement<ReservationDTO>(value)
+                        } catch (e: Exception) {
+                            println("FAIL DECODING HISTORY RESERVATION OBJECT VALUE: ${e.message} - JSON: $value")
+                            null
+                        }
+                    }
                 } else if (element is JsonArray) {
-                    jsonParser.decodeFromJsonElement<List<ReservationDTO?>>(element).filterNotNull()
+                    element.mapNotNull { value ->
+                        try {
+                            jsonParser.decodeFromJsonElement<ReservationDTO>(value)
+                        } catch (e: Exception) {
+                            println("FAIL DECODING HISTORY RESERVATION ARRAY VALUE: ${e.message} - JSON: $value")
+                            null
+                        }
+                    }
                 } else {
                     emptyList()
                 }
@@ -104,8 +118,8 @@ class ReservationHistoryRepositoryImpl(
 
         try {
             val resElement = jsonParser.parseToJsonElement(resJson as String).jsonObject
-            val parkingId = resElement["parkingId"]?.jsonPrimitive?.intOrNull ?: return
-            val spaceId = resElement["spaceId"]?.jsonPrimitive?.intOrNull ?: return
+            val parkingId = resElement["parkingId"]?.jsonPrimitive?.let { it.intOrNull ?: it.content.toIntOrNull() } ?: return
+            val spaceId = resElement["spaceId"]?.jsonPrimitive?.let { it.intOrNull ?: it.content.toIntOrNull() } ?: return
 
             // 2. Actualizar estado en Firebase (Reserva y Espacio Físico)
             firebaseManager.saveData("reservations/$reservationId/status", "\"OCUPADO\"")
@@ -123,7 +137,7 @@ class ReservationHistoryRepositoryImpl(
             }
 
             // 4. Notificar al Conductor que su llegada fue registrada
-            val driverId = resElement["driverId"]?.jsonPrimitive?.intOrNull ?: 0
+            val driverId = resElement["driverId"]?.jsonPrimitive?.let { it.intOrNull ?: it.content.toIntOrNull() } ?: 0
             if (driverId > 0) {
                 val notification = """
                 {
