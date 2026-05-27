@@ -62,6 +62,8 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.sentry.kmp)
             implementation(compose.materialIconsExtended)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
