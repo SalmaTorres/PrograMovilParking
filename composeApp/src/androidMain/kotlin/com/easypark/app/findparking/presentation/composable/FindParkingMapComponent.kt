@@ -31,6 +31,7 @@ actual fun FindParkingMapComponent(
     
     var mapViewRef by remember { mutableStateOf<MapView?>(null) }
     var hasCenteredOnUser by remember { mutableStateOf(false) }
+    var isPermissionGranted by remember { mutableStateOf(false) }
 
     val parkingsToShow = when {
         state.selectedParking != null -> state.allParkings
@@ -40,6 +41,7 @@ actual fun FindParkingMapComponent(
 
     LaunchedEffect(Unit) {
         permissionManager.requestPermission(PermissionType.LOCATION) { granted ->
+            isPermissionGranted = granted
             if (granted && !hasCenteredOnUser) {
                 try {
                     fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
@@ -64,16 +66,27 @@ actual fun FindParkingMapComponent(
             MapView(ctx).apply {
                 setMultiTouchControls(true)
                 controller.setZoom(15.0)
-
-                // Agregar el overlay para mostrar el punto azul del usuario
-                val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(ctx), this)
-                myLocationOverlay.enableMyLocation()
-                overlays.add(myLocationOverlay)
-
                 mapViewRef = this
             }
         },
         update = { mapView ->
+            // Asegurar que el overlay de ubicación esté presente y activo si se tienen permisos
+            var myLocationOverlay = mapView.overlays.firstOrNull { it is MyLocationNewOverlay } as? MyLocationNewOverlay
+            if (myLocationOverlay == null) {
+                myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(context), mapView)
+                mapView.overlays.add(myLocationOverlay)
+            }
+
+            if (isPermissionGranted) {
+                if (!myLocationOverlay.isMyLocationEnabled) {
+                    myLocationOverlay.enableMyLocation()
+                }
+            } else {
+                if (myLocationOverlay.isMyLocationEnabled) {
+                    myLocationOverlay.disableMyLocation()
+                }
+            }
+
             // Remover marcadores antiguos conservando el overlay de ubicación
             mapView.overlays.removeAll { it is org.osmdroid.views.overlay.Marker }
 
