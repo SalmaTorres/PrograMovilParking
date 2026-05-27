@@ -8,9 +8,15 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+
 class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        
+        createNotificationChannel()
 
         // Inicialización de Sentry
         Sentry.init(this) { options ->
@@ -25,6 +31,23 @@ class AndroidApp : Application() {
             androidLogger(Level.ERROR)
             androidContext(this@AndroidApp)
             modules(getModules())
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "default_easypark_channel"
+            val channelName = "Alertas de Parqueo"
+            val descriptionText = "Notificaciones para confirmaciones de reservas y alertas"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = descriptionText
+                enableVibration(true)
+            }
+            
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }

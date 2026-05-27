@@ -18,8 +18,16 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
+import org.koin.android.ext.android.inject
+import com.easypark.app.core.domain.session.SessionManager
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : ComponentActivity() {
+
+    private val sessionManager: SessionManager by inject()
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -38,6 +46,7 @@ class MainActivity : ComponentActivity() {
         askNotificationPermission()
         fetchFcmToken()
         checkAndTriggerWelcomeCampaign()
+        observeUserAndUploadToken()
 
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = packageName
@@ -95,6 +104,41 @@ class MainActivity : ComponentActivity() {
             }
         } else {
             Log.d("MainActivity", "No es el primer inicio. Ignorando evento de bienvenida.")
+        }
+    }
+
+    private fun observeUserAndUploadToken() {
+        lifecycleScope.launch {
+            sessionManager.currentUser.collectLatest { user ->
+                if (user != null) {
+                    uploadCurrentFcmToken(user.email)
+                }
+            }
+        }
+    }
+
+    private fun uploadCurrentFcmToken(email: String) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                if (token != null) {
+                    val sanitizedEmail = email.replace(".", "_")
+                    FirebaseDatabase.getInstance().reference
+                        .child("users")
+                        .child(sanitizedEmail)
+                        .child("fcmToken")
+                        .setValue(token)
+                        .addOnCompleteListener { uploadTask ->
+                            if (uploadTask.isSuccessful) {
+                                Log.d("MainActivity", "FCM token subido correctamente para: $sanitizedEmail")
+                            } else {
+                                Log.e("MainActivity", "FCM token no se pudo subir", uploadTask.exception)
+                            }
+                        }
+                }
+            } else {
+                Log.w("MainActivity", "FCM token falló al cargarse para subir", task.exception)
+            }
         }
     }
 }
