@@ -17,6 +17,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
     alias(libs.plugins.mockative)
+    alias(libs.plugins.firebase.appdistribution)
 }
 
 kotlin {
