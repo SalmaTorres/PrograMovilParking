@@ -11,12 +11,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easypark.app.core.data.remote.RemoteConfigManager
 import com.easypark.app.core.ui.ParkBackground
+import com.easypark.app.core.work.rememberBackgroundTaskManager
 import com.easypark.app.navigation.AppNavHost
 import org.koin.compose.koinInject // Asegúrate de tener este import para inyectar con Koin
 
 @Composable
 fun App() {
     val remoteConfig = koinInject<RemoteConfigManager>()
+    val backgroundTaskManager = rememberBackgroundTaskManager()
 
     var isLoading by remember { mutableStateOf(true) }
     var isMaintenanceMode by remember { mutableStateOf(false) }
@@ -28,6 +30,7 @@ fun App() {
             // Leemos los valores que la Persona 3 puso en la consola de Firebase
             isMaintenanceMode = remoteConfig.getBoolean("app_mantenimiento")
             maintenanceMessage = remoteConfig.getString("mensaje_mantenimiento")
+            backgroundTaskManager.schedulePeriodicDataSync()
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
