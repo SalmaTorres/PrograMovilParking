@@ -17,8 +17,14 @@ import kotlinx.serialization.json.decodeFromJsonElement
 class EarningsRepositoryImpl(
     private val reservationDS: ReservationLocalDataSource,
     private val spaceDS: SpaceLocalDataSource,
-    private val firebaseManager: FirebaseManager
+    private val observeRemoteData: (String) -> Flow<String?>
 ) : EarningsRepository {
+
+    constructor(
+        reservationDS: ReservationLocalDataSource,
+        spaceDS: SpaceLocalDataSource,
+        firebaseManager: FirebaseManager
+    ) : this(reservationDS, spaceDS, firebaseManager::observeData)
     private val jsonConfig = Json {
         ignoreUnknownKeys = true // Si Firebase tiene campos extra, no crashea
         isLenient = true         // Permite formatos de texto más flexibles
@@ -26,7 +32,7 @@ class EarningsRepositoryImpl(
     }
 
     override suspend fun observeEarningsRealtime(parkingId: Int): Flow<EarningsSummaryModel?> {
-        return firebaseManager.observeData("parkings/$parkingId/summary").map { json ->
+        return observeRemoteData("parkings/$parkingId/summary").map { json ->
             if (json == null || json == "null") return@map null
             try {
                 jsonConfig.decodeFromString<EarningsSummaryDTO>(json).toDomain()
@@ -57,7 +63,7 @@ class EarningsRepositoryImpl(
     }
 
     override suspend fun getEarningsHistory(parkingId: Int): List<EarningTransactionModel> {
-        val json = firebaseManager.observeData("reservations").firstOrNull() ?: return emptyList()
+        val json = observeRemoteData("reservations").firstOrNull() ?: return emptyList()
 
         val spaces = spaceDS.getMySpaces(parkingId)
         val spaceMap = spaces.associate { it.id to it.number }
@@ -89,7 +95,7 @@ class EarningsRepositoryImpl(
     }
 
     override fun observeTransactionsRealtime(parkingId: Int): Flow<List<EarningTransactionModel>> {
-        return firebaseManager.observeData("reservations").map { json ->
+        return observeRemoteData("reservations").map { json ->
             if (json == null) return@map emptyList()
 
             try {
