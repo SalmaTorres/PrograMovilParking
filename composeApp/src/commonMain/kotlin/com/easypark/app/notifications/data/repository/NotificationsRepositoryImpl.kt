@@ -14,8 +14,14 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 class NotificationsRepositoryImpl(
     private val localDS: NotificationLocalDataSource,
-    private val firebaseManager: FirebaseManager
+    private val observeRemoteData: (String) -> Flow<String?>
 ) : NotificationsRepository {
+
+    constructor(
+        localDS: NotificationLocalDataSource,
+        firebaseManager: FirebaseManager
+    ) : this(localDS, firebaseManager::observeData)
+
     private val jsonParser = Json {
         ignoreUnknownKeys = true
         isLenient = true
@@ -24,7 +30,7 @@ class NotificationsRepositoryImpl(
     }
 
     override suspend fun observeNotificationsRealtime(userId: Int): Flow<List<NotificationModel>> {
-        return firebaseManager.observeData("notifications/$userId").map { json ->
+        return observeRemoteData("notifications/$userId").map { json ->
             if (json == null) return@map emptyList<NotificationModel>()
 
             try {

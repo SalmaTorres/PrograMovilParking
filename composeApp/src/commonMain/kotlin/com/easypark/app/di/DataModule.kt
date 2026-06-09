@@ -81,9 +81,9 @@ val dataModule = module {
     singleOf(::BookingConfirmationRepositoryImpl).bind<BookingConfirmationRepository>()
     singleOf(::ReservationSummaryRepositoryImpl).bind<ReservationSummaryRepository>()
     singleOf(::SpaceManagementRepositoryImpl).bind<SpaceManagementRepository>()
-    singleOf(::EarningsRepositoryImpl).bind<EarningsRepository>()
+    single<EarningsRepository> { EarningsRepositoryImpl(get(), get(), get<FirebaseManager>()) }
     singleOf(::ReservationHistoryRepositoryImpl).bind<ReservationHistoryRepository>()
-    singleOf(::NotificationsRepositoryImpl).bind<NotificationsRepository>()
+    single<NotificationsRepository> { NotificationsRepositoryImpl(get(), get<FirebaseManager>()) }
 
     single { get<AppDatabase>().userDao() }
     single { get<AppDatabase>().parkingDao() }
