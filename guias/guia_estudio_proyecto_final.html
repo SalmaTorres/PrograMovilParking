@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía de estudio - EasyPark Proyecto Final</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --ink: #172033;
+      --muted: #5c667a;
+      --line: #dfe4ef;
+      --brand: #2457c5;
+      --brand-soft: #e9f0ff;
+      --ok: #176b3a;
+      --warn: #9a5b00;
+      --bad: #9b1c1c;
+      --code: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      background: linear-gradient(135deg, #153e91, #2f74e0);
+      color: #ffffff;
+      padding: 34px 28px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 980px;
+      color: #edf4ff;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 24px auto 56px;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 24px rgba(21, 36, 73, 0.06);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: #102247;
+      font-size: 23px;
+    }
+
+    h3 {
+      margin: 20px 0 10px;
+      color: #18305f;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    code {
+      background: #eef2f7;
+      color: var(--code);
+      border: 1px solid #d8dee9;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 0.94em;
+    }
+
+    pre {
+      overflow-x: auto;
+      background: #101827;
+      color: #e6edf7;
+      border-radius: 14px;
+      padding: 16px;
+      line-height: 1.42;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #f0f4fb;
+      color: #102247;
+    }
+
+    ul {
+      margin: 8px 0 8px 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fbfcff;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+    }
+
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .ok {
+      background: #e8f6ee;
+      color: var(--ok);
+      border: 1px solid #b9e3c9;
+    }
+
+    .partial {
+      background: #fff4df;
+      color: var(--warn);
+      border: 1px solid #f0d49b;
+    }
+
+    .pending {
+      background: #fdecec;
+      color: var(--bad);
+      border: 1px solid #efb8b8;
+    }
+
+    .note {
+      border-left: 4px solid var(--brand);
+      background: var(--brand-soft);
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin: 12px 0;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .flow-step {
+      border: 1px solid #cdd9f0;
+      background: #f8fbff;
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 92px;
+    }
+
+    .flow-step strong {
+      display: block;
+      color: #17356d;
+      margin-bottom: 4px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      header,
+      section {
+        box-shadow: none;
+      }
+
+      main {
+        width: 100%;
+        margin: 0;
+      }
+
+      section {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Guía de estudio del proyecto EasyPark</h1>
+    <p>
+      Resumen de estructura, arquitectura, almacenamiento, Firebase, pruebas y flujo de datos.
+      Esta guía está pensada para estudiar la defensa del proyecto final y ubicar rápidamente dónde se implementa cada requisito.
+    </p>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. Lectura rápida del proyecto</h2>
+      <p>
+        EasyPark es una aplicación móvil KMP con Compose Multiplatform para gestionar parqueos:
+        registro de usuarios, vehículos, parqueos, espacios, búsqueda de estacionamientos,
+        reservas, historial, ganancias y notificaciones.
+      </p>
+      <div class="note">
+        <strong>Idea principal para explicar en clase:</strong>
+        la UI vive en <code>composeApp/src/commonMain</code>, la lógica se separa por Clean Architecture
+        en <code>data</code>, <code>domain</code> y <code>presentation</code>, y la persistencia combina
+        Firebase Realtime Database con Room local.
+      </div>
+    </section>
+
+    <section>
+      <h2>2. Árbol resumido de carpetas</h2>
+      <pre><code>PrograMovilParking/
+├─ composeApp/
+│  ├─ build.gradle.kts
+│  └─ src/
+│     ├─ commonMain/kotlin/com/easypark/app/
+│     │  ├─ App.kt
+│     │  ├─ navigation/
+│     │  ├─ di/
+│     │  ├─ core/
+│     │  │  ├─ data/
+│     │  │  │  ├─ db/              Room database común
+│     │  │  │  ├─ dao/             DAOs de Room
+│     │  │  │  ├─ entity/          Tablas locales
+│     │  │  │  ├─ dto/             Datos para Firebase/serialización
+│     │  │  │  ├─ mapper/          Conversión DTO/Entity/Model
+│     │  │  │  └─ remote/          expect Firebase/RemoteConfig
+│     │  │  ├─ permissions/
+│     │  │  ├─ presentation/
+│     │  │  ├─ ui/
+│     │  │  └─ util/
+│     │  ├─ signin/
+│     │  ├─ register/
+│     │  ├─ registervehicle/
+│     │  ├─ registerparking/
+│     │  ├─ findparking/
+│     │  ├─ parkingdetails/
+│     │  ├─ bookingconfirmation/
+│     │  ├─ reservationsummary/
+│     │  ├─ reservationhistory/
+│     │  ├─ spacemanagement/
+│     │  ├─ earnings/
+│     │  └─ notifications/
+│     ├─ commonTest/kotlin/com/easypark/app/       Pruebas unitarias
+│     ├─ androidMain/kotlin/com/easypark/app/      Implementaciones Android
+│     ├─ androidMain/AndroidManifest.xml
+│     ├─ androidInstrumentedTest/kotlin/...        Pruebas UI instrumentadas
+│     ├─ debug/kotlin/...                          Activity host para UI tests
+│     └─ iosMain/kotlin/...                        Implementaciones iOS
+├─ iosApp/                                         Shell iOS del proyecto KMP
+├─ functions/                                      Cloud Functions Firebase
+├─ gradle/libs.versions.toml                       Versiones y plugins
+├─ firebase.json
+├─ firestore.rules / database.rules.json
+└─ guias/                                          Documentación del equipo</code></pre>
+    </section>
+
+    <section>
+      <h2>3. Organización por capas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Capa</th>
+            <th>Qué contiene</th>
+            <th>Carpetas clave</th>
+            <th>Cómo explicarlo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>presentation</strong></td>
+            <td>Pantallas Compose, componentes visuales, estados, eventos y ViewModels.</td>
+            <td><code>*/presentation/screen</code>, <code>*/presentation/composable</code>, <code>*/presentation/viewmodel</code>, <code>*/presentation/state</code></td>
+            <td>Es la capa que ve el usuario. Observa estados con Flow y manda eventos al ViewModel.</td>
+          </tr>
+          <tr>
+            <td><strong>domain</strong></td>
+            <td>Modelos del negocio, casos de uso e interfaces de repositorios.</td>
+            <td><code>*/domain/model</code>, <code>*/domain/usecase</code>, <code>*/domain/repository</code></td>
+            <td>Define las reglas de negocio sin depender de Firebase, Room ni UI.</td>
+          </tr>
+          <tr>
+            <td><strong>data</strong></td>
+            <td>Repositorios concretos, servicios, DTOs, entidades, DAOs, datasources y mappers.</td>
+            <td><code>*/data/repository</code>, <code>*/data/service</code>, <code>core/data</code></td>
+            <td>Conecta la app con Firebase Realtime Database y Room local.</td>
+          </tr>
+          <tr>
+            <td><strong>di</strong></td>
+            <td>Módulos Koin para inyectar dependencias.</td>
+            <td><code>di/DataModule.kt</code>, <code>di/DomainModule.kt</code>, <code>di/PresentationModule.kt</code>, <code>di/InitKoin.kt</code></td>
+            <td>Evita crear objetos manualmente en cada pantalla; Koin resuelve repositorios, casos de uso y ViewModels.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. Mapa por requisito de la rúbrica</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Requisito</th>
+            <th>Estado</th>
+            <th>Dónde está</th>
+            <th>Qué decir en la defensa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Firebase distribution</td>
+            <td><span class="pill partial">Parcial</span></td>
+            <td><code>gradle/libs.versions.toml</code>, <code>build.gradle.kts</code>, <code>composeApp/build.gradle.kts</code></td>
+            <td>El plugin de Firebase App Distribution está agregado, pero falta completar configuración de testers, grupos o notas de versión para una distribución real.</td>
+          </tr>
+          <tr>
+            <td>Mockups Figma</td>
+            <td><span class="pill partial">Evidencia externa</span></td>
+            <td>No se encontró archivo Figma dentro del repo.</td>
+            <td>Se debe presentar el enlace o capturas de Figma aparte si el docente lo pide.</td>
+          </tr>
+          <tr>
+            <td>Clean Architecture</td>
+            <td><span class="pill ok">Cumple</span></td>
+            <td>Features con <code>data</code>, <code>domain</code>, <code>presentation</code>.</td>
+            <td>La UI no habla directo con Firebase/Room; pasa por ViewModel, casos de uso y repositorios.</td>
+          </tr>
+          <tr>
+            <td>MVVM - MVI - Flow</td>
+            <td><span class="pill ok">Cumple</span></td>
+            <td><code>presentation/viewmodel</code>, <code>presentation/state</code>.</td>
+            <td>Los ViewModels mantienen <code>StateFlow</code>, reciben eventos y exponen estados hacia Compose.</td>
+          </tr>
+          <tr>
+            <td>Koin</td>
+            <td><span class="pill ok">Cumple</span></td>
+            <td><code>di/DataModule.kt</code>, <code>di/DomainModule.kt</code>, <code>di/PresentationModule.kt</code>.</td>
+            <td>Koin inyecta DAOs, servicios, repositorios, casos de uso y ViewModels.</td>
+          </tr>
+          <tr>
+            <td>Pruebas unitarias y UI</td>
+            <td><span class="pill ok">Cumple</span></td>
+            <td><code>commonTest</code>, <code>androidInstrumentedTest</code>.</td>
+            <td>Hay pruebas unitarias de repositorios, ViewModels y mappers; también pruebas UI simples de pantallas Compose.</td>
+          </tr>
+          <tr>
+            <td>Firebase Remote Config</td>
+            <td><span class="pill ok">Cumple</span></td>
+            <td><code>App.kt</code>, <code>core/data/remote/RemoteConfigManager.kt</code>.</td>
+            <td>La app lee banderas remotas como mantenimiento y mensaje de mantenimiento.</td>
+          </tr>
+          <tr>
+            <td>Conectividad Retrofit REST y/o Room</td>
+            <td><span class="pill ok">Cumple por Room</span></td>
+            <td><code>core/data/db</code>, <code>core/data/dao</code>, <code>core/data/entity</code>.</td>
+            <td>No se usa Retrofit como implementación principal; el requisito se cubre por Room y Firebase Realtime Database.</td>
+          </tr>
+          <tr>
+            <td>Notificaciones push / internas</td>
+            <td><span class="pill ok">Cumple</span></td>
+            <td><code>core/notifications</code>, <code>notifications</code>, <code>functions/index.js</code>.</td>
+            <td>FCM recibe push, NotificationHelper muestra notificaciones y la feature notifications lista notificaciones internas.</td>
+          </tr>
+          <tr>
+            <td>Manejo de recursos con Localize</td>
+            <td><span class="pill partial">Mayormente</span></td>
+            <td><code>composeResources/values*</code>, tareas <code>syncLoco</code> y <code>downloadLocoTranslations</code>.</td>
+            <td>Hay recursos traducibles en Compose Resources y tareas para Localise/Loco; conviene revisar textos hardcodeados antes de la entrega.</td>
+          </tr>
+          <tr>
+            <td>Demo de la app</td>
+            <td><span class="pill ok">Preparar demo</span></td>
+            <td>Flujo principal: registro, login, parqueos, reserva y notificaciones.</td>
+            <td>La demo debe mostrar el flujo de usuario conductor y, si aplica, administrador/propietario.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. KMP: Kotlin Multiplatform</h2>
+      <div class="grid">
+        <div class="mini-card">
+          <h3><code>commonMain</code></h3>
+          <p>Contiene la mayor parte de la app: pantallas Compose, navegación, casos de uso, modelos, repositorios comunes y contratos <code>expect</code>.</p>
+        </div>
+        <div class="mini-card">
+          <h3><code>androidMain</code></h3>
+          <p>Implementa lo específico de Android: Firebase SDK, Remote Config, FCM, Room builder, permisos, mapas y MainActivity.</p>
+        </div>
+        <div class="mini-card">
+          <h3><code>iosMain</code></h3>
+          <p>Contiene implementaciones <code>actual</code> para iOS y permite que el código común pueda compilar hacia esa plataforma.</p>
+        </div>
+      </div>
+      <p class="small">
+        En Windows normalmente no se compilan los binarios nativos de iOS, pero la estructura KMP sí está presente.
+      </p>
+    </section>
+
+    <section>
+      <h2>6. Flujo general de datos</h2>
+      <div class="flow">
+        <div class="flow-step">
+          <strong>1. Pantalla Compose</strong>
+          Muestra información y dispara acciones del usuario.
+        </div>
+        <div class="flow-step">
+          <strong>2. ViewModel</strong>
+          Recibe eventos, actualiza <code>StateFlow</code> y emite efectos de navegación o mensajes.
+        </div>
+        <div class="flow-step">
+          <strong>3. Caso de uso</strong>
+          Ejecuta una acción del negocio, por ejemplo registrar vehículo o crear reserva.
+        </div>
+        <div class="flow-step">
+          <strong>4. Repositorio</strong>
+          Decide si consulta Firebase, Room o ambos.
+        </div>
+        <div class="flow-step">
+          <strong>5. Data source</strong>
+          Usa <code>FirebaseManager</code>, servicios DB o DAOs de Room.
+        </div>
+        <div class="flow-step">
+          <strong>6. Mapper</strong>
+          Convierte entre DTO, Entity y Model.
+        </div>
+      </div>
+      <pre><code>Usuario toca botón
+→ Screen/Composable envía Event
+→ ViewModel procesa Event
+→ UseCase ejecuta regla de negocio
+→ Repository usa FirebaseManager y/o Room DAO
+→ Mapper convierte datos
+→ ViewModel actualiza UiState con StateFlow
+→ Compose redibuja la pantalla</code></pre>
+    </section>
+
+    <section>
+      <h2>7. MVVM, MVI y Flow</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Cómo aparece en el proyecto</th>
+            <th>Ejemplo de ubicación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MVVM</td>
+            <td>La pantalla no contiene la lógica fuerte; el ViewModel coordina estado y casos de uso.</td>
+            <td><code>*/presentation/viewmodel/*ViewModel.kt</code></td>
+          </tr>
+          <tr>
+            <td>MVI</td>
+            <td>Las pantallas usan eventos, estados y efectos: <code>Event</code>, <code>UiState</code>, <code>Effect</code>.</td>
+            <td><code>*/presentation/state/*Event.kt</code>, <code>*UiState.kt</code>, <code>*Effect.kt</code></td>
+          </tr>
+          <tr>
+            <td>Flow</td>
+            <td>Los estados se exponen como <code>StateFlow</code> y algunos efectos como <code>SharedFlow</code>.</td>
+            <td>ViewModels de cada feature.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Frase útil: <strong>MVVM organiza responsabilidades; MVI ordena la comunicación; Flow hace reactiva la actualización de la UI.</strong>
+      </p>
+    </section>
+
+    <section>
+      <h2>8. Patrones de diseño usados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Patrón</th>
+            <th>Aplicación en EasyPark</th>
+            <th>Beneficio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Repository</td>
+            <td>Interfaces en <code>domain/repository</code> e implementaciones en <code>data/repository</code>.</td>
+            <td>La lógica de negocio no depende de Firebase ni Room.</td>
+          </tr>
+          <tr>
+            <td>Use Case</td>
+            <td>Acciones como login, registro, creación de reservas, consulta de parqueos.</td>
+            <td>Centraliza reglas de negocio reutilizables.</td>
+          </tr>
+          <tr>
+            <td>Mapper</td>
+            <td><code>core/data/mapper</code> y mappers por feature.</td>
+            <td>Evita mezclar datos remotos/locales con modelos de dominio.</td>
+          </tr>
+          <tr>
+            <td>Data Source / Service</td>
+            <td>Servicios DB y Firebase manager.</td>
+            <td>Separa el origen de datos del repositorio.</td>
+          </tr>
+          <tr>
+            <td>Dependency Injection</td>
+            <td>Koin con módulos de data, domain y presentation.</td>
+            <td>Facilita pruebas y reduce acoplamiento.</td>
+          </tr>
+          <tr>
+            <td>expect / actual</td>
+            <td>Contratos comunes con implementación Android/iOS.</td>
+            <td>Permite compartir lógica en KMP sin perder APIs nativas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>9. Almacenamiento local con Room</h2>
+      <p>
+        El almacenamiento en tablas locales se realiza con Room. La base principal está declarada en
+        <code>core/data/db/AppDatabase.kt</code>. Las tablas se definen como entidades en
+        <code>core/data/entity</code> y el acceso se hace mediante DAOs en <code>core/data/dao</code>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Tabla local</th>
+            <th>Entidad</th>
+            <th>Uso principal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>user</code></td>
+            <td><code>UserEntity.kt</code></td>
+            <td>Usuarios registrados o sincronizados.</td>
+          </tr>
+          <tr>
+            <td><code>vehicle</code></td>
+            <td><code>VehicleEntity.kt</code></td>
+            <td>Vehículos asociados a usuarios.</td>
+          </tr>
+          <tr>
+            <td><code>parking</code></td>
+            <td><code>ParkingEntity.kt</code></td>
+            <td>Parqueos disponibles o registrados.</td>
+          </tr>
+          <tr>
+            <td><code>reservation</code></td>
+            <td><code>ReservationEntity.kt</code></td>
+            <td>Reservas realizadas por los usuarios.</td>
+          </tr>
+          <tr>
+            <td><code>space</code></td>
+            <td><code>SpaceEntity.kt</code></td>
+            <td>Espacios de parqueo y disponibilidad.</td>
+          </tr>
+          <tr>
+            <td><code>notification</code></td>
+            <td><code>NotificationEntity.kt</code></td>
+            <td>Notificaciones internas guardadas localmente.</td>
+          </tr>
+          <tr>
+            <td><code>review</code></td>
+            <td><code>ReviewEntity.kt</code></td>
+            <td>Reseñas o valoraciones.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        La creación concreta de la base en Android está en <code>androidMain/core/data/db/Database.android.kt</code>.
+        También hay implementación para iOS en <code>iosMain/core/data/db/Database.ios.kt</code>.
+      </p>
+    </section>
+
+    <section>
+      <h2>10. Firebase Realtime Database</h2>
+      <p>
+        Firebase se usa como base de datos remota en tiempo real. El contrato común está en
+        <code>commonMain/core/data/remote/FirebaseManager.kt</code> y la implementación Android real está en
+        <code>androidMain/core/data/remote/FirebaseManager.kt</code>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Elemento</th>
+            <th>Función</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>saveData(path, data)</code></td>
+            <td>Guarda información en una ruta de Firebase, por ejemplo usuarios, reservas o parqueos.</td>
+          </tr>
+          <tr>
+            <td><code>observeData(path)</code></td>
+            <td>Observa cambios remotos y los convierte en flujos reactivos.</td>
+          </tr>
+          <tr>
+            <td>Repositorios</td>
+            <td>Consumen FirebaseManager para sincronizar datos remotos con modelos de dominio.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Frase de defensa: <strong>Firebase es la fuente remota y Room es el almacenamiento local estructurado.</strong>
+      </p>
+    </section>
+
+    <section>
+      <h2>11. Firebase Config, FCM y notificaciones</h2>
+      <div class="grid">
+        <div class="mini-card">
+          <h3>Remote Config</h3>
+          <p>
+            <code>RemoteConfigManager</code> obtiene valores remotos. En <code>App.kt</code> se consulta
+            <code>app_mantenimiento</code> y <code>mensaje_mantenimiento</code> para mostrar una pantalla de mantenimiento.
+          </p>
+        </div>
+        <div class="mini-card">
+          <h3>Push FCM</h3>
+          <p>
+            <code>MyFirebaseMessagingService.kt</code> recibe mensajes push y maneja tokens FCM.
+            <code>MainActivity.kt</code> solicita permisos de notificación y puede subir el token del usuario.
+          </p>
+        </div>
+        <div class="mini-card">
+          <h3>Notificaciones internas</h3>
+          <p>
+            La feature <code>notifications</code> muestra notificaciones guardadas. También existe
+            <code>NotificationHelper.kt</code> para crear notificaciones locales en Android.
+          </p>
+        </div>
+        <div class="mini-card">
+          <h3>Cloud Functions</h3>
+          <p>
+            <code>functions/index.js</code> contiene lógica backend para enviar notificaciones cuando se crean reservas.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>12. Permisos en Android</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Permiso</th>
+            <th>Para qué sirve</th>
+            <th>Dónde revisarlo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>INTERNET</code>, <code>ACCESS_NETWORK_STATE</code></td>
+            <td>Conexión con Firebase y servicios remotos.</td>
+            <td><code>androidMain/AndroidManifest.xml</code></td>
+          </tr>
+          <tr>
+            <td><code>ACCESS_FINE_LOCATION</code>, <code>ACCESS_COARSE_LOCATION</code></td>
+            <td>Obtener ubicación del usuario para buscar o registrar parqueos.</td>
+            <td><code>core/permissions</code>, mapas Android.</td>
+          </tr>
+          <tr>
+            <td><code>POST_NOTIFICATIONS</code></td>
+            <td>Mostrar notificaciones en Android 13 o superior.</td>
+            <td><code>MainActivity.kt</code>, <code>NotificationHelper.kt</code>.</td>
+          </tr>
+          <tr>
+            <td><code>CAMERA</code></td>
+            <td>Soporte para funcionalidades que requieran cámara, si la app la usa.</td>
+            <td><code>androidMain/AndroidManifest.xml</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>13. Mapas y ubicación</h2>
+      <p>
+        El proyecto implementa mapas usando componentes Android con OSMDroid y ubicación con Google Play Services Location.
+        Aunque la rúbrica mencione Google Maps, el código actual se apoya principalmente en OSMDroid para mostrar mapas.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Pantalla</th>
+            <th>Archivo</th>
+            <th>Uso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Buscar parqueo</td>
+            <td><code>androidMain/findparking/presentation/composable/FindParkingMapComponent.kt</code></td>
+            <td>Muestra mapa y parqueos cercanos.</td>
+          </tr>
+          <tr>
+            <td>Registrar parqueo</td>
+            <td><code>androidMain/registerparking/presentation/composable/ParkingMapSection.kt</code></td>
+            <td>Permite seleccionar o visualizar ubicación del parqueo.</td>
+          </tr>
+          <tr>
+            <td>Permisos</td>
+            <td><code>core/permissions/PermissionManager.kt</code></td>
+            <td>Gestiona permisos de ubicación según plataforma.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>14. SharedPreferences</h2>
+      <p>
+        SharedPreferences se usa en Android para guardar configuraciones simples de la app.
+        Un ejemplo está en <code>MainActivity.kt</code>, donde se usa <code>getSharedPreferences("app_prefs", MODE_PRIVATE)</code>
+        para manejar un indicador de primer lanzamiento o campañas internas.
+      </p>
+      <p>
+        También se usa una preferencia para configuración de OSMDroid. Para datos del negocio, como usuarios,
+        parqueos o reservas, el proyecto usa Room y Firebase, no SharedPreferences.
+      </p>
+    </section>
+
+    <section>
+      <h2>15. Serialización</h2>
+      <p>
+        La serialización permite convertir objetos Kotlin a datos transportables o guardables.
+        El proyecto usa el plugin <code>kotlinx.serialization</code>, DTOs serializables y utilidades como
+        <code>SafeSerializers.kt</code>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Dónde aparece</th>
+            <th>Para qué sirve</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>core/data/dto</code></td>
+            <td>Representa datos remotos compatibles con Firebase y conversiones.</td>
+          </tr>
+          <tr>
+            <td><code>core/util/SafeSerializers.kt</code></td>
+            <td>Ayuda con serialización segura de datos complejos.</td>
+          </tr>
+          <tr>
+            <td><code>navigation</code></td>
+            <td>Permite pasar modelos o parámetros serializados entre pantallas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>16. Retrofit, Ktor, Room y KSP</h2>
+      <p>
+        En la implementación actual no se observa Retrofit como cliente principal. Sí existe dependencia de Ktor,
+        pero la conectividad real más importante del proyecto está en Firebase Realtime Database y el almacenamiento local en Room.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Tecnología</th>
+            <th>Estado</th>
+            <th>Explicación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Room</td>
+            <td><span class="pill ok">Implementado</span></td>
+            <td>Base local con entidades, DAOs y <code>AppDatabase</code>.</td>
+          </tr>
+          <tr>
+            <td>KSP</td>
+            <td><span class="pill ok">Implementado</span></td>
+            <td>Usado para el compilador de Room y generación relacionada a pruebas/mockative.</td>
+          </tr>
+          <tr>
+            <td>Retrofit</td>
+            <td><span class="pill pending">No usado</span></td>
+            <td>Si el docente exige Retrofit específicamente, habría que agregar un endpoint REST real. La rúbrica permite "y/o Room".</td>
+          </tr>
+          <tr>
+            <td>Ktor</td>
+            <td><span class="pill partial">Dependencia presente</span></td>
+            <td>Está como dependencia, pero no parece ser el mecanismo principal de datos.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>17. Recursos y Localize</h2>
+      <p>
+        Los textos traducibles viven en <code>composeApp/src/commonMain/composeResources</code>.
+        Existen carpetas como <code>values</code>, <code>values-en</code> y <code>values-fr</code>.
+      </p>
+      <p>
+        En <code>composeApp/build.gradle.kts</code> hay tareas relacionadas con descarga/sincronización de traducciones
+        desde Localise/Loco. Las pantallas deberían usar <code>stringResource(Res.string...)</code>.
+      </p>
+      <div class="note">
+        Para máxima nota, conviene revisar antes de la entrega si todavía hay textos quemados directamente en pantallas Compose.
+      </div>
+    </section>
+
+    <section>
+      <h2>18. Pruebas unitarias y pruebas UI</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Carpeta</th>
+            <th>Qué cubren</th>
+            <th>Comando útil</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Unitarias</td>
+            <td><code>composeApp/src/commonTest</code></td>
+            <td>Mappers, repositorios, ViewModels y lógica de dominio.</td>
+            <td><code>.\gradlew.bat :composeApp:testDebugUnitTest --console=plain</code></td>
+          </tr>
+          <tr>
+            <td>UI instrumentadas</td>
+            <td><code>composeApp/src/androidInstrumentedTest</code></td>
+            <td>Pantallas Compose con comprobaciones simples de textos y botones.</td>
+            <td><code>.\gradlew.bat :composeApp:connectedDebugAndroidTest --console=plain</code></td>
+          </tr>
+          <tr>
+            <td>Compilación de tests UI</td>
+            <td><code>androidInstrumentedTest</code> + <code>debug</code></td>
+            <td>Verifica que los tests compilen aunque no haya celular/emulador conectado.</td>
+            <td><code>.\gradlew.bat :composeApp:assembleDebugAndroidTest --console=plain</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Para ejecutar pruebas UI sí necesitas un dispositivo conectado o emulador activo. Si no hay dispositivo, Gradle puede compilar,
+        pero <code>connectedDebugAndroidTest</code> no podrá correr.
+      </p>
+    </section>
+
+    <section>
+      <h2>19. Features principales</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Responsabilidad</th>
+            <th>Capas presentes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>signin</code></td>
+            <td>Inicio de sesión.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>register</code></td>
+            <td>Registro de usuario.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>registervehicle</code></td>
+            <td>Registro de vehículos.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>registerparking</code></td>
+            <td>Registro de parqueos y ubicación.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>findparking</code></td>
+            <td>Búsqueda de parqueos disponibles.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>parkingdetails</code></td>
+            <td>Detalle de parqueo, información y reserva.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>bookingconfirmation</code></td>
+            <td>Confirmación de reserva.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>reservationsummary</code></td>
+            <td>Resumen de reserva activa o finalizada.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>reservationhistory</code></td>
+            <td>Historial de reservas.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>spacemanagement</code></td>
+            <td>Administración de espacios de parqueo.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>earnings</code></td>
+            <td>Ganancias del propietario o administrador.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+          <tr>
+            <td><code>notifications</code></td>
+            <td>Listado y manejo de notificaciones internas.</td>
+            <td>data, domain, presentation</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>20. Flujo recomendado para la demo</h2>
+      <ol>
+        <li>Mostrar login o registro de usuario.</li>
+        <li>Registrar o seleccionar vehículo.</li>
+        <li>Buscar parqueo en el mapa/listado.</li>
+        <li>Abrir detalle del parqueo.</li>
+        <li>Confirmar reserva.</li>
+        <li>Ver resumen e historial.</li>
+        <li>Mostrar notificación interna o push si está disponible.</li>
+        <li>Mostrar una pantalla administrativa como espacios o ganancias.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>21. Respuestas rápidas para estudiar</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pregunta posible</th>
+            <th>Respuesta corta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>¿Dónde se guarda la información local?</td>
+            <td>En Room, mediante <code>AppDatabase</code>, entidades en <code>core/data/entity</code> y DAOs en <code>core/data/dao</code>.</td>
+          </tr>
+          <tr>
+            <td>¿Dónde se guarda la información remota?</td>
+            <td>En Firebase Realtime Database, accedido por <code>FirebaseManager</code> y los repositorios.</td>
+          </tr>
+          <tr>
+            <td>¿Cómo se evita mezclar Firebase con la UI?</td>
+            <td>La UI usa ViewModels; los ViewModels usan casos de uso; los casos de uso dependen de repositorios de dominio.</td>
+          </tr>
+          <tr>
+            <td>¿Por qué usan mappers?</td>
+            <td>Para convertir entre DTOs de Firebase, entidades Room y modelos de dominio sin acoplar capas.</td>
+          </tr>
+          <tr>
+            <td>¿Cómo se actualiza la pantalla?</td>
+            <td>Con <code>StateFlow</code> en el ViewModel; Compose observa el estado y redibuja.</td>
+          </tr>
+          <tr>
+            <td>¿Cómo se manejan las notificaciones?</td>
+            <td>Con FCM para push, <code>NotificationHelper</code> para mostrar en Android y la feature <code>notifications</code> para notificaciones internas.</td>
+          </tr>
+          <tr>
+            <td>¿Qué falta reforzar?</td>
+            <td>Config final de Firebase App Distribution, evidencia Figma, posibles textos hardcodeados y aclarar que mapas usan OSMDroid.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
