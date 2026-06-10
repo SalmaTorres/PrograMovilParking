@@ -33,9 +33,8 @@ class ReservationHistoryUiTest {
             )
         }
 
-        // The tab names should match the resource strings or displays
         composeRule.onNodeWithText("Activas").assertIsDisplayed()
-        composeRule.onNodeWithText("Historial").assertIsDisplayed().performClick()
+        composeRule.onNodeWithText("Finalizadas").assertIsDisplayed().performClick()
         
         assertEquals(1, selectedIndex)
     }
